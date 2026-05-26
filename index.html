@@ -1351,7 +1351,7 @@
 <div class="splash" id="splash">
   <div class="splash-eyebrow">General Insurance · AI Maturity Assessment</div>
   <h1 class="splash-title">Benchmark where AI is <strong>creating value</strong> across your insurance value chain.</h1>
-  <p class="splash-body">A structured assessment across the full general insurance value chain. Rate your current state and target ambition for each sub-domain, see real deployed case studies from leading carriers, and receive a personalised AI opportunity brief tailored to your gaps.</p>
+  <p class="splash-body">A structured assessment across the full general insurance value chain. Rate your current state and target ambition for each sub-domain, see real deployed case studies from leading carriers, and receive a tailored AI opportunity brief — plus see how your AI maturity stacks up against other similar organisations in your industry.</p>
   <div class="splash-cta-row">
     <button class="splash-cta" id="start-assess-btn">
       Start the assessment
@@ -1448,7 +1448,7 @@
         <path d="M1 1 L13 13 M13 1 L1 13" />
       </svg>
     </button>
-    <div class="modal-eyebrow" id="lead-modal-eyebrow">Personalised AI Opportunity Brief</div>
+    <div class="modal-eyebrow" id="lead-modal-eyebrow">Tailored AI Opportunity Brief</div>
     <h2 class="modal-title" id="lead-modal-title">Get your tailored AI maturity report</h2>
     <div id="lead-modal-body">
       <div class="modal-section-body" style="margin-bottom:14px;">Based on your assessment, we'll prepare a personalised report mapping your biggest capability gaps to deployed AI case studies — emailed to you within one business day.</div>
@@ -2782,7 +2782,7 @@ function openLeadModal(trigger) {
     eyebrow.textContent = 'Follow-up Request';
     title.textContent = 'Discuss your shortlist with our team';
   } else {
-    eyebrow.textContent = 'Personalised AI Opportunity Brief';
+    eyebrow.textContent = 'Tailored AI Opportunity Brief';
     title.textContent = 'Get your tailored AI maturity report';
   }
   leadModal.classList.add('open');
@@ -2912,7 +2912,7 @@ document.getElementById('lead-form').addEventListener('submit', async (e) => {
   formContainer.innerHTML = `
     <div class="form-success">
       <strong>Thank you, ${lead.name.split(' ')[0]}!</strong>
-      We've received your details. The Omnia team will be in touch within one business day with your personalised AI Opportunity Brief.
+      We've received your details. The Omnia team will be in touch within one business day with your tailored AI Opportunity Brief.
     </div>
     <p class="form-fineprint" style="margin-top:18px;text-align:center;">
       In the meantime, feel free to keep exploring the capability map below.
