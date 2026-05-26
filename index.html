@@ -1,0 +1,2994 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Omnia — General Insurance AI Maturity Assessment</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #014348;
+    --bg-deep: #002f33;
+    --bg-card: #0b5358;
+    --bg-card-hover: #0f6168;
+    --accent: #C1EFA5;
+    --accent-dim: #8fc176;
+    --accent-soft: rgba(193, 239, 165, 0.12);
+    --accent-line: rgba(193, 239, 165, 0.25);
+    --text: #f3faf4;
+    --text-muted: #a8c4be;
+    --text-faint: #6f8e89;
+    --core-border: rgba(193, 239, 165, 0.4);
+    --enabling-border: rgba(168, 196, 190, 0.3);
+    --enabling-bg: #08383c;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+
+  body {
+    padding: 48px 40px 80px;
+    max-width: 1600px;
+    margin: 0 auto;
+  }
+
+  /* ===== Header ===== */
+  header {
+    margin-bottom: 40px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--accent-line);
+  }
+
+  .eyebrow {
+    font-size: 11px;
+    letter-spacing: 4px;
+    font-weight: 500;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  h1 {
+    font-size: 38px;
+    font-weight: 300;
+    letter-spacing: -0.5px;
+    line-height: 1.1;
+    color: var(--text);
+    margin-bottom: 14px;
+  }
+
+  h1 strong { font-weight: 600; color: var(--accent); }
+
+  .lede {
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--text-muted);
+    max-width: 720px;
+    font-weight: 300;
+  }
+
+  /* ===== Controls ===== */
+  .controls {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin: 24px 0 32px;
+    flex-wrap: wrap;
+  }
+
+  .ctrl-btn {
+    background: transparent;
+    border: 1px solid var(--accent-line);
+    color: var(--text-muted);
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 9px 18px;
+    border-radius: 100px;
+    cursor: pointer;
+    transition: all 0.18s ease;
+  }
+  .ctrl-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .ctrl-btn.active {
+    background: var(--accent);
+    color: var(--bg);
+    border-color: var(--accent);
+  }
+
+  .ctrl-divider {
+    width: 1px;
+    height: 22px;
+    background: var(--accent-line);
+    margin: 0 4px;
+  }
+
+  .ctrl-label {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin-right: 4px;
+  }
+
+  /* ===== Capability grid ===== */
+  .section-label {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 36px 0 18px;
+    padding-bottom: 8px;
+    border-bottom: 1px dashed var(--accent-line);
+    font-weight: 600;
+  }
+
+  .domain-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 18px;
+  }
+
+  .domain-grid.enabling {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+
+  /* ===== Domain card ===== */
+  .domain {
+    background: var(--bg-card);
+    border: 1px solid var(--core-border);
+    border-radius: 14px;
+    overflow: hidden;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .domain.enabling {
+    background: var(--enabling-bg);
+    border-color: var(--enabling-border);
+  }
+
+  .domain-header {
+    padding: 18px 20px 14px;
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    transition: background 0.18s ease;
+  }
+
+  .domain-header:hover { background: var(--bg-card-hover); }
+  .domain.enabling .domain-header:hover { background: #0a4448; }
+
+  .domain-title-block { flex: 1; min-width: 0; }
+
+  .domain-number {
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--accent-dim);
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  .domain.enabling .domain-number { color: var(--text-faint); }
+
+  .domain-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.2;
+    letter-spacing: -0.2px;
+  }
+
+  .chevron {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    color: var(--accent);
+    transition: transform 0.25s ease;
+  }
+  .domain.enabling .chevron { color: var(--text-muted); }
+
+  .domain.collapsed .chevron { transform: rotate(-90deg); }
+
+  /* ===== Subdomain body ===== */
+  .subdomains {
+    padding: 0 16px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 4000px;
+    transition: max-height 0.4s ease, padding 0.3s ease, opacity 0.25s ease;
+    opacity: 1;
+  }
+
+  .domain.collapsed .subdomains {
+    max-height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    opacity: 0;
+    overflow: hidden;
+  }
+
+  .subdomain {
+    background: rgba(255, 255, 255, 0.025);
+    border: 1px solid rgba(193, 239, 165, 0.15);
+    border-radius: 10px;
+    padding: 14px 14px 12px;
+    transition: all 0.18s ease;
+    cursor: pointer;
+  }
+
+  .domain.enabling .subdomain {
+    border-color: rgba(168, 196, 190, 0.18);
+  }
+
+  .subdomain:hover {
+    background: rgba(193, 239, 165, 0.06);
+    border-color: var(--accent);
+    transform: translateY(-1px);
+  }
+
+  .subdomain.expanded {
+    background: rgba(193, 239, 165, 0.05);
+    border-color: var(--accent);
+  }
+
+  .subdomain-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .subdomain-title-wrap {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  .subdomain-chevron {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+    color: var(--accent-dim);
+    transition: transform 0.25s ease;
+  }
+  .subdomain.expanded .subdomain-chevron { transform: rotate(90deg); color: var(--accent); }
+
+  .subdomain-title {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.3;
+  }
+
+  .case-pill {
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-weight: 700;
+    padding: 5px 10px;
+    border-radius: 100px;
+    background: var(--accent);
+    color: var(--bg);
+    flex-shrink: 0;
+    white-space: nowrap;
+    border: none;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .case-pill:hover {
+    background: #d4f5b8;
+    transform: scale(1.05);
+  }
+
+  .case-pill.none {
+    background: transparent;
+    color: var(--text-faint);
+    border: 1px solid var(--enabling-border);
+  }
+  .case-pill.none:hover {
+    color: var(--text-muted);
+    border-color: var(--text-muted);
+  }
+
+  .activities {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 0;
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease, opacity 0.25s ease, margin-top 0.25s ease;
+  }
+
+  .subdomain.expanded .activities {
+    max-height: 600px;
+    opacity: 1;
+    margin-top: 12px;
+  }
+
+  .activity {
+    font-size: 11px;
+    color: var(--text-muted);
+    background: rgba(255, 255, 255, 0.05);
+    padding: 6px 11px 6px 14px;
+    border-radius: 100px;
+    line-height: 1.4;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    position: relative;
+  }
+  .activity:hover {
+    background: rgba(193, 239, 165, 0.12);
+    color: var(--accent);
+    border-color: var(--accent-line);
+  }
+  .activity.has-leaf-case::after {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+  }
+
+  /* ===== Modal ===== */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 24, 26, 0.78);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    z-index: 100;
+    opacity: 0;
+    transition: opacity 0.22s ease;
+  }
+
+  .modal-backdrop.open { display: flex; opacity: 1; }
+
+  .modal {
+    background: var(--bg-card);
+    border: 1px solid var(--accent-line);
+    border-radius: 18px;
+    max-width: 720px;
+    width: 100%;
+    max-height: 88vh;
+    overflow-y: auto;
+    padding: 36px 40px 32px;
+    position: relative;
+    transform: translateY(8px);
+    transition: transform 0.22s ease;
+  }
+
+  .modal-backdrop.open .modal { transform: translateY(0); }
+
+  .modal-close {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid var(--accent-line);
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+    font-family: inherit;
+  }
+  .modal-close:hover { color: var(--accent); border-color: var(--accent); }
+  .modal-close svg { width: 14px; height: 14px; }
+
+  .modal-eyebrow {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  .modal-domain-path {
+    font-size: 12px;
+    color: var(--text-faint);
+    margin-bottom: 14px;
+    letter-spacing: 0.3px;
+  }
+
+  .modal-title {
+    font-size: 26px;
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--text);
+    margin-bottom: 22px;
+    letter-spacing: -0.3px;
+  }
+
+  .modal-section {
+    margin-bottom: 22px;
+  }
+
+  .modal-section-label {
+    font-size: 10px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--accent-dim);
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  .modal-section-body {
+    font-size: 14.5px;
+    line-height: 1.65;
+    color: var(--text);
+    font-weight: 300;
+  }
+
+  .modal-section-body strong {
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  .modal-footer {
+    margin-top: 28px;
+    padding-top: 22px;
+    border-top: 1px solid var(--accent-line);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .modal-source {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  .modal-source-link {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px dashed var(--accent-line);
+    padding-bottom: 1px;
+    transition: border-color 0.15s ease;
+  }
+  .modal-source-link:hover { border-bottom-color: var(--accent); }
+
+  .modal-year {
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    font-weight: 500;
+  }
+
+  /* ===== Empty state in modal ===== */
+  .no-case-body {
+    padding: 14px 16px;
+    background: var(--accent-soft);
+    border-radius: 10px;
+    border-left: 3px solid var(--accent-dim);
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--text-muted);
+  }
+
+  /* ===== Scrollbar ===== */
+  .modal::-webkit-scrollbar { width: 8px; }
+  .modal::-webkit-scrollbar-track { background: transparent; }
+  .modal::-webkit-scrollbar-thumb {
+    background: var(--accent-line);
+    border-radius: 4px;
+  }
+  .modal::-webkit-scrollbar-thumb:hover { background: var(--accent-dim); }
+
+  /* ===== Footer ===== */
+  .page-footer {
+    margin-top: 60px;
+    padding-top: 22px;
+    border-top: 1px solid var(--accent-line);
+    font-size: 11px;
+    color: var(--text-faint);
+    letter-spacing: 0.5px;
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  @media (max-width: 720px) {
+    body { padding: 28px 18px 60px; }
+    h1 { font-size: 28px; }
+    .modal { padding: 28px 22px 24px; }
+    .modal-title { font-size: 22px; }
+  }
+
+  /* =====================================================
+     V2 ADDITIONS — Assessment, shortlist, splash, branding
+     ===================================================== */
+
+  /* Brand bar at top */
+  .brand-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 24px;
+    margin-bottom: 24px;
+    border-bottom: 1px solid var(--accent-line);
+  }
+
+  .brand-mark {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .brand-logo {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--bg);
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: -0.5px;
+  }
+
+  .brand-name {
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: var(--text);
+  }
+
+  .brand-attribution {
+    font-size: 10px;
+    color: var(--text-faint);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-top: 1px;
+  }
+
+  .mode-toggle {
+    display: flex;
+    background: rgba(0,0,0,0.2);
+    border: 1px solid var(--accent-line);
+    border-radius: 100px;
+    padding: 3px;
+    gap: 2px;
+  }
+
+  .mode-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 8px 18px;
+    border-radius: 100px;
+    cursor: pointer;
+    transition: all 0.18s ease;
+  }
+  .mode-btn:hover { color: var(--text); }
+  .mode-btn.active {
+    background: var(--accent);
+    color: var(--bg);
+  }
+
+  /* Landing splash */
+  .splash {
+    background: linear-gradient(135deg, rgba(193, 239, 165, 0.08), rgba(193, 239, 165, 0.02));
+    border: 1px solid var(--core-border);
+    border-radius: 18px;
+    padding: 40px 44px;
+    margin-bottom: 36px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .splash::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 380px;
+    height: 380px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(193, 239, 165, 0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .splash-eyebrow {
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 14px;
+    position: relative;
+  }
+
+  .splash-title {
+    font-size: 34px;
+    font-weight: 300;
+    letter-spacing: -0.5px;
+    line-height: 1.15;
+    margin-bottom: 14px;
+    position: relative;
+    max-width: 680px;
+  }
+  .splash-title strong { font-weight: 600; color: var(--accent); }
+
+  .splash-body {
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--text-muted);
+    max-width: 680px;
+    margin-bottom: 22px;
+    position: relative;
+  }
+
+  .splash-cta-row {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    flex-wrap: wrap;
+    position: relative;
+  }
+
+  .splash-cta {
+    background: var(--accent);
+    color: var(--bg);
+    border: none;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 14px 24px;
+    border-radius: 100px;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .splash-cta:hover {
+    background: #d4f5b8;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(193, 239, 165, 0.2);
+  }
+  .splash-cta svg { width: 14px; height: 14px; }
+
+  .splash-skip {
+    color: var(--text-muted);
+    background: transparent;
+    border: none;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    border-bottom: 1px dashed var(--accent-line);
+    padding: 2px 0;
+    transition: all 0.15s ease;
+  }
+  .splash-skip:hover { color: var(--accent); border-bottom-color: var(--accent); }
+
+  .splash-meta {
+    margin-top: 18px;
+    padding-top: 18px;
+    border-top: 1px dashed var(--accent-line);
+    display: flex;
+    gap: 28px;
+    flex-wrap: wrap;
+    position: relative;
+  }
+
+  .splash-meta-item {
+    font-size: 11px;
+    color: var(--text-faint);
+    letter-spacing: 1px;
+  }
+  .splash-meta-item strong {
+    color: var(--accent);
+    font-weight: 700;
+    margin-right: 6px;
+  }
+
+  /* Hide splash if already engaged */
+  body.engaged .splash { display: none; }
+
+  /* Assessment sliders inside subdomain */
+  .assessment-block {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px dashed var(--accent-line);
+    display: none;
+  }
+  body.mode-assess .assessment-block { display: block; }
+  body.mode-assess .subdomain { cursor: default; }
+
+  .slider-row {
+    display: grid;
+    grid-template-columns: 90px 1fr 32px;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+  .slider-row:last-child { margin-bottom: 0; }
+
+  .slider-label {
+    font-size: 10.5px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-weight: 600;
+  }
+  .slider-label.target { color: var(--accent); }
+
+  .slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 5px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 100px;
+    outline: none;
+    cursor: pointer;
+  }
+  .slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--text-muted);
+    cursor: pointer;
+    border: 2px solid var(--bg-card);
+    transition: all 0.15s ease;
+  }
+  .slider::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--text-muted);
+    cursor: pointer;
+    border: 2px solid var(--bg-card);
+    transition: all 0.15s ease;
+  }
+  .slider.target::-webkit-slider-thumb { background: var(--accent); }
+  .slider.target::-moz-range-thumb { background: var(--accent); }
+  .slider:hover::-webkit-slider-thumb { transform: scale(1.15); }
+  .slider.unset::-webkit-slider-thumb {
+    background: transparent;
+    border: 2px dashed var(--text-faint);
+  }
+  .slider.unset::-moz-range-thumb {
+    background: transparent;
+    border: 2px dashed var(--text-faint);
+  }
+
+  .slider-value {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+    width: 28px;
+  }
+  .slider-value.unset { color: var(--text-faint); font-weight: 400; }
+
+  .gap-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--accent-dim);
+    margin-top: 8px;
+    font-weight: 600;
+  }
+  .gap-indicator.big { color: #ffb74d; }
+  .gap-indicator.huge { color: #ff8a65; }
+
+  /* Subdomain becomes a flex row in assess mode */
+  body.mode-assess .subdomain-head {
+    align-items: flex-start;
+  }
+
+  body.mode-assess .activities {
+    display: none;
+  }
+
+  body.mode-assess .subdomain.expanded .activities {
+    display: flex;
+  }
+
+  .examples-btn {
+    background: transparent;
+    border: 1px solid var(--accent-line);
+    color: var(--text-muted);
+    font-family: inherit;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: 600;
+    padding: 5px 11px;
+    border-radius: 100px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    margin-top: 10px;
+    display: none;
+  }
+  .examples-btn:hover { color: var(--accent); border-color: var(--accent); }
+  body.mode-assess .examples-btn { display: inline-block; }
+  body.mode-assess .case-pill { display: none; }
+
+  /* Progress bar / sticky CTA */
+  .progress-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(1, 67, 72, 0.94);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-top: 1px solid var(--accent-line);
+    padding: 16px 40px;
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    z-index: 50;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+  }
+  body.mode-assess .progress-bar {
+    display: flex;
+    transform: translateY(0);
+  }
+
+  .progress-info {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .progress-track {
+    flex: 1;
+    max-width: 280px;
+    height: 6px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 100px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--accent);
+    width: 0%;
+    transition: width 0.3s ease;
+    border-radius: 100px;
+  }
+
+  .progress-text {
+    font-size: 12px;
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+  }
+  .progress-text strong {
+    color: var(--accent);
+    font-weight: 700;
+    margin-right: 3px;
+  }
+
+  .progress-cta {
+    background: var(--accent);
+    color: var(--bg);
+    border: none;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 11px 22px;
+    border-radius: 100px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    flex-shrink: 0;
+    opacity: 0.5;
+    pointer-events: none;
+  }
+  .progress-cta.enabled {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .progress-cta.enabled:hover {
+    background: #d4f5b8;
+    transform: translateY(-1px);
+  }
+
+  /* Floating shortlist pill */
+  .shortlist-fab {
+    position: fixed;
+    bottom: 22px;
+    right: 24px;
+    background: var(--bg-card);
+    border: 1px solid var(--accent);
+    border-radius: 100px;
+    padding: 12px 18px 12px 16px;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    z-index: 49;
+    display: none;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+    transition: all 0.18s ease;
+  }
+  .shortlist-fab.visible { display: inline-flex; }
+  .shortlist-fab:hover {
+    background: var(--bg-card-hover);
+    transform: translateY(-2px);
+  }
+  body.mode-assess .shortlist-fab { bottom: 80px; }
+
+  .shortlist-fab-icon {
+    width: 16px;
+    height: 16px;
+    color: var(--accent);
+  }
+
+  .shortlist-fab-count {
+    background: var(--accent);
+    color: var(--bg);
+    padding: 1px 7px;
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 700;
+    min-width: 18px;
+    text-align: center;
+  }
+
+  /* Side panel for shortlist */
+  .side-panel-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 24, 26, 0.6);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    display: none;
+    z-index: 101;
+    opacity: 0;
+    transition: opacity 0.22s ease;
+  }
+  .side-panel-backdrop.open {
+    display: block;
+    opacity: 1;
+  }
+
+  .side-panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(480px, 100%);
+    background: var(--bg-card);
+    border-left: 1px solid var(--accent-line);
+    z-index: 102;
+    transform: translateX(100%);
+    transition: transform 0.28s ease;
+    display: flex;
+    flex-direction: column;
+  }
+  .side-panel.open { transform: translateX(0); }
+
+  .side-panel-header {
+    padding: 24px 28px 18px;
+    border-bottom: 1px solid var(--accent-line);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .side-panel-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+
+  .side-panel-sub {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  .side-panel-close {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid var(--accent-line);
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .side-panel-close:hover { color: var(--accent); border-color: var(--accent); }
+  .side-panel-close svg { width: 12px; height: 12px; }
+
+  .side-panel-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px 28px;
+  }
+
+  .shortlist-item {
+    padding: 14px 16px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(193, 239, 165, 0.15);
+    border-radius: 10px;
+    margin-bottom: 10px;
+    position: relative;
+  }
+
+  .shortlist-item-eyebrow {
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--accent-dim);
+    margin-bottom: 4px;
+    font-weight: 600;
+  }
+
+  .shortlist-item-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.3;
+    margin-bottom: 4px;
+    padding-right: 28px;
+  }
+
+  .shortlist-item-company {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  .shortlist-item-remove {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: none;
+    background: transparent;
+    color: var(--text-faint);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .shortlist-item-remove:hover { color: var(--accent); }
+  .shortlist-item-remove svg { width: 11px; height: 11px; }
+
+  .shortlist-empty {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-faint);
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .shortlist-empty strong {
+    display: block;
+    color: var(--text-muted);
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  .side-panel-footer {
+    padding: 20px 28px;
+    border-top: 1px solid var(--accent-line);
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .panel-btn {
+    flex: 1;
+    background: var(--accent);
+    color: var(--bg);
+    border: none;
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    padding: 12px 16px;
+    border-radius: 100px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    min-width: 0;
+  }
+  .panel-btn:hover { background: #d4f5b8; }
+  .panel-btn.secondary {
+    background: transparent;
+    border: 1px solid var(--accent-line);
+    color: var(--text-muted);
+  }
+  .panel-btn.secondary:hover { color: var(--accent); border-color: var(--accent); }
+
+  /* Add-to-shortlist button in modal */
+  .modal-shortlist-btn {
+    background: transparent;
+    border: 1px solid var(--accent-line);
+    color: var(--text-muted);
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 8px 14px;
+    border-radius: 100px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .modal-shortlist-btn:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+  .modal-shortlist-btn.added {
+    background: var(--accent);
+    color: var(--bg);
+    border-color: var(--accent);
+  }
+  .modal-shortlist-btn svg { width: 12px; height: 12px; }
+
+  /* Star indicator on shortlisted subdomains */
+  .shortlist-star {
+    width: 14px;
+    height: 14px;
+    color: var(--accent);
+    margin-left: 6px;
+    display: none;
+  }
+  .subdomain.shortlisted .shortlist-star { display: inline-block; }
+
+  /* Lead capture form modal */
+  .lead-form {
+    margin-top: 18px;
+  }
+  .form-field {
+    margin-bottom: 14px;
+  }
+  .form-label {
+    display: block;
+    font-size: 10.5px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--accent-dim);
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .form-input {
+    width: 100%;
+    background: rgba(0,0,0,0.2);
+    border: 1px solid var(--accent-line);
+    color: var(--text);
+    font-family: inherit;
+    font-size: 14px;
+    padding: 11px 14px;
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.15s ease;
+  }
+  .form-input:focus {
+    border-color: var(--accent);
+  }
+  .form-input::placeholder { color: var(--text-faint); }
+
+  .form-submit {
+    width: 100%;
+    background: var(--accent);
+    color: var(--bg);
+    border: none;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    padding: 14px;
+    border-radius: 100px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    margin-top: 6px;
+  }
+  .form-submit:hover { background: #d4f5b8; transform: translateY(-1px); }
+  .form-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  .form-success {
+    padding: 18px;
+    background: rgba(193, 239, 165, 0.1);
+    border: 1px solid var(--accent);
+    border-radius: 10px;
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.5;
+    text-align: center;
+  }
+  .form-success strong { color: var(--accent); display: block; margin-bottom: 6px; }
+
+  .form-fineprint {
+    font-size: 11px;
+    color: var(--text-faint);
+    margin-top: 14px;
+    line-height: 1.5;
+  }
+
+  /* Privacy notice */
+  .privacy-notice {
+    position: fixed;
+    bottom: 22px;
+    left: 24px;
+    max-width: 420px;
+    background: var(--bg-card);
+    border: 1px solid var(--accent-line);
+    border-radius: 12px;
+    padding: 14px 18px;
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--text-muted);
+    z-index: 48;
+    display: none;
+    align-items: flex-start;
+    gap: 12px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+  }
+  .privacy-notice.visible { display: flex; }
+  body.mode-assess .privacy-notice { bottom: 80px; }
+
+  .privacy-notice-text { flex: 1; }
+  .privacy-notice strong { color: var(--text); }
+  .privacy-notice a { color: var(--accent); text-decoration: none; border-bottom: 1px dashed var(--accent-line); }
+
+  .privacy-notice-close {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 2px;
+    flex-shrink: 0;
+  }
+  .privacy-notice-close:hover { color: var(--accent); }
+  .privacy-notice-close svg { width: 14px; height: 14px; }
+
+  @media (max-width: 720px) {
+    .splash { padding: 28px 22px; }
+    .splash-title { font-size: 26px; }
+    .progress-bar { padding: 12px 18px; }
+    .side-panel { width: 100%; }
+    .privacy-notice { left: 12px; right: 12px; max-width: none; bottom: 12px; }
+    .shortlist-fab { bottom: 12px; right: 12px; }
+  }
+</style>
+</head>
+<body class="mode-assess">
+
+<!-- Brand bar with mode toggle -->
+<div class="brand-bar">
+  <div class="brand-mark">
+    <div class="brand-logo">O</div>
+    <div>
+      <div class="brand-name">OMNIA</div>
+      <div class="brand-attribution">AI Maturity Atlas · Delivered by AI Decisions</div>
+    </div>
+  </div>
+  <div class="mode-toggle" id="mode-toggle">
+    <button class="mode-btn active" data-mode="assess">Assess</button>
+    <button class="mode-btn" data-mode="explore">Explore</button>
+  </div>
+</div>
+
+<!-- Landing splash -->
+<div class="splash" id="splash">
+  <div class="splash-eyebrow">General Insurance · AI Maturity Assessment</div>
+  <h1 class="splash-title">Benchmark where AI is <strong>creating value</strong> across your insurance value chain.</h1>
+  <p class="splash-body">A structured assessment across the full general insurance value chain. Rate your current state and target ambition for each sub-domain, see real deployed case studies from leading carriers, and receive a personalised AI opportunity brief tailored to your gaps.</p>
+  <div class="splash-cta-row">
+    <button class="splash-cta" id="start-assess-btn">
+      Start the assessment
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+    </button>
+    <button class="splash-skip" id="skip-to-explore-btn">Just exploring? Skip the assessment →</button>
+  </div>
+  <div class="splash-meta">
+    <div class="splash-meta-item"><strong>~5 min</strong>to complete</div>
+    <div class="splash-meta-item"><strong id="splash-count-display">27</strong>capability areas</div>
+    <div class="splash-meta-item"><strong>30+</strong>live case studies from major carriers</div>
+    <div class="splash-meta-item"><strong>Personalised report</strong>emailed to you</div>
+  </div>
+</div>
+
+<!-- Filter controls (only used in Explore mode) -->
+<div class="controls" id="explore-controls" style="display:none;">
+  <span class="ctrl-label">View</span>
+  <button class="ctrl-btn active" data-action="expand-all">Expand all</button>
+  <button class="ctrl-btn" data-action="collapse-all">Collapse all</button>
+  <div class="ctrl-divider"></div>
+  <span class="ctrl-label">Filter</span>
+  <button class="ctrl-btn active" data-filter="all">All capabilities</button>
+  <button class="ctrl-btn" data-filter="with-case">With case studies</button>
+</div>
+
+<div class="section-label">Core Business Capabilities</div>
+<div class="domain-grid" id="core-grid"></div>
+
+<div class="section-label">Enabling Functions</div>
+<div class="domain-grid enabling" id="enabling-grid"></div>
+
+<div class="page-footer">
+  <span>Sources: McKinsey · CDP Center · Emerj · Microsoft Customer Stories · BCG · PwC · DataCamp · Vendor announcements (2024–2026)</span>
+  <span>© Omnia · Delivered by AI Decisions</span>
+</div>
+
+<!-- Sticky progress bar (Assess mode) -->
+<div class="progress-bar" id="progress-bar">
+  <div class="progress-info">
+    <div class="progress-text"><strong id="progress-count">0</strong>of <span id="progress-total">0</span> sub-domains rated</div>
+    <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+  </div>
+  <button class="progress-cta" id="generate-report-btn">Generate my report</button>
+</div>
+
+<!-- Floating shortlist FAB -->
+<button class="shortlist-fab" id="shortlist-fab">
+  <svg class="shortlist-fab-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16l-7-3-7 3z"/></svg>
+  Shortlist
+  <span class="shortlist-fab-count" id="shortlist-fab-count">0</span>
+</button>
+
+<!-- Case study modal -->
+<div class="modal-backdrop" id="modal-backdrop">
+  <div class="modal" id="modal">
+    <button class="modal-close" id="modal-close" aria-label="Close">
+      <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M1 1 L13 13 M13 1 L1 13" />
+      </svg>
+    </button>
+    <div class="modal-eyebrow" id="modal-eyebrow">AI Case Study</div>
+    <div class="modal-domain-path" id="modal-path"></div>
+    <h2 class="modal-title" id="modal-title"></h2>
+    <div id="modal-body"></div>
+    <div class="modal-footer" id="modal-footer"></div>
+  </div>
+</div>
+
+<!-- Shortlist side panel -->
+<div class="side-panel-backdrop" id="side-panel-backdrop"></div>
+<div class="side-panel" id="side-panel">
+  <div class="side-panel-header">
+    <div>
+      <div class="side-panel-title">Your shortlist</div>
+      <div class="side-panel-sub" id="shortlist-sub">No cases yet</div>
+    </div>
+    <button class="side-panel-close" id="side-panel-close" aria-label="Close">
+      <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 1 L13 13 M13 1 L1 13" /></svg>
+    </button>
+  </div>
+  <div class="side-panel-body" id="side-panel-body"></div>
+  <div class="side-panel-footer">
+    <button class="panel-btn secondary" id="clear-shortlist-btn">Clear all</button>
+    <button class="panel-btn" id="request-followup-btn">Request follow-up</button>
+  </div>
+</div>
+
+<!-- Lead capture / report request modal -->
+<div class="modal-backdrop" id="lead-modal-backdrop">
+  <div class="modal" id="lead-modal">
+    <button class="modal-close" id="lead-modal-close" aria-label="Close">
+      <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M1 1 L13 13 M13 1 L1 13" />
+      </svg>
+    </button>
+    <div class="modal-eyebrow" id="lead-modal-eyebrow">Personalised AI Opportunity Brief</div>
+    <h2 class="modal-title" id="lead-modal-title">Get your tailored AI maturity report</h2>
+    <div id="lead-modal-body">
+      <div class="modal-section-body" style="margin-bottom:14px;">Based on your assessment, we'll prepare a personalised report mapping your biggest capability gaps to deployed AI case studies — emailed to you within one business day.</div>
+      <form class="lead-form" id="lead-form">
+        <div class="form-field">
+          <label class="form-label" for="lead-name">Full name</label>
+          <input class="form-input" type="text" id="lead-name" name="name" required placeholder="Alex Smith" autocomplete="name" />
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="lead-email">Work email</label>
+          <input class="form-input" type="email" id="lead-email" name="email" required placeholder="alex@insurer.com.au" autocomplete="email" />
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="lead-company">Organisation</label>
+          <input class="form-input" type="text" id="lead-company" name="company" required placeholder="Your insurance company" autocomplete="organization" />
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="lead-role">Role</label>
+          <input class="form-input" type="text" id="lead-role" name="role" placeholder="e.g. Head of Transformation" autocomplete="organization-title" />
+        </div>
+        <button class="form-submit" type="submit" id="lead-submit">Send me my report</button>
+        <p class="form-fineprint">Omnia (delivered by AI Decisions) will use your details only to send your report and may follow up about your AI agenda. You can opt out any time. We store your assessment responses to improve our industry benchmark; results are never shared individually.</p>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Privacy notice -->
+<div class="privacy-notice" id="privacy-notice">
+  <div class="privacy-notice-text">
+    <strong>A note on how we use your activity.</strong> We anonymously record which capabilities you explore to improve this tool and build an industry benchmark. No personal data is collected unless you submit the form.
+  </div>
+  <button class="privacy-notice-close" id="privacy-close" aria-label="Dismiss">
+    <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 1 L13 13 M13 1 L1 13" /></svg>
+  </button>
+</div>
+
+<script>
+// =====================================================
+// OMNIA CONFIG — replace these values after Supabase setup.
+// Keep the structure; just swap REPLACE_ME_... for real values.
+// If you leave these as placeholders, the app still runs (offline mode).
+// =====================================================
+const OMNIA_CONFIG = {
+  SUPABASE_URL: 'REPLACE_ME_SUPABASE_URL',         // e.g. https://abcdefghij.supabase.co
+  SUPABASE_ANON_KEY: 'REPLACE_ME_SUPABASE_ANON_KEY' // long string starting with "eyJ..."
+};
+
+// =================== DATA ===================
+const DATA = {
+  core: [
+    {
+      num: "01", title: "Product and Distribution",
+      subdomains: [
+        {
+          id: "1.1", title: "Develop and Manage Products & Services",
+          activities: [
+            {
+              name: "Analyse Market & Customer Needs",
+              caseStudy: {
+                company: "Crédit Agricole Assurances",
+                year: "2024",
+                title: "AI models for personalised coverage recommendations",
+                context: "Crédit Agricole Assurances — the insurance arm of one of Europe's largest cooperative banking groups — serves life, property, casualty, and borrower insurance customers through a bancassurance distribution model. Identifying the right coverage need across this customer base historically depended on agent intuition and static segmentation, leaving gaps between what customers needed and what they were offered.",
+                useCase: "Deployed AI models that analyse customer data to identify coverage needs and suggest appropriate insurance products, providing personalised advice at the point of customer contact. The initiative sits within a broader customer-centric strategic transformation referenced in Capgemini's World Life and Health Insurance Report.",
+                outcomes: "Enabled the bancassurance network to <strong>match products to genuine customer need</strong> rather than push pre-packaged offers, improving offer relevance and reducing unnecessary touchpoints across retail and group customer journeys.",
+                source: "Capgemini World Life Insurance Report 2025 / CDP Center",
+                sourceUrl: "https://www.capgemini.com/insights/research-library/world-life-insurance-report/"
+              }
+            },
+            "Enhance Existing Products & Services",
+            {
+              name: "Monitor / Manage Programs",
+              caseStudy: {
+                company: "WTW (Radar Vision)",
+                year: "2025",
+                title: "AI-driven Active Portfolio Management for general insurers",
+                context: "General insurers managing books of business across many products, segments, and geographies have historically relied on static annual planning cycles. The lag between performance signals and pricing or product action leaves profit on the table and lets underperforming segments persist longer than they should.",
+                useCase: "WTW launched Radar Vision, an AI-driven tool for Active Portfolio Management (APM). It continuously monitors portfolio performance across segments, flags emerging patterns and anomalies, and identifies which segments to grow, reduce, or reshape based on profitability and strategic alignment. Outputs feed live rating engines and KPI dashboards for real-time deployment.",
+                outcomes: "Insurers using APM <strong>achieve significantly better profitability</strong> by actively steering the portfolio rather than predicting outcomes and hoping. The dynamic monitoring loop turns static planning into agile, data-driven portfolio management.",
+                source: "WTW",
+                sourceUrl: "https://www.wtwco.com/en-be/insights/2025/12/active-portfolio-management-in-insurance-a-new-era-driven-by-ai"
+              }
+            },
+            "Withdraw Products & Services",
+            {
+              name: "Develop New Products & Services",
+              caseStudy: {
+                company: "Lemonade",
+                year: "2024",
+                title: "AI-native telematics integration at auto onboarding",
+                context: "Lemonade, a digital-first AI-native carrier, struggled to scale auto insurance profitably after launch — pricing accuracy on a new line of business is notoriously hard to nail, and traditional add-on telematics has weak attach rates because customers opt in after the sale.",
+                useCase: "Redesigned its auto insurance product by integrating telematics directly into the onboarding flow rather than treating it as an optional add-on. The AI-driven product blends behavioural pricing signals into the quote experience from the first interaction. Lemonade also expanded the product to the UK and Germany in the same period, adapting its AI chatbot (Maya) for local markets.",
+                outcomes: "Improved conversion by approximately <strong>60%</strong> and significantly improved pricing accuracy on the auto book. The redesign was central to Lemonade reaching its first full year of positive adjusted free cash flow in 2024, <strong>a year ahead of plan</strong>.",
+                source: "Insurnest / Lemonade",
+                sourceUrl: "https://insurnest.com/blog/lemonade-insurance-case-study/"
+              }
+            },
+            "Launch New / Enhanced",
+            "Plan Changes"
+          ],
+          caseStudy: {
+            company: "Next Insurance",
+            year: "2024",
+            title: "AI at the core of product development",
+            context: "Next Insurance, a US-based digital small-business insurer, faced the challenge of expanding its product range and customer base while maintaining a lean operating model and avoiding linear headcount growth.",
+            useCase: "Embedded AI at the core of its product development cycle, using machine learning to analyse market signals, model new product configurations, and accelerate go-to-market timelines.",
+            outcomes: "Grew its product range and client base with a <strong>near-flat headcount</strong>, treating AI as an amplifier for product teams rather than a headcount substitute.",
+            source: "Calcalist Tech",
+            sourceUrl: "https://www.calcalistech.com/"
+          }
+        },
+        {
+          id: "1.2", title: "Market & Promote Products & Services",
+          activities: [
+            {
+              name: "Advertise / Promote",
+              caseStudy: {
+                company: "Progressive Insurance",
+                year: "2024",
+                title: "Generative AI for campaign personalisation (AI-Boost)",
+                context: "Progressive, the US's #2 auto insurer with $75bn in 2024 revenue and $2.2bn in annual ICT spend, runs marketing at massive scale — millions of touchpoints across email, ad copy, and product recommendations. The challenge was moving beyond static segmentation to truly personalised, real-time campaign optimisation.",
+                useCase: "Deployed AI-Boost (built on the Claritas platform) to generate data-driven, personalised content variations across the campaign lifecycle. The system handles tailored content for each customer segment (product recommendations, email subject lines, ad copy), creates adaptive customer journeys that respond to individual interactions in real time, and continuously monitors and optimises campaign performance automatically.",
+                outcomes: "Enabled real-time campaign optimisation at scale across millions of customer touchpoints, with the system making automatic adjustments to maximise campaign effectiveness rather than waiting for human marketers to interpret results and react.",
+                source: "Emerj AI Research",
+                sourceUrl: "https://emerj.com/artificial-intelligence-at-progressive-insurance/"
+              }
+            },
+            {
+              name: "Manage Pricing",
+              caseStudy: {
+                company: "Progressive Insurance",
+                year: "2024",
+                title: "Snapshot — AI-driven usage-based pricing",
+                context: "Traditional auto insurance pricing relies on coarse proxies (age, postcode, vehicle type) that misprice many drivers — overcharging safe drivers and undercharging risky ones. This creates adverse selection and competitive vulnerability against more sophisticated pricing models.",
+                useCase: "Progressive's Snapshot program uses telematics devices and mobile apps to gather real-time driving data, then applies ML models to deliver usage-based insurance plans. Pricing is fairer and more personalised: safe drivers (avoiding speeding and hard braking) get reduced premiums, while pricing accuracy improves across the book.",
+                outcomes: "Approach <strong>improved underwriting accuracy and increased customer retention by 15%</strong>. Progressive has gained a competitive edge in the US auto market by offering a fairer, more transparent pricing model that also incentivises safer driving behaviour.",
+                source: "Insurance Thought Leadership / SmartDev",
+                sourceUrl: "https://www.insurancethoughtleadership.com/ai-machine-learning/how-ai-changing-insurance"
+              }
+            },
+            {
+              name: "Manage Support / Distribution Channels",
+              caseStudy: {
+                company: "Eleos Life",
+                year: "2026",
+                title: "AI Agent Desk — embedding AI agents in broker channels",
+                context: "Brokers and independent insurance agents face a structural threat from AI-powered direct distribution channels (AI agents quoting and comparing policies inside ChatGPT, for example). To compete, distribution channels need AI capability embedded directly into their existing workflows, not as a separate tool.",
+                useCase: "Eleos Life introduced AI Agent Desk in Q1 2026, enabling brokers and independent agents to embed AI agents directly into their digital sales channels. The agents provide customers with instant policy explanations drawn from each producer's proprietary knowledge base, reducing response times to leads and inquiries.",
+                outcomes: "Brings agentic AI capability into the distribution layer that historically lacked it, helping brokers compete with AI-native direct channels. Part of a broader 2026 trend where carriers expose agentic capabilities to brokers and agents to bring automation benefits directly into distribution workflows.",
+                source: "ScienceSoft Q1 2026 Insurance AI Trends",
+                sourceUrl: "https://www.scnsoft.com/insurance/insurance-ai-trends"
+              }
+            },
+            "Develop Marketing & Sales Plan",
+            {
+              name: "Manage the Selling Process",
+              caseStudy: {
+                company: "Progressive Insurance (with Salesforce Einstein)",
+                year: "2024",
+                title: "AI lead scoring with 90% identification accuracy",
+                context: "Insurance sales teams typically work from large pools of inbound leads with widely varying conversion likelihood. Traditional static lead scoring misses behavioural signals and forces reps to spend time on low-probability prospects, dragging down conversion economics.",
+                useCase: "Progressive deployed AI-powered lead scoring through Salesforce Einstein. The system processes historical CRM data (email activity, purchases, lead source, behaviour patterns) to score each lead's likelihood of conversion and surface next-best-action recommendations for reps.",
+                outcomes: "Achieved <strong>90% lead identification accuracy</strong> — a benchmark cited as winning over internal sceptics and accelerating organisational buy-in. Across Einstein deployments more broadly, businesses report conversion rate uplifts of <strong>up to 30%</strong> and roughly an hour per day saved per sales rep.",
+                source: "SmartLead / Salesforce",
+                sourceUrl: "https://www.smartlead.ai/blog/case-studies-companies-that-improved-conversions-with-ai-lead-scoring"
+              }
+            },
+            "Perform Agent Setup"
+          ],
+          caseStudy: {
+            company: "Leading Global Insurer",
+            year: "2024",
+            title: "AI-driven intelligent automation across distribution",
+            context: "A major global insurer needed to shift away from agent-mediated, paper-based sales journeys toward digital self-service to improve customer experience and reduce cost-to-acquire.",
+            useCase: "Implemented AI-driven intelligent automation across the distribution and sales process — personalising quotes, automating policy presentation, and enabling self-service purchasing.",
+            outcomes: "<strong>80% of transactions moved online</strong>, and customer satisfaction scores rose <strong>36 percentage points</strong>.",
+            source: "McKinsey",
+            sourceUrl: "https://www.mckinsey.com/industries/financial-services/our-insights/insurance"
+          }
+        },
+        {
+          id: "1.3", title: "Manage Commissions",
+          activities: [
+            "Manage Commission Types & Plans",
+            "Negotiate Commission",
+            {
+              name: "Payout Commission",
+              caseStudy: {
+                company: "Applied Systems",
+                year: "2024",
+                title: "Automated Statements — AI commission reconciliation",
+                context: "Reconciling direct bill commissions and agency-billed payables is one of the two most common daily accounting tasks at insurance agencies. Statements arrive in unstructured PDFs, XLS, CSV, or paper — with hundreds or thousands of records to process. User research showed manual reconciliation took accounting staff <strong>over 15 hours per week</strong>, with some agencies dedicating entire teams or outsourcing the work to BPOs at significant cost.",
+                useCase: "Applied Systems launched Automated Statements, an AI-powered tool that records and reconciles direct bill commissions and agency bill payables. The AI matches carrier statements to agency records, flags exceptions, and posts entries automatically — working across the mixed formats statements arrive in.",
+                outcomes: "<strong>Dramatically cut reconciliation cycles and error rates</strong>, eliminating the need for dedicated reconciliation teams in many agencies and removing a recurring outsourcing cost.",
+                source: "Applied Systems",
+                sourceUrl: "https://www1.appliedsystems.com/en-us/blog/posts/how-ai-is-transforming-insurance-agency-experience/"
+              }
+            }
+          ],
+          caseStudy: {
+            company: "Applied Systems",
+            year: "2024",
+            title: "AI-powered Automated Statements for commission reconciliation",
+            context: "Insurance agencies dealing with direct bill commission reconciliation faced a manual, high-effort process — in some agencies, entire teams were dedicated to matching carrier statements against internal records, consuming over 15 hours of staff time per week.",
+            useCase: "Applied Systems launched its AI-powered Automated Statements tool. The AI matches carrier statements to agency records, flags exceptions, and posts entries automatically.",
+            outcomes: "<strong>Dramatically cut reconciliation cycles and error rates</strong>, eliminating the need for dedicated reconciliation teams in many agencies.",
+            source: "Applied Systems",
+            sourceUrl: "https://www1.appliedsystems.com/"
+          }
+        }
+      ]
+    },
+    {
+      num: "02", title: "Quoting and Underwriting",
+      subdomains: [
+        {
+          id: "2.1", title: "Quoting",
+          activities: ["Calculate & Present Quote", "Configure Cover & Options", "Manage Quote Pipeline", "Multi-Quote / Tender Response"],
+          caseStudy: null
+        },
+        {
+          id: "2.2", title: "Underwriting",
+          activities: ["Risk Assessment", "Underwriting Decisioning", "Referrals & Exception Handling", "Underwriter Guidance & Knowledge Support", "Data Enrichment & Third-Party Lookups"],
+          caseStudy: {
+            company: "Liberty Mutual (with Groundspeed Analytics)",
+            year: "2024",
+            title: "AI for commercial underwriting loss-data extraction",
+            context: "Mid-size and large commercial accounts arrive with loss runs in unstructured PDFs, scanned documents, and inconsistent formats. Liberty Mutual's underwriters had to manually extract and structure this loss history before they could quote — a slow process that delayed competitive responses to brokers. Liberty Mutual is the 6th-largest global property and casualty insurer with $43.2bn in revenue and over 45,000 employees in 29 countries.",
+            useCase: "Partnered with Groundspeed Analytics to deploy AI that transforms unstructured loss documents into structured, enriched, clean information and routes it directly to underwriters. Sits within a broader Liberty Mutual GenAI strategy that has also produced 'LibertyGPT' — an internal LLM used by 1 in 4 employees across underwriting, claims, tech, and marketing.",
+            outcomes: "<strong>Cut the average time to extract loss data in half</strong> for mid-size and large accounts, yielding faster underwriting and more competitive quotes. Allianz's parallel BRIAN underwriting tool similarly compressed complex submission cycles from <strong>days to under 15 minutes</strong>, with risk assessment accuracy improving by <strong>up to 43%</strong>.",
+            source: "Liberty Mutual Press Release / CIO Dive",
+            sourceUrl: "https://www.libertymutualgroup.com/about-lm/news/articles/liberty-mutual-continues-harness-artificial-intelligence-enhance-commercial-insurance-underwriting"
+          }
+        },
+        {
+          id: "2.3", title: "Policy Issuance & Renewals",
+          activities: ["Manage Application / New Business", "Generate & Deliver Policy Documents", "Manage Renewals", "Manage Customer Relationships"],
+          caseStudy: {
+            company: "Liberty International Underwriters",
+            year: "2024",
+            title: "Automated document generation across the policy lifecycle",
+            context: "Liberty International Underwriters (LIU), Liberty Mutual's largest specialty subsidiary, handles high-value commercial property, liability, casualty, and specialty insurance — including unusual cases like product contamination, kidnapping, and ransom. A single policy can contain hundreds of endorsements forming a document pack frequently exceeding 1,000 pages. Manual document production at this scale was time-consuming and risky — even small errors in limits, deductibles, or clauses created legal exposure.",
+            useCase: "Deployed ActiveDocs across the policy lifecycle (quoting, binding, issuance, renewals) to automate generation of complex policy documents. 16 different systems run inside the business, some in 'push-button' automated mode for high-volume products and others in user-driven mode for bespoke cases. The system inserts correct endorsements and clause wording automatically and integrates with core systems.",
+            outcomes: "Now automates document generation for the <strong>20 most-used product lines</strong> with more added every day. Eliminated manual production for high-volume products entirely and dramatically reduced review burden for complex specialty cases — without IT involvement to create or modify templates.",
+            source: "ActiveDocs Case Study",
+            sourceUrl: "https://www.activedocs.com/case_studies/liberty_international_underwriters.html"
+          }
+        },
+        {
+          id: "2.4", title: "Bill & Collect Premiums",
+          activities: ["Produce Bill / Statements", "Manage Changes to Payment Details", "Process Receipts", "Perform Collection"],
+          caseStudy: {
+            company: "UiPath Insurance Clients",
+            year: "2024",
+            title: "AI-powered billing and collections automation",
+            context: "Multiple insurance carriers needed to scale billing operations without proportional headcount growth, and faced high manual effort across statement generation, payment matching, failed payment retries, and exception routing.",
+            useCase: "Deployed UiPath's AI-powered billing automation. AI agents handle statement generation, payment matching, failed payment retries, and exception routing without human intervention.",
+            outcomes: "Saved over <strong>15,000 employee hours per month</strong> across billing and collections. Documentation time fell <strong>40%</strong>, turnaround <strong>50%</strong>, with <strong>99.5% data accuracy</strong> and a <strong>30% reported ROI</strong>.",
+            source: "UiPath / CDP Center",
+            sourceUrl: "https://www.uipath.com/"
+          }
+        }
+      ]
+    },
+    {
+      num: "03", title: "Policy Servicing",
+      subdomains: [
+        {
+          id: "3.1", title: "Customer Service Operations",
+          activities: ["Develop Customer Service Strategy", "Fulfil Customer Service Requirements", "Manage Service Delivery", "Measure and Improve Service", "Manage Contact Channels"],
+          caseStudy: {
+            company: "Zurich Insurance",
+            year: "2024",
+            title: "AI-driven CRM across four markets",
+            context: "Zurich needed to consolidate fragmented customer data and unify agent experience across phone, email, and WhatsApp, while reducing servicing times and improving claim handling consistency.",
+            useCase: "Launched an AI-powered CRM in January 2024, built on Microsoft Dynamics 365 with Copilot for Sales. A 'three-click rule' was embedded in the design — agents access any customer record or complete any task in three clicks or fewer. A separate AI claims chatbot now handles 35% of all claim requests.",
+            outcomes: "Servicing times dropped by <strong>over 70%</strong> across four pilot markets. The claims chatbot cut average processing time by <strong>30%</strong> with an <strong>80% Net Promoter Score</strong>.",
+            source: "Microsoft Customer Stories",
+            sourceUrl: "https://customers.microsoft.com/"
+          }
+        },
+        {
+          id: "3.2", title: "Policy Administration",
+          activities: ["Manage Endorsements", "Mid-Term Adjustments", "Policy Data Maintenance", "Coverage Changes", "Audit Trail & Compliance Records"],
+          caseStudy: {
+            company: "Major US Insurer (Nomad Data Doc Chat)",
+            year: "2024",
+            title: "AI-powered endorsement processing at scale",
+            context: "Endorsements — the mid-term changes that update coverage, add locations, modify limits, or exclude new exposures — are high-volume, document-heavy, and high-risk. Each request requires cross-referencing dense 100+ page policy documents, comparing against schedules and regulatory notices, and flagging conflicts. A major US insurer reported receiving <strong>thousands of endorsement requests weekly</strong>, with dedicated teams whose entire job was reviewing, interpreting, and manually processing them.",
+            useCase: "Deployed Nomad Data's Doc Chat AI agent to automate endorsement intake and cross-document verification. The system reads requests in any format (emails, scanned letters, digital forms, handwritten notes), parses them against the original policy and prior endorsements, flags coverage conflicts and regulatory gaps, and routes for review or auto-approval.",
+            outcomes: "Transformed endorsement processing from a 'necessary administrative cost centre to a strategic, value-generating function.' Insurers using similar AI policy-administration agents report cycle times <strong>compressed from days to minutes</strong> for high-volume change types, with audit-readiness time <strong>cut 60–80%</strong>.",
+            source: "Nomad Data",
+            sourceUrl: "https://www.nomad-data.com/doc-chat/ai-powered-policy-endorsement-processing-revolutionizing-mid-term-changes-in-insurance-servicing"
+          }
+        },
+        {
+          id: "3.3", title: "Retention & Cross-Sell",
+          activities: ["Predict Customer Churn", "Trigger Retention Actions", "Identify Cross-Sell / Up-Sell Opportunities", "Customer Lifetime Value Modelling", "Renewal Engagement"],
+          caseStudy: {
+            company: "Nationwide Insurance (with H2O.ai)",
+            year: "2024",
+            title: "Centralised AI model factory for churn, retention & customer expansion",
+            context: "Nationwide, a top US P&C carrier, had a sprawling set of analytics use cases — customer churn, retention, call routing, risk segmentation, fraud, underwriting, customer expansion — but lacked a single platform to develop, deploy, and monitor models consistently. Bespoke modelling per use case was slow and inconsistent.",
+            useCase: "Powered by H2O Driverless AI, Nationwide built a centralised data science team and a unique, patented 'model factory' that monitors all AI/ML models across the business. The agile team rapidly explores data with feature engineering and prototypes models for customer churn, retention, cross-sell, call routing, risk and business segmentation, fraud, underwriting, and customer-360 use cases.",
+            outcomes: "Enabled stable, statistically unbiased models that the business can trust in production. Quote from Nationwide's VP of Predictive Analytics: 'We are able to do more with less and do it faster.' The model factory pattern has become a reference architecture for other P&C carriers building scaled AI capability.",
+            source: "H2O.ai / Emerj AI Research",
+            sourceUrl: "https://h2o.ai/case-studies/nationwide-insurance-delivers-exceptional-protection-for-members-with-h2o-ai/"
+          }
+        }
+      ]
+    },
+    {
+      num: "04", title: "Claims",
+      subdomains: [
+        {
+          id: "4.1", title: "Initial Claim Setup",
+          activities: ["Receive Claim Notice (FNOL)", "Triage / Assign Claim", "Perform Investigation", "Constituent Set Up"],
+          caseStudy: {
+            company: "Aviva",
+            year: "2024",
+            title: "AI-powered triage and routing",
+            context: "As part of an 80+ AI model deployment across the claims journey, Aviva targeted the intake and triage stage — a high-volume bottleneck where mis-routing extended liability assessment timelines on complex cases.",
+            useCase: "Applied AI at intake and triage to automatically classify inbound claims by type, severity, and complexity, and route them to the right specialist team.",
+            outcomes: "Routing accuracy improved by <strong>30%</strong> and liability assessment time for complex cases was cut by <strong>23 days</strong>. The full claims transformation saved Aviva <strong>more than £60 million in 2024</strong> and reduced customer complaints by <strong>65%</strong>.",
+            source: "McKinsey / Thomson Reuters",
+            sourceUrl: "https://legal.thomsonreuters.com/blog/ai-is-transforming-insurance-and-the-law-firms-that-serve-it-must-keep-pace/"
+          }
+        },
+        {
+          id: "4.2", title: "Claims Assessment & Adjudication",
+          activities: ["Determine Loss Control", "Determine Salvage", "Evaluate Fraud", "Manage Exposure", "Manage Claim Reserves", "Determine Reinsurance", "Determine Subrogation"],
+          caseStudy: {
+            company: "Allianz",
+            year: "2024",
+            title: "'Incognito' Fraud Detection System",
+            context: "Fabricated or manipulated evidence — subtle image distortions, doctored documents — routinely slips past human adjusters, creating material leakage across motor and property books.",
+            useCase: "Deployed 'Incognito' across motor claims, home insurance claims, and applications. The system analyses distortions and anomalies in images, video, and documents to detect tampered evidence.",
+            outcomes: "<strong>29% increase in fraud detection</strong> across all channels, materially reducing leakage on the book.",
+            source: "CDP Center / Risk & Insurance",
+            sourceUrl: "https://riskandinsurance.com/"
+          }
+        },
+        {
+          id: "4.3", title: "Claims Operations",
+          activities: ["Manage Vendor Relationships", "Manage Litigation & Legal Spend", "Manage / Review Billing", "Manage Claim Department", "Perform Reporting", "Knowledge & Quality Management"],
+          caseStudy: {
+            company: "Aviva (claims operations layer)",
+            year: "2024",
+            title: "80+ AI models across claims operations",
+            context: "Beyond intake and triage, the day-to-day machinery of claims operations — vendor coordination, litigation management, billing review, and departmental reporting — was a major source of leakage and lag. Aviva approached this with a portfolio rather than a point-solution strategy, layering AI across the entire operation.",
+            useCase: "Deployed more than 80 AI models across the claims operation, covering vendor performance, legal spend, departmental KPIs, and case-routing optimisation. AI-generated reports, legal correspondence drafts, and quality-assurance signals feed directly into adjuster and operations-manager workflows. One large carrier (referenced alongside Aviva) now generates approximately 50,000 claims-related communications daily using AI.",
+            outcomes: "Aviva's full claims transformation <strong>saved more than £60 million ($79.3m) in 2024</strong>, cut customer complaints by <strong>65%</strong>, and improved routing accuracy by <strong>30%</strong>. AI leaders in insurance have generated more than <strong>six times the total shareholder return</strong> of laggard peers over the past five years.",
+            source: "Thomson Reuters / McKinsey",
+            sourceUrl: "https://legal.thomsonreuters.com/blog/ai-is-transforming-insurance-and-the-law-firms-that-serve-it-must-keep-pace/"
+          }
+        },
+        {
+          id: "4.4", title: "Negotiate & Settle Claims",
+          activities: ["Issue Payment", "Perform Claims Audit", "Settlement Recommendation Drafting"],
+          caseStudy: {
+            company: "Allianz Austria",
+            year: "2024",
+            title: "Insurance Copilot for Settlement",
+            context: "Automotive claims settlement required adjusters to synthesise claim evidence, policy terms, and precedent to negotiate and authorise payment — a high-touch, time-intensive stage of the claims lifecycle.",
+            useCase: "Launched the Insurance Copilot — a generative AI tool that drafts settlement recommendations and payment authorisations. Adjusters can accept, modify, or escalate the AI's proposals.",
+            outcomes: "Cut settlement cycle time significantly. A comparable US travel insurer using AI settlement automation cut claims processing <strong>from weeks to minutes</strong> and achieved <strong>57% straight-through processing</strong>.",
+            source: "Allianz Media / CDP Center",
+            sourceUrl: "https://www.allianz.com/en/press.html"
+          }
+        }
+      ]
+    },
+    {
+      num: "05", title: "Risk, Capital & Investment Management",
+      subdomains: [
+        {
+          id: "5.1", title: "Manage Investments",
+          activities: ["Manage Portfolio", "Perform Investment Accounting", "Process Transactions", "Monitor Assets", "Perform Private Asset Origination", "Select Assets"],
+          caseStudy: {
+            company: "Allianz & AXA",
+            year: "2024–2025",
+            title: "AI-driven portfolio optimisation and ALM",
+            context: "Complex capital risk calculations and asset-liability management (ALM) require modelling across vast datasets — historically constrained by compute time and, for multinational insurers, by data residency rules across jurisdictions.",
+            useCase: "Allianz partnered with quantum computing startup IQM to explore quantum-enhanced AI for portfolio optimisation. AXA runs sophisticated in-house AI-driven ALM models using a federated learning architecture that trains across multiple country datasets without breaching data privacy rules.",
+            outcomes: "Early Allianz results show a potential <strong>40% improvement in computational efficiency</strong> for complex risk modelling. AXA's approach improved risk assessment accuracy by <strong>30%</strong>.",
+            source: "Klover.ai / Emerj AI Research",
+            sourceUrl: "https://emerj.com/"
+          }
+        },
+        {
+          id: "5.2", title: "Capital & Solvency Management",
+          activities: ["Capital Modelling", "Solvency Calculations", "Regulatory Reporting (QRT / SCR)", "Stress Testing", "Reinsurance Optimisation"],
+          caseStudy: {
+            company: "Munich Re",
+            year: "2024",
+            title: "AI-augmented Solvency II management & Earnings Stabilisation",
+            context: "Under Solvency II, large European insurers must produce 740+ data points per quarter across Quantitative Reporting Templates (QRTs), typically with around 38 manual overrides from claims files. At Munich Re's scale (90,000 employees globally, 300% Solvency II ratio in 2024), this is a 4-day sprint involving ~22 actuarial staff. The same regulatory regime forces continuous active management of the solvency ratio against stress scenarios.",
+            useCase: "Munich Re developed its Earnings Stabilisation tool — a capital management product that uses Solvency II's own stress-scenario sensitivity logic to dynamically trigger reinsurance cover when underwriting income falls below a defined corridor. AI augments the surrounding capital management stack: automating QRT data assembly, monitoring stress sensitivities, and supporting regulatory reporting cycles.",
+            outcomes: "Enabled <strong>active and accurate solvency ratio management</strong> for life and health insurers operating under Solvency II. The earnings-stabilisation cover mechanism is now embedded in Munich Re's solutions portfolio for clients facing low interest rates and increasing capital requirements.",
+            source: "Munich Re / Gosign Munich",
+            sourceUrl: "https://www.munichre.com/en/solutions/reinsurance-life-health/capital-management-for-life-insurance-companies.html"
+          }
+        },
+        {
+          id: "5.3", title: "Enterprise Risk Management",
+          activities: ["Identify Emerging Risks", "Climate & Catastrophe Modelling", "Scenario Analysis", "ESG Risk Monitoring", "Cyber Risk Modelling", "Risk Aggregation & Reporting"],
+          caseStudy: {
+            company: "AXA",
+            year: "2023–2025",
+            title: "AXA Wildfire + NVIDIA Earth-2 climate risk platform",
+            context: "Traditional catastrophe models are constrained by the limited historical record of extreme weather events. As climate volatility increases, insurers using past data to predict future losses are systematically under-pricing risk — and increasingly walking away from coverage that's no longer viable.",
+            useCase: "AXA launched AXA Wildfire in 2023 — a service that combines AI with geospatial analytics to assess topography, vegetation, wind patterns, and human infrastructure in real time, providing up to 48 hours' warning of elevated fire risk with tailored mitigation advice. In parallel, AXA partnered with NVIDIA's Earth-2 platform to run high-resolution climate and weather simulations for hurricane risk research, generating synthetic event datasets that go beyond the limits of historical record.",
+            outcomes: "Reflects AXA's broader shift from <strong>payer of claims to proactive risk partner</strong>. In Evident's 2025 AI Index for Insurance, AXA was ranked <strong>#1 of 30 leading insurers</strong> for AI adoption, with Allianz close behind. The service extended into operational disaster management during the January 2025 Los Angeles fires.",
+            source: "Computing / Klover.ai / Evident AI Index",
+            sourceUrl: "https://www.computing.co.uk/feature/2026/how-axa-using-ai-rewrite-insurance-model"
+          }
+        }
+      ]
+    }
+  ],
+  enabling: [
+    {
+      num: "06", title: "Finance",
+      subdomains: [
+        {
+          id: "6.1", title: "Transactional Finance",
+          activities: ["Accounts Payable", "Accounts Receivable", "General Ledger Accounting", "Tax Accounting", "Fixed Asset Accounting", "Reconciliations"],
+          caseStudy: {
+            company: "Enterprise AP Automation Benchmarks",
+            year: "2024–2025",
+            title: "AI-driven AP automation in scaled finance operations",
+            context: "Insurance carriers run high-volume accounts payable functions across reinsurance, claims vendors, IT spend, and operational suppliers. The traditional AP function relies on manual invoice keying, multi-screen data entry, and email-based approvals — a pattern that breaks down at scale and creates a recurring source of late payments, missed early-pay discounts, and reconciliation errors.",
+            useCase: "Enterprises (including insurance carriers) deploying AI-powered AP platforms (Coupa, UiPath agentic AP, HighRadius) automate invoice ingestion via OCR/NLP, three-way matching, exception routing, and approval workflow. Modern agentic systems handle non-standard cases, draft supplier communications autonomously, and provide reasoning for discrepancies.",
+            outcomes: "Coupa's enterprise customers report <strong>invoice processing costs dropping 70%+</strong> with <strong>first-time match rates above 97%</strong>. A multinational manufacturing case (analogous in invoice volume to a large insurer) processes <strong>80,000 supplier invoices annually</strong> with materially reduced manual handling. Insurance-specific platforms report data capture accuracy <strong>up to 99%</strong> with <strong>processing cost reductions of 80%</strong>.",
+            source: "Coupa / HighRadius / Cognizant",
+            sourceUrl: "https://www.coupa.com/blog/ap-automation-case-studies/"
+          }
+        },
+        {
+          id: "6.2", title: "Planning, Performance & Reporting",
+          activities: ["Budgeting / Forecasting", "Cost Management", "Financial Analysis & Reporting", "Management Reporting", "Treasury & Cash Forecasting"],
+          caseStudy: {
+            company: "Munich Re",
+            year: "2024",
+            title: "45,000 AI models for financial forecasting",
+            context: "Reserving, financial planning, and personalised pricing all depend on accurate estimates of future spending, loss ratios, and customer behaviour — a forecasting problem far too large for traditional actuarial methods alone.",
+            useCase: "Implemented a suite of 45,000 AI models across the finance function to estimate future spending patterns, loss ratios, and customer behaviour. Outputs feed directly into financial planning, budgeting, and forecasting cycles.",
+            outcomes: "Enabled <strong>more accurate reserve-setting and personalised pricing at scale</strong>. Across the sector, AI applied to finance automation (AP, GL reconciliation, audit) is <strong>accelerating month-end close times by 30–50%</strong>.",
+            source: "CDP Center / McKinsey",
+            sourceUrl: "https://www.mckinsey.com/industries/financial-services/our-insights/insurance"
+          }
+        }
+      ]
+    },
+    {
+      num: "07", title: "HR Function",
+      subdomains: [
+        {
+          id: "7.1", title: "Organisation Management",
+          activities: ["Plan & Manage Employee Resources"],
+          caseStudy: {
+            company: "Workday Illuminate",
+            year: "2024",
+            title: "AI-driven workforce planning",
+            context: "Insurance carriers needed to match headcount against projected business volumes and respond faster to capacity gaps — a workflow historically handled in spreadsheets and quarterly planning cycles.",
+            useCase: "Workday's Illuminate platform was adopted by multiple insurance carriers in 2024. Its AI agents autonomously handle workforce planning workflows — matching headcount needs against projected business volumes, flagging capacity gaps, and recommending resource reallocation.",
+            outcomes: "Insurance clients reported a <strong>49% improvement in HR task automation</strong> across planning and admin functions.",
+            source: "Workday / Codebridge",
+            sourceUrl: "https://www.workday.com/"
+          }
+        },
+        {
+          id: "7.2", title: "Recruitment",
+          activities: ["Manage Recruiting & Employee Integration"],
+          caseStudy: {
+            company: "Mid-Sized Insurer",
+            year: "2024",
+            title: "AI hiring workflows",
+            context: "Insurance hiring at scale — particularly for claims, sales, and operations roles — involves heavy manual screening of resumes and interview coordination, slowing time-to-hire and producing inconsistent quality.",
+            useCase: "Adopted AI-powered hiring workflows covering resume screening, candidate scoring, interview scheduling, and integration onboarding. AXA, Allstate, and AIA are similarly integrating AI into candidate sourcing and screening.",
+            outcomes: "Reduced time-to-hire by <strong>60%</strong> and improved quality-of-hire scores by <strong>more than 30%</strong>.",
+            source: "The Talent Pool / PwC",
+            sourceUrl: "https://www.pwc.com/"
+          }
+        },
+        {
+          id: "7.3", title: "Employee Lifecycle Management",
+          activities: ["Manage Employee Union Activities", "Monitor Employee Health & Safety", "Manage Employee Separation Process"],
+          caseStudy: {
+            company: "Large Insurance Firm using Ema",
+            year: "2024",
+            title: "Agentic AI for HR operations",
+            context: "Managing workforce lifecycle workflows — onboarding, compliance tracking, capacity planning — across a large insurance firm produced both downtime gaps and overload risks. Predicting and balancing workloads dynamically required more than rule-based scheduling.",
+            useCase: "Integrated Ema's agentic AI into HR operations. Ema's algorithms analyse historical data to predict workload spikes and dynamically reallocate employee resources.",
+            outcomes: "Organisations with AI-driven onboarding report an <strong>82% improvement in new hire retention</strong> and a <strong>40% reduction in time-to-productivity</strong>.",
+            source: "Ema.co / inFeedo",
+            sourceUrl: "https://www.ema.co/"
+          }
+        },
+        {
+          id: "7.4", title: "Compensation & Benefits",
+          activities: ["Administer Employee Benefits", "Manage Payroll", "Perform Employee Benefit & Enrolment", "Perform Employee Data & Salary Administration"],
+          caseStudy: {
+            company: "Humana & IBM",
+            year: "2024",
+            title: "AI benefits virtual agent",
+            context: "Employees and health plan members needed personalised, accurate information on benefits, coverage, claims, and healthcare costs — historically delivered through call centres or static portals, both expensive and inconsistent.",
+            useCase: "Humana partnered with IBM to deploy an AI-powered virtual agent that handles enrolment queries, plan comparisons, and benefits explanations at scale.",
+            outcomes: "IBM's equivalent internal AskHR system automated <strong>80+ HR tasks</strong> and handled <strong>over 2.1 million employee conversations in 2024</strong>, achieving a <strong>94% containment rate</strong> — fewer than 1 in 16 queries required human escalation.",
+            source: "IBM Case Studies / CDP Center",
+            sourceUrl: "https://www.ibm.com/case-studies/"
+          }
+        },
+        {
+          id: "7.5", title: "Learning & Development",
+          activities: ["Develop & Train Workforce"],
+          caseStudy: {
+            company: "Allianz",
+            year: "2024",
+            title: "Upskilling 6,000+ employees with AI",
+            context: "As AI tools were introduced across underwriting, claims, and operations, Allianz needed to ensure staff could apply them in day-to-day work — not just understand them theoretically.",
+            useCase: "Partnered with DataCamp to upskill more than 6,000 employees in data literacy and AI skills. The initiative prioritised practical, role-relevant AI skills over theoretical training. Swiss Re runs a parallel AI awareness and training programme covering AI risks, responsibilities, and productivity applications.",
+            outcomes: "Enabled staff across underwriting, claims, and operations to apply AI tools directly in their day-to-day work, supporting the broader AI rollout.",
+            source: "DataCamp / Swiss Re",
+            sourceUrl: "https://www.datacamp.com/"
+          }
+        }
+      ]
+    },
+    {
+      num: "08", title: "IT Function",
+      subdomains: [
+        {
+          id: "8.1", title: "Service Portfolio Management",
+          activities: ["Service Catalogue", "Service Level", "Lifecycle", "Bill Calculation & Invoicing"],
+          caseStudy: {
+            company: "CNP Assurances",
+            year: "2024",
+            title: "AI for service qualification and acceptance",
+            context: "Analysing and qualifying health questionnaires was a manual, high-touch process generating large review queues and slow turnaround for prospective customers.",
+            useCase: "Deployed AI to automatically analyse and qualify health questionnaires against acceptance criteria in real time. GEICO similarly deployed an AI chatbot across its service portfolio that independently resolved over 60% of customer support inquiries.",
+            outcomes: "Raised the automatic acceptance rate to <strong>over 80%</strong>, dramatically reducing manual review queues.",
+            source: "CDP Center / ITSM.tools",
+            sourceUrl: "https://itsm.tools/"
+          }
+        },
+        {
+          id: "8.2", title: "Service Transition",
+          activities: ["Change Management", "Release & Deployment", "Configuration & Asset Management", "Service Testing & Acceptance", "Knowledge Management"],
+          caseStudy: null,
+          emptyNote: "No insurance-specific public case study identified for AI applied directly to IT service transition (change management, release pipelines, CMDB). However, general ITSM surveys show 48% of IT leaders identify process optimisation as their top AI use case in ITSM, with AI-assisted change advisory boards and automated regression testing gaining traction in financial services broadly."
+        },
+        {
+          id: "8.3", title: "Service Operations",
+          activities: ["Service Desk", "Event Management", "Incident Management", "Availability Management", "Capacity Management", "Request Fulfilment", "Security Management", "Service Continuity", "Access Management", "Problem Management", "Service Reporting", "Risk & Compliance"],
+          caseStudy: {
+            company: "AXA XL",
+            year: "2024",
+            title: "AI-automated risk engineering operations",
+            context: "Processing property site survey reports was a manual, specialist-intensive process for risk engineers, creating a bottleneck on SLA turnaround for service requests and pulling expensive talent away from higher-value analysis.",
+            useCase: "Deployed AI to automate data extraction and analysis from property site survey reports. The system now processes over 10,000 survey reports annually.",
+            outcomes: "Freed risk engineers for higher-value analysis and accelerated SLA turnaround. Across IT service operations, insurers deploying AI report <strong>30–40% productivity gains</strong> in incident routing, request fulfilment, and problem management, with policy coverage verification time falling <strong>from 15–20 minutes to seconds</strong>.",
+            source: "Emerj AI Research / Datagrid",
+            sourceUrl: "https://emerj.com/"
+          }
+        }
+      ]
+    }
+  ]
+};
+
+// =================== RENDER ===================
+function renderDomain(domain, isEnabling = false) {
+  const subdomainHTML = domain.subdomains.map(s => {
+    const hasCase = !!s.caseStudy || !!s.emptyNote;
+    const pillClass = s.caseStudy ? 'case-pill' : (s.emptyNote ? 'case-pill none' : '');
+    const pillText = s.caseStudy ? 'View case' : (s.emptyNote ? 'Sector view' : '');
+    const pillHTML = hasCase
+      ? `<button class="${pillClass}" data-subdomain-id="${s.id}" data-click-type="subdomain-case">${pillText}</button>`
+      : '';
+
+    const examplesBtnHTML = hasCase
+      ? `<button class="examples-btn" data-subdomain-id="${s.id}" data-click-type="subdomain-case">See live example →</button>`
+      : '';
+
+    const activitiesHTML = s.activities.map((a, idx) => {
+      const name = typeof a === 'string' ? a : a.name;
+      const hasLeafCase = typeof a === 'object' && !!a.caseStudy;
+      return `<span class="activity ${hasLeafCase ? 'has-leaf-case' : ''}"
+                    data-click-type="leaf"
+                    data-subdomain-id="${s.id}"
+                    data-leaf-idx="${idx}">${name}</span>`;
+    }).join('');
+
+    // Assessment block — two sliders for current/target maturity
+    const assessmentHTML = `
+      <div class="assessment-block" data-subdomain-id="${s.id}">
+        <div class="slider-row">
+          <div class="slider-label">Current</div>
+          <input type="range" class="slider current unset" min="0" max="5" step="1" value="0"
+                 data-subdomain-id="${s.id}" data-slider-type="current" />
+          <div class="slider-value unset" data-display="current-${s.id}">–</div>
+        </div>
+        <div class="slider-row">
+          <div class="slider-label target">Target</div>
+          <input type="range" class="slider target unset" min="0" max="5" step="1" value="0"
+                 data-subdomain-id="${s.id}" data-slider-type="target" />
+          <div class="slider-value unset" data-display="target-${s.id}">–</div>
+        </div>
+        <div class="gap-indicator" data-gap="${s.id}" style="display:none;"></div>
+      </div>
+    `;
+
+    return `
+      <div class="subdomain" data-subdomain-id="${s.id}" data-click-type="subdomain-expand">
+        <div class="subdomain-head">
+          <div class="subdomain-title-wrap">
+            <svg class="subdomain-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 6 15 12 9 18"></polyline>
+            </svg>
+            <div class="subdomain-title">${s.id} · ${s.title}</div>
+            <svg class="shortlist-star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+          </div>
+          ${pillHTML}
+        </div>
+        ${assessmentHTML}
+        ${examplesBtnHTML}
+        <div class="activities">${activitiesHTML}</div>
+      </div>
+    `;
+  }).join('');
+
+  return `
+    <div class="domain ${isEnabling ? 'enabling' : ''}" data-domain-num="${domain.num}">
+      <div class="domain-header">
+        <div class="domain-title-block">
+          <div class="domain-number">DOMAIN ${domain.num}</div>
+          <div class="domain-title">${domain.title}</div>
+        </div>
+        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </div>
+      <div class="subdomains">${subdomainHTML}</div>
+    </div>
+  `;
+}
+
+document.getElementById('core-grid').innerHTML = DATA.core.map(d => renderDomain(d, false)).join('');
+document.getElementById('enabling-grid').innerHTML = DATA.enabling.map(d => renderDomain(d, true)).join('');
+
+// =================== INTERACTIONS ===================
+
+// Domain expand/collapse
+document.querySelectorAll('.domain-header').forEach(header => {
+  header.addEventListener('click', () => {
+    header.parentElement.classList.toggle('collapsed');
+  });
+});
+
+// Expand / collapse all
+document.querySelectorAll('[data-action]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const action = btn.dataset.action;
+    document.querySelectorAll('[data-action]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.domain').forEach(d => {
+      if (action === 'expand-all') d.classList.remove('collapsed');
+      else d.classList.add('collapsed');
+    });
+  });
+});
+
+// Filter
+document.querySelectorAll('[data-filter]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const filter = btn.dataset.filter;
+    document.querySelectorAll('[data-filter]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.subdomain').forEach(s => {
+      const hasCaseButton = !!s.querySelector('.case-pill');
+      if (filter === 'all') s.style.display = '';
+      else s.style.display = hasCaseButton ? '' : 'none';
+    });
+    document.querySelectorAll('.domain').forEach(d => {
+      const visible = [...d.querySelectorAll('.subdomain')].some(s => s.style.display !== 'none');
+      d.style.opacity = visible ? '' : '0.35';
+    });
+  });
+});
+
+// Modal refs
+const modal = document.getElementById('modal-backdrop');
+const modalEyebrow = document.getElementById('modal-eyebrow');
+const modalPath = document.getElementById('modal-path');
+const modalTitle = document.getElementById('modal-title');
+const modalBody = document.getElementById('modal-body');
+const modalFooter = document.getElementById('modal-footer');
+
+function findSubdomain(id) {
+  for (const d of [...DATA.core, ...DATA.enabling]) {
+    const found = d.subdomains.find(s => s.id === id);
+    if (found) return { sub: found, domain: d };
+  }
+  return null;
+}
+
+function openCaseModal(subId) {
+  const found = findSubdomain(subId);
+  if (!found) return;
+  const { sub, domain } = found;
+
+  modalPath.textContent = `${domain.num} · ${domain.title}  →  ${sub.id} · ${sub.title}`;
+
+  if (sub.caseStudy) {
+    const cs = sub.caseStudy;
+    modalEyebrow.textContent = `AI Case Study · ${cs.company}`;
+    modalTitle.textContent = cs.title;
+    modalBody.innerHTML = `
+      <div class="modal-section">
+        <div class="modal-section-label">Context</div>
+        <div class="modal-section-body">${cs.context}</div>
+      </div>
+      <div class="modal-section">
+        <div class="modal-section-label">Use case</div>
+        <div class="modal-section-body">${cs.useCase}</div>
+      </div>
+      <div class="modal-section">
+        <div class="modal-section-label">Outcomes</div>
+        <div class="modal-section-body">${cs.outcomes}</div>
+      </div>
+    `;
+    modalFooter.innerHTML = `
+      <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
+        <button class="modal-shortlist-btn" id="modal-shortlist-btn" data-shortlist-target="${sub.id}::sub">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16l-7-3-7 3z"/></svg>
+          <span class="modal-shortlist-label">Add to shortlist</span>
+        </button>
+        <div class="modal-source">Source: <a href="${cs.sourceUrl}" target="_blank" rel="noopener" class="modal-source-link">${cs.source}</a></div>
+      </div>
+      <div class="modal-year">${cs.year}</div>
+    `;
+    wireModalShortlistButton();
+  } else if (sub.emptyNote) {
+    modalEyebrow.textContent = 'Sector observation';
+    modalTitle.textContent = sub.title;
+    modalBody.innerHTML = `
+      <div class="modal-section">
+        <div class="modal-section-label">No insurance-specific case study identified</div>
+        <div class="no-case-body">${sub.emptyNote}</div>
+      </div>
+    `;
+    modalFooter.innerHTML = `
+      <button class="modal-shortlist-btn" id="modal-shortlist-btn" data-shortlist-target="${subId}::sub">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16l-7-3-7 3z"/></svg>
+        <span class="modal-shortlist-label">Add to shortlist</span>
+      </button>
+    `;
+    wireModalShortlistButton();
+  }
+
+  modal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function openLeafModal(subId, leafIdx) {
+  const found = findSubdomain(subId);
+  if (!found) return;
+  const { sub, domain } = found;
+  const leaf = sub.activities[leafIdx];
+  const leafName = typeof leaf === 'string' ? leaf : leaf.name;
+  const leafCase = typeof leaf === 'object' ? leaf.caseStudy : null;
+
+  modalPath.textContent = `${domain.num} · ${domain.title}  →  ${sub.id} · ${sub.title}  →  ${leafName}`;
+
+  if (leafCase) {
+    modalEyebrow.textContent = `AI Case Study · ${leafCase.company}`;
+    modalTitle.textContent = leafCase.title;
+    modalBody.innerHTML = `
+      <div class="modal-section">
+        <div class="modal-section-label">Context</div>
+        <div class="modal-section-body">${leafCase.context}</div>
+      </div>
+      <div class="modal-section">
+        <div class="modal-section-label">Use case</div>
+        <div class="modal-section-body">${leafCase.useCase}</div>
+      </div>
+      <div class="modal-section">
+        <div class="modal-section-label">Outcomes</div>
+        <div class="modal-section-body">${leafCase.outcomes}</div>
+      </div>
+    `;
+    modalFooter.innerHTML = `
+      <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
+        <button class="modal-shortlist-btn" id="modal-shortlist-btn" data-shortlist-target="${subId}::leaf::${leafIdx}">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16l-7-3-7 3z"/></svg>
+          <span class="modal-shortlist-label">Add to shortlist</span>
+        </button>
+        <div class="modal-source">Source: <a href="${leafCase.sourceUrl}" target="_blank" rel="noopener" class="modal-source-link">${leafCase.source}</a></div>
+      </div>
+      <div class="modal-year">${leafCase.year}</div>
+    `;
+    wireModalShortlistButton();
+  } else {
+    modalEyebrow.textContent = 'Activity';
+    modalTitle.textContent = leafName;
+    const subCaseHint = sub.caseStudy
+      ? `<p style="margin-top:10px;font-size:13px;color:var(--text-muted);">The <strong style="color:var(--accent);">${sub.id} · ${sub.title}</strong> sub-domain has a documented case study — open it for a representative example covering this activity area.</p>`
+      : '';
+    modalBody.innerHTML = `
+      <div class="modal-section">
+        <div class="modal-section-label">No leaf-specific case study yet</div>
+        <div class="no-case-body">
+          This activity sits within <strong style="color:var(--accent);">${domain.num} · ${domain.title}</strong> → <strong style="color:var(--accent);">${sub.id} · ${sub.title}</strong>.
+          A specific case study at the activity level hasn't been catalogued.
+          ${subCaseHint}
+        </div>
+      </div>
+    `;
+    const shortlistBtnHTML = `
+      <button class="modal-shortlist-btn" id="modal-shortlist-btn" data-shortlist-target="${subId}::leaf::${leafIdx}">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16l-7-3-7 3z"/></svg>
+        <span class="modal-shortlist-label">Add to shortlist</span>
+      </button>`;
+    const jumpBtnHTML = sub.caseStudy
+      ? `<button class="ctrl-btn active" id="jump-to-sub-case" style="margin:0;">View sub-domain case</button>`
+      : '';
+    modalFooter.innerHTML = `
+      <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
+        ${shortlistBtnHTML}
+        ${jumpBtnHTML}
+      </div>
+    `;
+    wireModalShortlistButton();
+
+    // wire up the jump-to button if present
+    setTimeout(() => {
+      const jump = document.getElementById('jump-to-sub-case');
+      if (jump) jump.addEventListener('click', () => openCaseModal(subId));
+    }, 0);
+  }
+
+  modal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+// Delegated click handler on the grids
+function handleGridClick(e) {
+  // Walk up to find the nearest element with a data-click-type
+  let el = e.target;
+  while (el && el !== document.body) {
+    const type = el.dataset && el.dataset.clickType;
+    if (type === 'subdomain-case') {
+      e.stopPropagation();
+      openCaseModal(el.dataset.subdomainId);
+      return;
+    }
+    if (type === 'leaf') {
+      e.stopPropagation();
+      openLeafModal(el.dataset.subdomainId, parseInt(el.dataset.leafIdx, 10));
+      return;
+    }
+    if (type === 'subdomain-expand') {
+      el.classList.toggle('expanded');
+      return;
+    }
+    el = el.parentElement;
+  }
+}
+
+document.getElementById('core-grid').addEventListener('click', handleGridClick);
+document.getElementById('enabling-grid').addEventListener('click', handleGridClick);
+
+function closeModal() {
+  modal.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('modal-close').addEventListener('click', closeModal);
+modal.addEventListener('click', (e) => {
+  if (e.target === modal) closeModal();
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && modal.classList.contains('open')) closeModal();
+});
+
+// =====================================================
+// V2 ADDITIONS — state, telemetry, modes, shortlist, leads
+// =====================================================
+
+const STORAGE_KEY = 'omnia_gi_v2';
+const SESSION_KEY = 'omnia_gi_session_v2';
+
+// ---- Session ----
+function getOrCreateSession() {
+  let s = localStorage.getItem(SESSION_KEY);
+  if (!s) {
+    s = 'sess_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 10);
+    localStorage.setItem(SESSION_KEY, s);
+  }
+  return s;
+}
+const SESSION_ID = getOrCreateSession();
+
+// ---- State ----
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : { scores: {}, shortlist: [], mode: 'assess', engaged: false, privacyDismissed: false };
+  } catch {
+    return { scores: {}, shortlist: [], mode: 'assess', engaged: false, privacyDismissed: false };
+  }
+}
+function saveState() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+const state = loadState();
+
+// ---- Telemetry ----
+// Events are batched in memory and flushed to Supabase periodically.
+// If Supabase is not configured (placeholder values still in OMNIA_CONFIG),
+// events stay in memory and the app continues to work normally.
+
+const TELEMETRY_BUFFER = [];          // unsent events
+const TELEMETRY_LOG = [];             // everything for window.OMNIA_EVENTS inspection
+const FLUSH_INTERVAL_MS = 4000;       // batch every 4 seconds
+const MAX_BATCH = 30;                 // max events per request
+
+function supabaseConfigured() {
+  return OMNIA_CONFIG.SUPABASE_URL &&
+         !OMNIA_CONFIG.SUPABASE_URL.startsWith('REPLACE_') &&
+         OMNIA_CONFIG.SUPABASE_ANON_KEY &&
+         !OMNIA_CONFIG.SUPABASE_ANON_KEY.startsWith('REPLACE_');
+}
+
+function track(eventType, payload = {}) {
+  const event = {
+    session_id: SESSION_ID,
+    event_type: eventType,
+    payload: payload,
+    client_timestamp: new Date().toISOString()
+  };
+  TELEMETRY_BUFFER.push(event);
+  TELEMETRY_LOG.push(event);
+  if (window.OMNIA_DEBUG) console.log('[telemetry]', event);
+}
+window.OMNIA_DEBUG = false; // flip to true in console to see events live
+window.OMNIA_EVENTS = TELEMETRY_LOG; // expose for inspection
+
+async function flushTelemetry() {
+  if (!supabaseConfigured() || TELEMETRY_BUFFER.length === 0) return;
+  // Take a batch off the buffer
+  const batch = TELEMETRY_BUFFER.splice(0, MAX_BATCH);
+  try {
+    const res = await fetch(`${OMNIA_CONFIG.SUPABASE_URL}/rest/v1/events`, {
+      method: 'POST',
+      headers: {
+        'apikey': OMNIA_CONFIG.SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${OMNIA_CONFIG.SUPABASE_ANON_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify(batch)
+    });
+    if (!res.ok) {
+      // Re-queue the batch so we don't lose events; throttle next try
+      TELEMETRY_BUFFER.unshift(...batch);
+      if (window.OMNIA_DEBUG) console.warn('[telemetry] flush failed', res.status);
+    }
+  } catch (err) {
+    TELEMETRY_BUFFER.unshift(...batch);
+    if (window.OMNIA_DEBUG) console.warn('[telemetry] flush error', err);
+  }
+}
+
+// Periodic flush
+setInterval(flushTelemetry, FLUSH_INTERVAL_MS);
+
+// Best-effort flush on page hide / unload (sendBeacon for reliability)
+function flushOnExit() {
+  if (!supabaseConfigured() || TELEMETRY_BUFFER.length === 0) return;
+  const batch = TELEMETRY_BUFFER.splice(0, TELEMETRY_BUFFER.length);
+  try {
+    const blob = new Blob([JSON.stringify(batch)], { type: 'application/json' });
+    // sendBeacon doesn't let us set headers, so we use a fetch with keepalive as fallback.
+    // Supabase requires the apikey header, so we use fetch keepalive.
+    fetch(`${OMNIA_CONFIG.SUPABASE_URL}/rest/v1/events`, {
+      method: 'POST',
+      headers: {
+        'apikey': OMNIA_CONFIG.SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${OMNIA_CONFIG.SUPABASE_ANON_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(batch),
+      keepalive: true
+    });
+  } catch {}
+}
+window.addEventListener('pagehide', flushOnExit);
+window.addEventListener('beforeunload', flushOnExit);
+
+track('page_loaded', { mode: state.mode });
+
+// ---- Mode switching ----
+const body = document.body;
+function setMode(mode) {
+  state.mode = mode;
+  if (mode === 'assess') {
+    body.classList.add('mode-assess');
+    body.classList.remove('mode-explore');
+    document.getElementById('explore-controls').style.display = 'none';
+  } else {
+    body.classList.remove('mode-assess');
+    body.classList.add('mode-explore');
+    document.getElementById('explore-controls').style.display = 'flex';
+  }
+  document.querySelectorAll('.mode-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.mode === mode);
+  });
+  saveState();
+  track('mode_changed', { mode });
+}
+
+// Apply persisted mode on load (after a tick to let DOM settle)
+if (state.mode === 'explore') setMode('explore');
+
+document.querySelectorAll('.mode-btn').forEach(btn => {
+  btn.addEventListener('click', () => setMode(btn.dataset.mode));
+});
+
+// ---- Splash dismissal ----
+function dismissSplash() {
+  body.classList.add('engaged');
+  state.engaged = true;
+  saveState();
+}
+if (state.engaged) body.classList.add('engaged');
+
+document.getElementById('start-assess-btn').addEventListener('click', () => {
+  setMode('assess');
+  dismissSplash();
+  track('splash_action', { action: 'start_assess' });
+  // Scroll to first sub-domain
+  window.scrollTo({ top: 300, behavior: 'smooth' });
+});
+document.getElementById('skip-to-explore-btn').addEventListener('click', () => {
+  setMode('explore');
+  dismissSplash();
+  track('splash_action', { action: 'skip_to_explore' });
+  window.scrollTo({ top: 300, behavior: 'smooth' });
+});
+
+// ---- Sliders / assessment ----
+const TOTAL_SUBDOMAINS = (() => {
+  let n = 0;
+  [...DATA.core, ...DATA.enabling].forEach(d => { n += d.subdomains.length; });
+  return n;
+})();
+
+// Threshold to enable the "Generate report" CTA — set proportionally (~30% of subdomains)
+const UNLOCK_THRESHOLD = Math.max(5, Math.ceil(TOTAL_SUBDOMAINS * 0.3));
+
+// Sync the splash display + progress total once on init
+(function syncDynamicCounts() {
+  const splashEl = document.getElementById('splash-count-display');
+  if (splashEl) splashEl.textContent = TOTAL_SUBDOMAINS;
+  const totalEl = document.getElementById('progress-total');
+  if (totalEl) totalEl.textContent = TOTAL_SUBDOMAINS;
+})();
+
+function getScore(subId) { return state.scores[subId] || null; }
+
+function setScore(subId, type, value) {
+  if (!state.scores[subId]) state.scores[subId] = {};
+  state.scores[subId][type] = value;
+  saveState();
+  track('score_changed', { subdomain: subId, type, value });
+  updateProgress();
+  refreshSubdomainScoreDisplay(subId);
+}
+
+function refreshSubdomainScoreDisplay(subId) {
+  const score = getScore(subId);
+  if (!score) return;
+  ['current', 'target'].forEach(type => {
+    const display = document.querySelector(`[data-display="${type}-${subId}"]`);
+    const slider = document.querySelector(`.slider[data-subdomain-id="${subId}"][data-slider-type="${type}"]`);
+    if (score[type] != null && display) {
+      display.textContent = score[type];
+      display.classList.remove('unset');
+      if (slider) {
+        slider.classList.remove('unset');
+        slider.value = score[type];
+      }
+    }
+  });
+  // Gap indicator
+  const gapEl = document.querySelector(`[data-gap="${subId}"]`);
+  if (gapEl && score.current != null && score.target != null) {
+    const gap = score.target - score.current;
+    if (gap > 0) {
+      gapEl.style.display = 'inline-flex';
+      gapEl.className = 'gap-indicator' + (gap >= 3 ? ' huge' : gap >= 2 ? ' big' : '');
+      gapEl.innerHTML = `Gap of ${gap} ${gap >= 3 ? '· high priority' : gap >= 2 ? '· notable' : ''}`;
+    } else {
+      gapEl.style.display = 'none';
+    }
+  }
+}
+
+function updateProgress() {
+  let rated = 0;
+  Object.values(state.scores).forEach(s => {
+    if (s.current != null && s.target != null) rated++;
+  });
+  // Single update — innerHTML rewrites the whole .progress-text including #progress-count.
+  // Don't reference #progress-count separately or it'll go stale after the first update.
+  const progressTextEl = document.querySelector('.progress-text');
+  if (progressTextEl) {
+    progressTextEl.innerHTML = `<strong id="progress-count">${rated}</strong>of ${TOTAL_SUBDOMAINS} sub-domains rated`;
+  }
+  const progressFill = document.getElementById('progress-fill');
+  if (progressFill) {
+    const pct = (rated / TOTAL_SUBDOMAINS) * 100;
+    progressFill.style.width = pct + '%';
+  }
+
+  const cta = document.getElementById('generate-report-btn');
+  if (cta) {
+    if (rated >= UNLOCK_THRESHOLD) cta.classList.add('enabled');
+    else cta.classList.remove('enabled');
+  }
+}
+
+// Wire slider events (use event delegation)
+document.body.addEventListener('input', (e) => {
+  if (!e.target.classList.contains('slider')) return;
+  const subId = e.target.dataset.subdomainId;
+  const type = e.target.dataset.sliderType;
+  const value = parseInt(e.target.value, 10);
+  setScore(subId, type, value);
+});
+
+// Stop slider clicks from bubbling up to the subdomain expand handler
+document.body.addEventListener('click', (e) => {
+  if (e.target.classList.contains('slider') || e.target.closest('.assessment-block')) {
+    e.stopPropagation();
+  }
+}, true);
+
+// Restore any persisted scores on load
+Object.keys(state.scores).forEach(refreshSubdomainScoreDisplay);
+updateProgress();
+
+// ---- Shortlist ----
+function shortlistKey(target) { return target; } // target is e.g. "1.1::sub" or "1.1::leaf::3"
+
+function isShortlisted(target) {
+  return state.shortlist.some(item => item.target === target);
+}
+
+function lookupTarget(target) {
+  // Parse target into { sub, domain, leafIdx? } and resolve title/company
+  const parts = target.split('::');
+  const subId = parts[0];
+  const found = findSubdomain(subId);
+  if (!found) return null;
+  if (parts[1] === 'sub') {
+    const cs = found.sub.caseStudy;
+    return {
+      subId, domain: found.domain, sub: found.sub,
+      title: cs ? cs.title : found.sub.title,
+      company: cs ? cs.company : '',
+      caption: cs ? '' : (found.sub.emptyNote ? 'Sector observation · no specific case yet' : 'Sub-domain · no case yet'),
+      eyebrow: `${found.domain.num} · ${found.domain.title}`,
+      path: `${found.sub.id} · ${found.sub.title}`
+    };
+  }
+  if (parts[1] === 'leaf') {
+    const leafIdx = parseInt(parts[2], 10);
+    const leaf = found.sub.activities[leafIdx];
+    if (leaf === undefined) return null;
+    const leafName = typeof leaf === 'string' ? leaf : leaf.name;
+    const leafCase = typeof leaf === 'object' ? leaf.caseStudy : null;
+    return {
+      subId, domain: found.domain, sub: found.sub, leafIdx,
+      title: leafCase ? leafCase.title : leafName,
+      company: leafCase ? leafCase.company : '',
+      caption: leafCase ? '' : 'Activity · no case yet',
+      eyebrow: `${found.domain.num} · ${found.domain.title}`,
+      path: `${found.sub.id} · ${found.sub.title} → ${leafName}`
+    };
+  }
+  return null;
+}
+
+function addToShortlist(target) {
+  if (isShortlisted(target)) return;
+  state.shortlist.push({ target, added_at: new Date().toISOString() });
+  saveState();
+  refreshShortlistUI();
+  refreshSubdomainShortlistStars();
+  track('shortlist_added', { target });
+}
+
+function removeFromShortlist(target) {
+  state.shortlist = state.shortlist.filter(item => item.target !== target);
+  saveState();
+  refreshShortlistUI();
+  refreshSubdomainShortlistStars();
+  track('shortlist_removed', { target });
+}
+
+function refreshSubdomainShortlistStars() {
+  // A sub-domain shows the star if either the sub or any of its leaves is shortlisted
+  document.querySelectorAll('.subdomain').forEach(el => {
+    const subId = el.dataset.subdomainId;
+    const shortlisted = state.shortlist.some(item => item.target.startsWith(subId + '::'));
+    el.classList.toggle('shortlisted', shortlisted);
+  });
+}
+
+function refreshShortlistUI() {
+  const count = state.shortlist.length;
+  const fab = document.getElementById('shortlist-fab');
+  document.getElementById('shortlist-fab-count').textContent = count;
+  fab.classList.toggle('visible', count > 0);
+
+  const body = document.getElementById('side-panel-body');
+  const sub = document.getElementById('shortlist-sub');
+
+  if (count === 0) {
+    sub.textContent = 'No cases yet';
+    body.innerHTML = `
+      <div class="shortlist-empty">
+        <strong>Your shortlist is empty</strong>
+        Click <em>Add to shortlist</em> in any capability or case study to save it here for later.
+      </div>
+    `;
+    return;
+  }
+
+  sub.textContent = `${count} item${count === 1 ? '' : 's'} saved`;
+  body.innerHTML = state.shortlist.map(item => {
+    const resolved = lookupTarget(item.target);
+    if (!resolved) return '';
+    const captionLine = resolved.company
+      ? resolved.company + ' · ' + resolved.path
+      : (resolved.caption ? `<span style="color:var(--text-faint);">${resolved.caption}</span> · ` + resolved.path : resolved.path);
+    return `
+      <div class="shortlist-item">
+        <button class="shortlist-item-remove" data-remove="${item.target}" aria-label="Remove">
+          <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 1 L13 13 M13 1 L1 13"/></svg>
+        </button>
+        <div class="shortlist-item-eyebrow">${resolved.eyebrow}</div>
+        <div class="shortlist-item-title">${resolved.title}</div>
+        <div class="shortlist-item-company">${captionLine}</div>
+      </div>
+    `;
+  }).join('');
+
+  // Wire remove buttons
+  body.querySelectorAll('[data-remove]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      removeFromShortlist(btn.dataset.remove);
+    });
+  });
+}
+
+function wireModalShortlistButton() {
+  const btn = document.getElementById('modal-shortlist-btn');
+  if (!btn) return;
+  const target = btn.dataset.shortlistTarget;
+  const updateBtn = () => {
+    const added = isShortlisted(target);
+    btn.classList.toggle('added', added);
+    btn.querySelector('.modal-shortlist-label').textContent = added ? 'Saved' : 'Add to shortlist';
+  };
+  updateBtn();
+  btn.addEventListener('click', () => {
+    if (isShortlisted(target)) removeFromShortlist(target);
+    else addToShortlist(target);
+    updateBtn();
+  });
+}
+
+// Side panel open/close
+const sidePanel = document.getElementById('side-panel');
+const sidePanelBackdrop = document.getElementById('side-panel-backdrop');
+
+function openSidePanel() {
+  sidePanel.classList.add('open');
+  sidePanelBackdrop.classList.add('open');
+  track('shortlist_panel_opened', { count: state.shortlist.length });
+}
+function closeSidePanel() {
+  sidePanel.classList.remove('open');
+  sidePanelBackdrop.classList.remove('open');
+}
+
+document.getElementById('shortlist-fab').addEventListener('click', openSidePanel);
+document.getElementById('side-panel-close').addEventListener('click', closeSidePanel);
+sidePanelBackdrop.addEventListener('click', closeSidePanel);
+
+document.getElementById('clear-shortlist-btn').addEventListener('click', () => {
+  if (!confirm('Clear your entire shortlist?')) return;
+  state.shortlist = [];
+  saveState();
+  refreshShortlistUI();
+  refreshSubdomainShortlistStars();
+  track('shortlist_cleared');
+});
+
+// Initial shortlist UI render
+refreshShortlistUI();
+refreshSubdomainShortlistStars();
+
+// ---- Lead capture / report request ----
+const leadModal = document.getElementById('lead-modal-backdrop');
+
+function openLeadModal(trigger) {
+  // Re-show form if it was previously submitted
+  const form = document.getElementById('lead-form');
+  if (form) form.style.display = '';
+  // Reset title/eyebrow based on trigger
+  const title = document.getElementById('lead-modal-title');
+  const eyebrow = document.getElementById('lead-modal-eyebrow');
+  if (trigger === 'shortlist_followup') {
+    eyebrow.textContent = 'Follow-up Request';
+    title.textContent = 'Discuss your shortlist with our team';
+  } else {
+    eyebrow.textContent = 'Personalised AI Opportunity Brief';
+    title.textContent = 'Get your tailored AI maturity report';
+  }
+  leadModal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  track('lead_modal_opened', { trigger });
+}
+function closeLeadModal() {
+  leadModal.classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.getElementById('lead-modal-close').addEventListener('click', closeLeadModal);
+leadModal.addEventListener('click', (e) => { if (e.target === leadModal) closeLeadModal(); });
+
+document.getElementById('generate-report-btn').addEventListener('click', () => {
+  if (!document.getElementById('generate-report-btn').classList.contains('enabled')) return;
+  openLeadModal('assessment_complete');
+});
+
+document.getElementById('request-followup-btn').addEventListener('click', () => {
+  closeSidePanel();
+  openLeadModal('shortlist_followup');
+});
+
+// Form submission — for now, capture locally + show success.
+// In Phase 2, this POSTs to Supabase / Formspree.
+document.getElementById('lead-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const submit = document.getElementById('lead-submit');
+  submit.disabled = true;
+  submit.textContent = 'Sending...';
+
+  const lead = {
+    session_id: SESSION_ID,
+    name: document.getElementById('lead-name').value,
+    email: document.getElementById('lead-email').value,
+    company: document.getElementById('lead-company').value,
+    role: document.getElementById('lead-role').value,
+    scores: state.scores,
+    shortlist: state.shortlist.map(s => s.target),
+    submitted_at: new Date().toISOString()
+  };
+
+  track('lead_submitted', {
+    has_assessment: Object.keys(state.scores).length > 0,
+    shortlist_count: state.shortlist.length
+  });
+
+  // Always keep a localStorage backup so nothing's ever lost
+  const localLeads = JSON.parse(localStorage.getItem('omnia_gi_leads') || '[]');
+  localLeads.push(lead);
+  localStorage.setItem('omnia_gi_leads', JSON.stringify(localLeads));
+  window.OMNIA_LEADS = localLeads;
+
+  // Send to Supabase if configured
+  if (supabaseConfigured()) {
+    try {
+      // 1. Insert the lead row
+      await fetch(`${OMNIA_CONFIG.SUPABASE_URL}/rest/v1/leads`, {
+        method: 'POST',
+        headers: {
+          'apikey': OMNIA_CONFIG.SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${OMNIA_CONFIG.SUPABASE_ANON_KEY}`,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify({
+          session_id: SESSION_ID,
+          name: lead.name,
+          email: lead.email,
+          company: lead.company,
+          role: lead.role,
+          shortlist_count: state.shortlist.length,
+          assessment_count: Object.keys(state.scores).length
+        })
+      });
+
+      // 2. Insert assessment scores as individual rows for analytics-friendly shape
+      const assessmentRows = Object.entries(state.scores)
+        .filter(([_, v]) => v.current != null || v.target != null)
+        .map(([subdomain_id, v]) => ({
+          session_id: SESSION_ID,
+          subdomain_id,
+          current_score: v.current ?? null,
+          target_score: v.target ?? null
+        }));
+      if (assessmentRows.length > 0) {
+        await fetch(`${OMNIA_CONFIG.SUPABASE_URL}/rest/v1/assessments`, {
+          method: 'POST',
+          headers: {
+            'apikey': OMNIA_CONFIG.SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${OMNIA_CONFIG.SUPABASE_ANON_KEY}`,
+            'Content-Type': 'application/json',
+            'Prefer': 'return=minimal'
+          },
+          body: JSON.stringify(assessmentRows)
+        });
+      }
+
+      // 3. Insert shortlist items
+      const shortlistRows = state.shortlist.map(item => ({
+        session_id: SESSION_ID,
+        target_id: item.target,
+        added_at: item.added_at
+      }));
+      if (shortlistRows.length > 0) {
+        await fetch(`${OMNIA_CONFIG.SUPABASE_URL}/rest/v1/shortlists`, {
+          method: 'POST',
+          headers: {
+            'apikey': OMNIA_CONFIG.SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${OMNIA_CONFIG.SUPABASE_ANON_KEY}`,
+            'Content-Type': 'application/json',
+            'Prefer': 'return=minimal'
+          },
+          body: JSON.stringify(shortlistRows)
+        });
+      }
+
+      // Flush any remaining telemetry immediately so the lead's event log is complete
+      await flushTelemetry();
+    } catch (err) {
+      console.warn('[lead submit] Supabase write failed (localStorage backup kept)', err);
+    }
+  }
+
+  // Show success state regardless — the localStorage backup means nothing is lost
+  const formContainer = document.getElementById('lead-modal-body');
+  formContainer.innerHTML = `
+    <div class="form-success">
+      <strong>Thank you, ${lead.name.split(' ')[0]}!</strong>
+      We've received your details. The Omnia team will be in touch within one business day with your personalised AI Opportunity Brief.
+    </div>
+    <p class="form-fineprint" style="margin-top:18px;text-align:center;">
+      In the meantime, feel free to keep exploring the capability map below.
+    </p>
+  `;
+});
+
+// ---- Telemetry: track modal opens with dwell time ----
+let modalOpenedAt = null;
+let modalOpenTarget = null;
+
+// Patch openCaseModal and openLeafModal in-place so callers (handleGridClick) pick up tracking.
+// Function declarations create a mutable binding, so this reassignment works at the namespace level.
+const _origOpenCase = openCaseModal;
+const _origOpenLeaf = openLeafModal;
+const _origCloseFn = closeModal;
+
+openCaseModal = function(subId) {
+  modalOpenedAt = Date.now();
+  modalOpenTarget = { type: 'subdomain', subId };
+  track('case_modal_opened', { target: 'subdomain', subdomain_id: subId });
+  return _origOpenCase(subId);
+};
+openLeafModal = function(subId, leafIdx) {
+  modalOpenedAt = Date.now();
+  modalOpenTarget = { type: 'leaf', subId, leafIdx };
+  track('case_modal_opened', { target: 'leaf', subdomain_id: subId, leaf_idx: leafIdx });
+  return _origOpenLeaf(subId, leafIdx);
+};
+closeModal = function() {
+  if (modalOpenedAt) {
+    const dwell = Math.round((Date.now() - modalOpenedAt) / 1000);
+    track('case_modal_closed', { ...modalOpenTarget, dwell_seconds: dwell });
+    modalOpenedAt = null;
+  }
+  return _origCloseFn();
+};
+
+// Re-bind the modal close button + backdrop with the patched closeModal,
+// because their previous handlers captured the original reference at registration time.
+// (The keydown handler calls closeModal() inline, so it picks up the new ref automatically.)
+const modalCloseBtn = document.getElementById('modal-close');
+const newCloseBtn = modalCloseBtn.cloneNode(true);
+modalCloseBtn.parentNode.replaceChild(newCloseBtn, modalCloseBtn);
+newCloseBtn.addEventListener('click', () => closeModal());
+
+modal.addEventListener('click', (e) => {
+  if (e.target === modal) {
+    closeModal();
+  }
+});
+
+// ---- Privacy notice ----
+const privacyNotice = document.getElementById('privacy-notice');
+if (!state.privacyDismissed) {
+  setTimeout(() => privacyNotice.classList.add('visible'), 1500);
+}
+document.getElementById('privacy-close').addEventListener('click', () => {
+  privacyNotice.classList.remove('visible');
+  state.privacyDismissed = true;
+  saveState();
+  track('privacy_dismissed');
+});
+
+// ---- Domain interaction telemetry ----
+document.querySelectorAll('.domain-header').forEach(header => {
+  header.addEventListener('click', () => {
+    const domain = header.parentElement.dataset.domainNum;
+    const opened = !header.parentElement.classList.contains('collapsed');
+    track('domain_toggled', { domain, opened });
+  });
+});
+
+// Initial telemetry log
+track('session_initialised', { total_subdomains: TOTAL_SUBDOMAINS });
+
+</script>
+</body>
+</html>
