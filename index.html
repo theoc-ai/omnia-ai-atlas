@@ -137,6 +137,111 @@
     font-weight: 600;
   }
 
+  /* Mode-specific intro blurbs */
+  .mode-intro { display: none; }
+  body.mode-assess .assess-intro { display: block; }
+  body.mode-explore .explore-intro { display: block; }
+  .mode-intro {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text-muted);
+    max-width: 760px;
+    margin: 4px 0 18px;
+    font-weight: 300;
+  }
+  .mode-intro strong { color: var(--text); font-weight: 600; }
+
+  /* Shortlist legend — explains the quick-add toggle */
+  .shortlist-legend {
+    display: none;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--text-muted);
+    background: var(--accent-soft);
+    border: 1px dashed var(--accent-line);
+    border-radius: 100px;
+    padding: 9px 16px 9px 11px;
+    margin: 0 0 22px;
+    max-width: 760px;
+    font-weight: 300;
+  }
+  body.mode-assess .shortlist-legend,
+  body.mode-explore .shortlist-legend { display: inline-flex; }
+  .shortlist-legend strong { color: var(--text); font-weight: 600; }
+  .sl-chip {
+    flex-shrink: 0;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--bg);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .sl-chip svg { width: 11px; height: 11px; }
+
+  /* Maturity scoring legend (Assess mode only) */
+  .maturity-legend { display: none; }
+  body.mode-assess .maturity-legend {
+    display: block;
+    background: var(--accent-soft);
+    border: 1px solid var(--accent-line);
+    border-radius: 12px;
+    padding: 20px 22px;
+    margin: 8px 0 4px;
+  }
+  .maturity-legend-head {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .maturity-legend-intro {
+    font-size: 13px;
+    line-height: 1.55;
+    color: rgba(255,255,255,0.72);
+    margin-bottom: 16px;
+    max-width: 720px;
+  }
+  .maturity-legend-intro strong { color: var(--accent); font-weight: 600; }
+  .maturity-scale {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 8px;
+  }
+  .scale-step {
+    border: 1px solid var(--accent-line);
+    border-radius: 8px;
+    padding: 10px 11px;
+    background: rgba(0,0,0,0.12);
+  }
+  .scale-step-num {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .scale-step-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 4px;
+  }
+  .scale-step-desc {
+    font-size: 11px;
+    line-height: 1.4;
+    color: rgba(255,255,255,0.6);
+  }
+  @media (max-width: 860px) {
+    .maturity-scale { grid-template-columns: repeat(2, 1fr); }
+  }
+
   .domain-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
@@ -562,17 +667,18 @@
   }
 
   .brand-logo {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background: var(--accent);
+    width: 34px;
+    height: 34px;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--bg);
-    font-weight: 700;
-    font-size: 14px;
-    letter-spacing: -0.5px;
+    color: var(--accent);
+    flex-shrink: 0;
+  }
+  .brand-logo svg {
+    width: 100%;
+    height: 100%;
+    display: block;
   }
 
   .brand-name {
@@ -588,6 +694,35 @@
     letter-spacing: 1.5px;
     text-transform: uppercase;
     margin-top: 1px;
+  }
+
+  .brand-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .data-refreshed-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--text-muted);
+    padding: 6px 12px;
+    border: 1px solid var(--accent-line);
+    border-radius: 100px;
+    background: rgba(0,0,0,0.15);
+    white-space: nowrap;
+  }
+  .data-refreshed-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
   }
 
   .mode-toggle {
@@ -866,8 +1001,55 @@
     display: none;
   }
   .examples-btn:hover { color: var(--accent); border-color: var(--accent); }
-  body.mode-assess .examples-btn { display: inline-block; }
+  body.mode-assess .examples-btn { display: inline-block; vertical-align: middle; }
   body.mode-assess .case-pill { display: none; }
+
+  /* Quick add-to-shortlist toggle (alternative to the modal button) */
+  .shortlist-toggle {
+    flex-shrink: 0;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 1px solid var(--accent-line);
+    background: transparent;
+    color: var(--accent);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s ease;
+  }
+  .shortlist-toggle:hover {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+    transform: scale(1.08);
+  }
+  .shortlist-toggle svg { width: 13px; height: 13px; }
+  .shortlist-toggle .stc { display: none; }
+  .shortlist-toggle.added {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--bg);
+  }
+  .shortlist-toggle.added .stp { display: none; }
+  .shortlist-toggle.added .stc { display: block; }
+
+  .head-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+  body.mode-assess .head-toggle { display: none; }
+  .inline-toggle {
+    display: none;
+    margin-top: 10px;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+  body.mode-assess .inline-toggle { display: inline-flex; }
 
   /* Progress bar / sticky CTA */
   .progress-bar {
@@ -1335,15 +1517,23 @@
 <!-- Brand bar with mode toggle -->
 <div class="brand-bar">
   <div class="brand-mark">
-    <div class="brand-logo">O</div>
+    <div class="brand-logo" aria-label="The Omnia Collective">
+      <svg viewBox="0 0 54.61 55.01" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M26.3095 18.1429V13.2563C19.0435 13.2563 13.1565 19.19 13.1565 26.5057H18.0075C18.0075 21.8871 21.7245 18.1394 26.313 18.1394L26.3095 18.1429Z" fill="currentColor"></path><path d="M28.2905 13.2563V18.1429C32.8755 18.1429 36.596 21.8871 36.596 26.5092H41.447C41.447 19.19 35.5565 13.2599 28.294 13.2599L28.2905 13.2563Z" fill="currentColor"></path><path d="M26.3095 4.89337V0.00683594C19.0435 0.00683594 13.1565 5.94049 13.1565 13.2562H18.0075C18.0075 8.63761 21.7245 4.88985 26.313 4.88985L26.3095 4.89337Z" fill="currentColor"></path><path d="M13.153 4.89337V0.00683594C5.8905 0.00683594 0 5.94049 0 13.2562H4.851C4.851 8.63761 8.568 4.88985 13.1565 4.88985L13.153 4.89337Z" fill="currentColor"></path><path d="M28.2905 0.00683594V4.89337C32.8755 4.89337 36.596 8.63761 36.596 13.2597H41.447C41.447 5.94049 35.5565 0.00683594 28.2905 0.00683594Z" fill="currentColor"></path><path d="M41.447 0.00683594V4.89337C46.032 4.89337 49.7525 8.63761 49.7525 13.2597H54.6035C54.6035 5.94049 48.713 0.0103616 41.4505 0.0103616L41.447 0.00683594Z" fill="currentColor"></path><path d="M28.2906 36.8711V41.7577C35.5566 41.7577 41.4436 35.824 41.4436 28.5083H36.5926C36.5926 33.1269 32.8756 36.8746 28.2871 36.8746L28.2906 36.8711Z" fill="currentColor"></path><path d="M41.447 13.2563V18.1429C46.032 18.1429 49.7525 21.8871 49.7525 26.5092H54.6035C54.6035 19.19 48.713 13.2599 41.4505 13.2599L41.447 13.2563Z" fill="currentColor"></path><path d="M41.4471 36.8711V41.7577C48.7131 41.7577 54.6001 35.824 54.6001 28.5083H49.7491C49.7491 33.1269 46.0321 36.8746 41.4436 36.8746L41.4471 36.8711Z" fill="currentColor"></path><path d="M41.4471 50.1201V55.0067C48.7131 55.0067 54.6001 49.073 54.6001 41.7573H49.7491C49.7491 46.3759 46.0321 50.1237 41.4436 50.1237L41.4471 50.1201Z" fill="currentColor"></path><path d="M18.0041 28.5045H13.1531C13.1531 35.8237 19.0436 41.7539 26.3061 41.7539V36.8673C21.7211 36.8673 18.0006 33.1231 18.0006 28.501L18.0041 28.5045Z" fill="currentColor"></path><path d="M28.2906 50.1201V55.0067C35.5566 55.0067 41.4436 49.073 41.4436 41.7573H36.5926C36.5926 46.3759 32.8756 50.1237 28.2871 50.1237L28.2906 50.1201Z" fill="currentColor"></path><path d="M18.0041 41.7574H13.1531C13.1531 49.0767 19.0436 55.0068 26.3061 55.0068V50.1203C21.7211 50.1203 18.0006 46.376 18.0006 41.7539L18.0041 41.7574Z" fill="currentColor"></path><path d="M13.153 18.1429V13.2563C5.8905 13.2563 0 19.19 0 26.5092H4.851C4.851 21.8906 8.568 18.1429 13.1565 18.1429H13.153Z" fill="currentColor"></path><path d="M4.851 28.5045H0C0 35.8237 5.8905 41.7539 13.153 41.7539V36.8673C8.568 36.8673 4.8475 33.1231 4.8475 28.501L4.851 28.5045Z" fill="currentColor"></path><path d="M4.851 41.7574H0C0 49.0767 5.8905 55.0068 13.153 55.0068V50.1203C8.568 50.1203 4.8475 46.376 4.8475 41.7539L4.851 41.7574Z" fill="currentColor"></path></svg>
+    </div>
     <div>
       <div class="brand-name">OMNIA</div>
       <div class="brand-attribution">AI Maturity Atlas · Delivered by AI Decisions</div>
     </div>
   </div>
-  <div class="mode-toggle" id="mode-toggle">
-    <button class="mode-btn active" data-mode="assess">Assess</button>
-    <button class="mode-btn" data-mode="explore">Explore</button>
+  <div class="brand-right">
+    <span class="data-refreshed-tag">
+      <span class="data-refreshed-dot"></span>
+      Data refreshed June 2026
+    </span>
+    <div class="mode-toggle" id="mode-toggle">
+      <button class="mode-btn active" data-mode="assess">Assess</button>
+      <button class="mode-btn" data-mode="explore">Explore</button>
+    </div>
   </div>
 </div>
 
@@ -1376,6 +1566,67 @@
   <span class="ctrl-label">Filter</span>
   <button class="ctrl-btn active" data-filter="all">All capabilities</button>
   <button class="ctrl-btn" data-filter="with-case">With case studies</button>
+</div>
+
+<!-- Mode-specific intro blurbs -->
+<p class="mode-intro assess-intro">
+  Work through the capability areas below, expanding any sub-domain to rate it. You don't need to
+  complete every one — <strong>rate what's relevant to you</strong> and generate your tailored AI
+  opportunity brief whenever you're ready.
+</p>
+<p class="mode-intro explore-intro">
+  This is a <strong>capability model</strong> of the general insurance value chain. Expand any domain
+  to see where AI is already being deployed by leading carriers. We're <strong>progressively adding
+  more examples</strong> of where AI is playing a role, so check back as the atlas grows.
+</p>
+
+<!-- Shortlist legend -->
+<div class="shortlist-legend">
+  <span class="sl-chip">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+  </span>
+  <span>Hit the <strong>+</strong> on any area to add it to your shortlist. Tell us your priorities and we'll send you specific detail and case studies for those areas.</span>
+</div>
+
+<!-- Maturity scoring legend (Assess mode) -->
+<div class="maturity-legend">
+  <div class="maturity-legend-head">How to score</div>
+  <p class="maturity-legend-intro">
+    For each sub-domain, rate your <strong>Current</strong> state — how AI is used today — and your
+    <strong>Target</strong> — the ambition you're aiming for. Both use the same 0–5 maturity scale below.
+  </p>
+  <div class="maturity-scale">
+    <div class="scale-step">
+      <div class="scale-step-num">0</div>
+      <div class="scale-step-label">No AI</div>
+      <div class="scale-step-desc">No use of AI; the capability runs entirely on manual or rules-based processes.</div>
+    </div>
+    <div class="scale-step">
+      <div class="scale-step-num">1</div>
+      <div class="scale-step-label">Exploring</div>
+      <div class="scale-step-desc">Experimenting with AI in isolated pilots or proofs of concept.</div>
+    </div>
+    <div class="scale-step">
+      <div class="scale-step-num">2</div>
+      <div class="scale-step-label">Assisting</div>
+      <div class="scale-step-desc">AI supports a few discrete tasks but isn't part of the core workflow.</div>
+    </div>
+    <div class="scale-step">
+      <div class="scale-step-num">3</div>
+      <div class="scale-step-label">Bolted on</div>
+      <div class="scale-step-desc">AI bolted into select parts of the process to speed up existing steps.</div>
+    </div>
+    <div class="scale-step">
+      <div class="scale-step-num">4</div>
+      <div class="scale-step-label">Embedded</div>
+      <div class="scale-step-desc">AI embedded across most of the process and trusted in day-to-day operations.</div>
+    </div>
+    <div class="scale-step">
+      <div class="scale-step-num">5</div>
+      <div class="scale-step-label">Redesigned</div>
+      <div class="scale-step-desc">The capability is redesigned around AI, not just augmented by it.</div>
+    </div>
+  </div>
 </div>
 
 <div class="section-label">Core Business Capabilities</div>
@@ -2050,6 +2301,13 @@ const DATA = {
 };
 
 // =================== RENDER ===================
+function shortlistToggleBtn(extraClass, target) {
+  return `<button class="shortlist-toggle ${extraClass}" data-click-type="shortlist-toggle" data-shortlist-target="${target}" aria-label="Add to shortlist" title="Add to shortlist">
+    <svg class="stp" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+    <svg class="stc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+  </button>`;
+}
+
 function renderDomain(domain, isEnabling = false) {
   const subdomainHTML = domain.subdomains.map(s => {
     const hasCase = !!s.caseStudy || !!s.emptyNote;
@@ -2062,6 +2320,10 @@ function renderDomain(domain, isEnabling = false) {
     const examplesBtnHTML = hasCase
       ? `<button class="examples-btn" data-subdomain-id="${s.id}" data-click-type="subdomain-case">See live example →</button>`
       : '';
+
+    // Quick add-to-shortlist toggle — alternative to the modal button
+    const headToggleHTML = hasCase ? shortlistToggleBtn('head-toggle', `${s.id}::sub`) : '';
+    const inlineToggleHTML = hasCase ? shortlistToggleBtn('inline-toggle', `${s.id}::sub`) : '';
 
     const activitiesHTML = s.activities.map((a, idx) => {
       const name = typeof a === 'string' ? a : a.name;
@@ -2101,10 +2363,10 @@ function renderDomain(domain, isEnabling = false) {
             <div class="subdomain-title">${s.id} · ${s.title}</div>
             <svg class="shortlist-star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
           </div>
-          ${pillHTML}
+          <div class="head-actions">${pillHTML}${headToggleHTML}</div>
         </div>
         ${assessmentHTML}
-        ${examplesBtnHTML}
+        ${examplesBtnHTML}${inlineToggleHTML}
         <div class="activities">${activitiesHTML}</div>
       </div>
     `;
@@ -2330,6 +2592,13 @@ function handleGridClick(e) {
   let el = e.target;
   while (el && el !== document.body) {
     const type = el.dataset && el.dataset.clickType;
+    if (type === 'shortlist-toggle') {
+      e.stopPropagation();
+      const target = el.dataset.shortlistTarget;
+      if (isShortlisted(target)) removeFromShortlist(target);
+      else addToShortlist(target);
+      return;
+    }
     if (type === 'subdomain-case') {
       e.stopPropagation();
       openCaseModal(el.dataset.subdomainId);
@@ -2683,6 +2952,7 @@ function addToShortlist(target) {
   saveState();
   refreshShortlistUI();
   refreshSubdomainShortlistStars();
+  refreshShortlistToggles();
   track('shortlist_added', { target });
 }
 
@@ -2691,7 +2961,19 @@ function removeFromShortlist(target) {
   saveState();
   refreshShortlistUI();
   refreshSubdomainShortlistStars();
+  refreshShortlistToggles();
   track('shortlist_removed', { target });
+}
+
+function refreshShortlistToggles() {
+  // Sync every quick-add toggle button to its shortlist state
+  document.querySelectorAll('.shortlist-toggle').forEach(btn => {
+    const on = isShortlisted(btn.dataset.shortlistTarget);
+    btn.classList.toggle('added', on);
+    const label = on ? 'Remove from shortlist' : 'Add to shortlist';
+    btn.setAttribute('title', label);
+    btn.setAttribute('aria-label', label);
+  });
 }
 
 function refreshSubdomainShortlistStars() {
@@ -2792,12 +3074,14 @@ document.getElementById('clear-shortlist-btn').addEventListener('click', () => {
   saveState();
   refreshShortlistUI();
   refreshSubdomainShortlistStars();
+  refreshShortlistToggles();
   track('shortlist_cleared');
 });
 
 // Initial shortlist UI render
 refreshShortlistUI();
 refreshSubdomainShortlistStars();
+refreshShortlistToggles();
 
 // ---- Lead capture / report request ----
 const leadModal = document.getElementById('lead-modal-backdrop');
