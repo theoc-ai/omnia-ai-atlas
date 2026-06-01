@@ -1476,6 +1476,34 @@
   </div>
 </div>
 
+<!-- Insight report prompt — auto-triggered after a few explore interactions -->
+<div class="modal-backdrop" id="insight-modal-backdrop">
+  <div class="modal" id="insight-modal">
+    <button class="modal-close" id="insight-modal-close" aria-label="Close">
+      <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M1 1 L13 13 M13 1 L1 13" />
+      </svg>
+    </button>
+    <div class="modal-eyebrow">Industry Insight Report</div>
+    <h2 class="modal-title">See where others are focusing their AI efforts</h2>
+    <div id="insight-modal-body">
+      <div class="modal-section-body" style="margin-bottom:14px;">Enjoying the atlas? We track which capabilities insurers are prioritising across the value chain. Leave your details and we'll send you a short insight report on where the industry is concentrating its AI investment — and the deployed case studies behind it.</div>
+      <form class="lead-form" id="insight-form">
+        <div class="form-field">
+          <label class="form-label" for="insight-name">Full name</label>
+          <input class="form-input" type="text" id="insight-name" name="name" required placeholder="Alex Smith" autocomplete="name" />
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="insight-email">Work email</label>
+          <input class="form-input" type="email" id="insight-email" name="email" required placeholder="alex@insurer.com.au" autocomplete="email" />
+        </div>
+        <button class="form-submit" type="submit" id="insight-submit">Send me the insight report</button>
+        <p class="form-fineprint">Omnia (delivered by AI Decisions) will use your details only to send this report and may follow up about your AI agenda. You can opt out any time. We never share individual responses.</p>
+      </form>
+    </div>
+  </div>
+</div>
+
 <!-- Privacy notice -->
 <div class="privacy-notice" id="privacy-notice">
   <div class="privacy-notice-text">
@@ -2305,15 +2333,18 @@ function handleGridClick(e) {
     if (type === 'subdomain-case') {
       e.stopPropagation();
       openCaseModal(el.dataset.subdomainId);
+      registerExploreInteraction();
       return;
     }
     if (type === 'leaf') {
       e.stopPropagation();
       openLeafModal(el.dataset.subdomainId, parseInt(el.dataset.leafIdx, 10));
+      registerExploreInteraction();
       return;
     }
     if (type === 'subdomain-expand') {
       el.classList.toggle('expanded');
+      registerExploreInteraction();
       return;
     }
     el = el.parentElement;
@@ -2358,9 +2389,9 @@ const SESSION_ID = getOrCreateSession();
 function loadState() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : { scores: {}, shortlist: [], mode: 'assess', engaged: false, privacyDismissed: false };
+    return raw ? JSON.parse(raw) : { scores: {}, shortlist: [], mode: 'assess', engaged: false, privacyDismissed: false, insightPromptDone: false, insightSubmitted: false, leadSubmitted: false };
   } catch {
-    return { scores: {}, shortlist: [], mode: 'assess', engaged: false, privacyDismissed: false };
+    return { scores: {}, shortlist: [], mode: 'assess', engaged: false, privacyDismissed: false, insightPromptDone: false, insightSubmitted: false, leadSubmitted: false };
   }
 }
 function saveState() {
@@ -2830,6 +2861,11 @@ document.getElementById('lead-form').addEventListener('submit', async (e) => {
     shortlist_count: state.shortlist.length
   });
 
+  // Record that this visitor has handed over their details, so the
+  // auto-triggered insight prompt won't pester them later.
+  state.leadSubmitted = true;
+  saveState();
+
   // Always keep a localStorage backup so nothing's ever lost
   const localLeads = JSON.parse(localStorage.getItem('omnia_gi_leads') || '[]');
   localLeads.push(lead);
@@ -2965,6 +3001,132 @@ modal.addEventListener('click', (e) => {
   }
 });
 
+// ---- Insight report prompt (auto-triggered while exploring) ----
+// After a handful of explore interactions, invite the visitor to receive an
+// industry insight report on where other insurers are focusing their AI efforts.
+const INSIGHT_INTERACTION_THRESHOLD = 5;
+let exploreInteractionCount = 0;
+let insightPromptPending = false;
+const insightModal = document.getElementById('insight-modal-backdrop');
+
+function leadAlreadyCaptured() {
+  return state.leadSubmitted || state.insightSubmitted;
+}
+
+function openInsightModal() {
+  if (insightModal.classList.contains('open')) return;
+  state.insightPromptDone = true; // only ever prompt once per visitor
+  saveState();
+  insightModal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  track('insight_prompt_shown', { interactions: exploreInteractionCount });
+}
+function closeInsightModal() {
+  insightModal.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function maybeShowInsightPrompt() {
+  if (state.insightPromptDone || leadAlreadyCaptured()) return;
+  if (exploreInteractionCount < INSIGHT_INTERACTION_THRESHOLD) return;
+  // If a case study modal is open, don't stack — defer until it closes.
+  if (modal.classList.contains('open')) { insightPromptPending = true; return; }
+  openInsightModal();
+}
+
+function registerExploreInteraction() {
+  if (state.mode !== 'explore') return;
+  if (state.insightPromptDone || leadAlreadyCaptured()) return;
+  exploreInteractionCount++;
+  maybeShowInsightPrompt();
+}
+
+// When a case study modal closes, surface any queued insight prompt.
+const _closeBeforeInsight = closeModal;
+closeModal = function() {
+  const result = _closeBeforeInsight();
+  if (insightPromptPending) {
+    insightPromptPending = false;
+    setTimeout(openInsightModal, 250);
+  }
+  return result;
+};
+
+document.getElementById('insight-modal-close').addEventListener('click', () => {
+  closeInsightModal();
+  track('insight_prompt_dismissed', { interactions: exploreInteractionCount });
+});
+insightModal.addEventListener('click', (e) => {
+  if (e.target === insightModal) {
+    closeInsightModal();
+    track('insight_prompt_dismissed', { interactions: exploreInteractionCount });
+  }
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && insightModal.classList.contains('open')) closeInsightModal();
+});
+
+document.getElementById('insight-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const submit = document.getElementById('insight-submit');
+  submit.disabled = true;
+  submit.textContent = 'Sending...';
+
+  const lead = {
+    session_id: SESSION_ID,
+    name: document.getElementById('insight-name').value,
+    email: document.getElementById('insight-email').value,
+    source: 'insight_report',
+    submitted_at: new Date().toISOString()
+  };
+
+  state.insightSubmitted = true;
+  saveState();
+
+  track('insight_lead_submitted', { interactions: exploreInteractionCount });
+
+  // Always keep a localStorage backup so nothing's ever lost
+  const localLeads = JSON.parse(localStorage.getItem('omnia_gi_leads') || '[]');
+  localLeads.push(lead);
+  localStorage.setItem('omnia_gi_leads', JSON.stringify(localLeads));
+  window.OMNIA_LEADS = localLeads;
+
+  // Send to Supabase if configured (best-effort — localStorage backup kept)
+  if (supabaseConfigured()) {
+    try {
+      await fetch(`${OMNIA_CONFIG.SUPABASE_URL}/rest/v1/leads`, {
+        method: 'POST',
+        headers: {
+          'apikey': OMNIA_CONFIG.SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${OMNIA_CONFIG.SUPABASE_ANON_KEY}`,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify({
+          session_id: SESSION_ID,
+          name: lead.name,
+          email: lead.email,
+          company: '',
+          role: '',
+          shortlist_count: state.shortlist.length,
+          assessment_count: Object.keys(state.scores).length
+        })
+      });
+      await flushTelemetry();
+    } catch (err) {
+      console.warn('[insight submit] Supabase write failed (localStorage backup kept)', err);
+    }
+  }
+
+  document.getElementById('insight-modal-body').innerHTML = `
+    <div class="form-success">
+      <strong>Thanks, ${lead.name.split(' ')[0]}!</strong>
+      Your industry insight report is on its way — we'll email it to you shortly. Keep exploring the atlas in the meantime.
+    </div>
+  `;
+  setTimeout(closeInsightModal, 2800);
+});
+
 // ---- Privacy notice ----
 const privacyNotice = document.getElementById('privacy-notice');
 if (!state.privacyDismissed) {
@@ -2983,6 +3145,7 @@ document.querySelectorAll('.domain-header').forEach(header => {
     const domain = header.parentElement.dataset.domainNum;
     const opened = !header.parentElement.classList.contains('collapsed');
     track('domain_toggled', { domain, opened });
+    registerExploreInteraction();
   });
 });
 
