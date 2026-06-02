@@ -1510,6 +1510,62 @@
     .privacy-notice { left: 12px; right: 12px; max-width: none; bottom: 12px; }
     .shortlist-fab { bottom: 12px; right: 12px; }
   }
+
+  /* ===== RESPONSIVE — comprehensive mobile pass ===== */
+
+  /* Hide "Data refreshed" badge when viewport gets narrow */
+  @media (max-width: 680px) {
+    .data-refreshed-tag { display: none; }
+  }
+
+  /* Hide brand attribution sub-line on phones to prevent overflow */
+  @media (max-width: 640px) {
+    .brand-attribution { display: none; }
+  }
+
+  /* Small phones (≤ 480px) */
+  @media (max-width: 480px) {
+    /* Brand bar */
+    .brand-right { gap: 8px; }
+    .mode-btn { padding: 7px 12px; font-size: 10px; letter-spacing: 1px; }
+
+    /* Typography */
+    h1 { font-size: 22px; }
+    .splash-title { font-size: 19px; }
+    .splash-body { font-size: 14px; }
+
+    /* Splash CTA — stack vertically */
+    .splash-cta-row {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    /* Assessment sliders — tighten label column */
+    .slider-row {
+      grid-template-columns: 60px 1fr 26px;
+      gap: 8px;
+    }
+    .slider-label { font-size: 9px; letter-spacing: 1px; }
+
+    /* Larger touch targets for slider thumbs */
+    .slider { height: 7px; }
+    .slider::-webkit-slider-thumb { width: 22px; height: 22px; }
+    .slider::-moz-range-thumb { width: 22px; height: 22px; }
+
+    /* Progress bar — hide track to free space for the CTA button */
+    .progress-track { display: none; }
+
+    /* Modal — tighter padding and stack footer */
+    .modal-backdrop { padding: 10px; }
+    .modal-footer { flex-direction: column; align-items: flex-start; gap: 12px; }
+
+    /* Case pill — larger touch target */
+    .case-pill { padding: 7px 12px; }
+
+    /* Page footer — stack vertically */
+    .page-footer { flex-direction: column; gap: 6px; }
+  }
 </style>
 </head>
 <body class="mode-assess">
