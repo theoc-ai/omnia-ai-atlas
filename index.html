@@ -1806,11 +1806,125 @@ const OMNIA_CONFIG = {
 // =================== DATA ===================
 const DATA = {
   core: [
-    {
-      num: "01", title: "Product and Distribution",
+      num: "01", title: "Policy Servicing",
       subdomains: [
         {
-          id: "1.1", title: "Develop and Manage Products & Services",
+          id: "1.1", title: "Customer Service Operations",
+          activities: ["Develop Customer Service Strategy", "Fulfil Customer Service Requirements", "Manage Service Delivery", "Measure and Improve Service", "Manage Contact Channels", "Handle Complaints & Escalations", "Route & Prioritise Inbound Contacts"],
+          caseStudy: {
+            company: "Zurich Insurance",
+            year: "2024",
+            title: "AI-driven CRM across four markets",
+            context: "Zurich needed to consolidate fragmented customer data and unify agent experience across phone, email, and WhatsApp, while reducing servicing times and improving claim handling consistency.",
+            useCase: "Launched an AI-powered CRM in January 2024, built on Microsoft Dynamics 365 with Copilot for Sales. A 'three-click rule' was embedded in the design — agents access any customer record or complete any task in three clicks or fewer. A separate AI claims chatbot now handles 35% of all claim requests.",
+            outcomes: "Servicing times dropped by <strong>over 70%</strong> across four pilot markets. The claims chatbot cut average processing time by <strong>30%</strong> with an <strong>80% Net Promoter Score</strong>.",
+            source: "Microsoft Customer Stories",
+            sourceUrl: "https://customers.microsoft.com/"
+          }
+        },
+        {
+          id: "1.2", title: "Policy Administration",
+          activities: ["Issue & Deliver Policy Documents", "Process Endorsements & Mid-Term Adjustments", "Process Renewals (Operational)", "Process Cancellations & Lapses", "Manage Coverage Corrections", "Policy Data Quality & Maintenance", "Intelligent Document Processing (IDP)", "Straight-Through Processing (STP) Automation", "Regulatory Compliance & Filings"],
+          caseStudy: {
+            company: "Major US Insurer (Nomad Data Doc Chat)",
+            year: "2024",
+            title: "AI-powered endorsement processing at scale",
+            context: "Endorsements — the mid-term changes that update coverage, add locations, modify limits, or exclude new exposures — are high-volume, document-heavy, and high-risk. Each request requires cross-referencing dense 100+ page policy documents, comparing against schedules and regulatory notices, and flagging conflicts. A major US insurer reported receiving <strong>thousands of endorsement requests weekly</strong>, with dedicated teams whose entire job was reviewing, interpreting, and manually processing them.",
+            useCase: "Deployed Nomad Data's Doc Chat AI agent to automate endorsement intake and cross-document verification. The system reads requests in any format (emails, scanned letters, digital forms, handwritten notes), parses them against the original policy and prior endorsements, flags coverage conflicts and regulatory gaps, and routes for review or auto-approval.",
+            outcomes: "Transformed endorsement processing from a 'necessary administrative cost centre to a strategic, value-generating function.' Insurers using similar AI policy-administration agents report cycle times <strong>compressed from days to minutes</strong> for high-volume change types, with audit-readiness time <strong>cut 60–80%</strong>.",
+            source: "Nomad Data",
+            sourceUrl: "https://www.nomad-data.com/doc-chat/ai-powered-policy-endorsement-processing-revolutionizing-mid-term-changes-in-insurance-servicing"
+          }
+        },
+        {
+          id: "1.3", title: "Billing & Premium Management",
+          activities: ["Premium Invoicing & Collection", "Direct Debit & Payment Processing", "Premium Adjustment & Recalculation", "Manage Instalments & Financing", "Debt Management & Arrears", "Refunds & Credit Processing", "Premium Reconciliation"],
+          caseStudy: null,
+          emptyNote: "AI is being applied to premium collection and billing workflows across P&C — automating payment reconciliation, predicting arrears risk, optimising instalment defaults, and reducing lapse from missed payments. Case studies in production are emerging but not yet widely published by name; vendors active in this space include Majesco, Guidewire Billing Center with AI extensions, and specialist fintechs. We are sourcing a confirmed case study for this area."
+        },
+        {
+          id: "1.4", title: "Retention & Cross-Sell",
+          activities: ["Predict Customer Churn", "Trigger Retention Actions", "Identify Cross-Sell / Up-Sell Opportunities", "Customer Lifetime Value Modelling", "Renewal Engagement"],
+          caseStudy: {
+            company: "Nationwide Insurance (with H2O.ai)",
+            year: "2024",
+            title: "Centralised AI model factory for churn, retention & customer expansion",
+            context: "Nationwide, a top US P&C carrier, had a sprawling set of analytics use cases — customer churn, retention, call routing, risk segmentation, fraud, underwriting, customer expansion — but lacked a single platform to develop, deploy, and monitor models consistently. Bespoke modelling per use case was slow and inconsistent.",
+            useCase: "Powered by H2O Driverless AI, Nationwide built a centralised data science team and a unique, patented 'model factory' that monitors all AI/ML models across the business. The agile team rapidly explores data with feature engineering and prototypes models for customer churn, retention, cross-sell, call routing, risk and business segmentation, fraud, underwriting, and customer-360 use cases.",
+            outcomes: "Enabled stable, statistically unbiased models that the business can trust in production. Quote from Nationwide's VP of Predictive Analytics: 'We are able to do more with less and do it faster.' The model factory pattern has become a reference architecture for other P&C carriers building scaled AI capability.",
+            source: "H2O.ai / Emerj AI Research",
+            sourceUrl: "https://h2o.ai/case-studies/nationwide-insurance-delivers-exceptional-protection-for-members-with-h2o-ai/"
+          }
+        }
+      ]
+    },
+    {
+      num: "02", title: "Claims",
+      subdomains: [
+        {
+          id: "2.1", title: "Initial Claim Setup",
+          activities: ["Receive Claim Notice (FNOL)", "Triage / Assign Claim", "Constituent Set Up", "Set Initial Reserves", "Perform Initial Investigation", "Manage CAT & Major Loss Events"],
+          caseStudy: {
+            company: "Aviva",
+            year: "2024",
+            title: "AI-powered triage and routing",
+            context: "As part of an 80+ AI model deployment across the claims journey, Aviva targeted the intake and triage stage — a high-volume bottleneck where mis-routing extended liability assessment timelines on complex cases.",
+            useCase: "Applied AI at intake and triage to automatically classify inbound claims by type, severity, and complexity, and route them to the right specialist team.",
+            outcomes: "Routing accuracy improved by <strong>30%</strong> and liability assessment time for complex cases was cut by <strong>23 days</strong>. The full claims transformation saved Aviva <strong>more than £60 million in 2024</strong> and reduced customer complaints by <strong>65%</strong>.",
+            source: "McKinsey / Thomson Reuters",
+            sourceUrl: "https://legal.thomsonreuters.com/blog/ai-is-transforming-insurance-and-the-law-firms-that-serve-it-must-keep-pace/"
+          }
+        },
+        {
+          id: "2.2", title: "Claims Assessment & Adjudication",
+          activities: ["Appoint & Manage Loss Adjusters", "Assess Damage & Quantify Loss", "Manage Repair & Reinstatement", "Determine Loss Control", "Determine Salvage", "Evaluate Fraud", "Manage Exposure", "Manage Claim Reserves", "Determine Reinsurance", "Determine Subrogation"],
+          caseStudy: {
+            company: "Allianz",
+            year: "2024",
+            title: "'Incognito' Fraud Detection System",
+            context: "Fabricated or manipulated evidence — subtle image distortions, doctored documents — routinely slips past human adjusters, creating material leakage across motor and property books.",
+            useCase: "Deployed 'Incognito' across motor claims, home insurance claims, and applications. The system analyses distortions and anomalies in images, video, and documents to detect tampered evidence.",
+            outcomes: "<strong>29% increase in fraud detection</strong> across all channels, materially reducing leakage on the book.",
+            source: "CDP Center / Risk & Insurance",
+            sourceUrl: "https://riskandinsurance.com/"
+          }
+        },
+        {
+          id: "2.3", title: "Claims Operations",
+          activities: ["Manage Claimant Communications", "Manage Vendor Relationships", "Manage Third Party Administrators (TPA)", "Manage Litigation & Legal Spend", "Manage / Review Billing", "Manage Claim Department", "Perform Reporting", "Knowledge & Quality Management"],
+          caseStudy: {
+            company: "Aviva (claims operations layer)",
+            year: "2024",
+            title: "80+ AI models across claims operations",
+            context: "Beyond intake and triage, the day-to-day machinery of claims operations — vendor coordination, litigation management, billing review, and departmental reporting — was a major source of leakage and lag. Aviva approached this with a portfolio rather than a point-solution strategy, layering AI across the entire operation.",
+            useCase: "Deployed more than 80 AI models across the claims operation, covering vendor performance, legal spend, departmental KPIs, and case-routing optimisation. AI-generated reports, legal correspondence drafts, and quality-assurance signals feed directly into adjuster and operations-manager workflows. One large carrier (referenced alongside Aviva) now generates approximately 50,000 claims-related communications daily using AI.",
+            outcomes: "Aviva's full claims transformation <strong>saved more than £60 million ($79.3m) in 2024</strong>, cut customer complaints by <strong>65%</strong>, and improved routing accuracy by <strong>30%</strong>. AI leaders in insurance have generated more than <strong>six times the total shareholder return</strong> of laggard peers over the past five years.",
+            source: "Thomson Reuters / McKinsey",
+            sourceUrl: "https://legal.thomsonreuters.com/blog/ai-is-transforming-insurance-and-the-law-firms-that-serve-it-must-keep-pace/"
+          }
+        },
+        {
+          id: "2.4", title: "Negotiate & Settle Claims",
+          activities: ["Settlement Recommendation Drafting", "Third Party Negotiation", "Issue Payment", "Manage Disputes & Litigation", "Pursue Recovery & Subrogation", "Perform Claims Audit", "Close Claim & Archive File"],
+          caseStudy: {
+            company: "Allianz Austria",
+            year: "2024",
+            title: "Insurance Copilot for Settlement",
+            context: "Automotive claims settlement required adjusters to synthesise claim evidence, policy terms, and precedent to negotiate and authorise payment — a high-touch, time-intensive stage of the claims lifecycle.",
+            useCase: "Launched the Insurance Copilot — a generative AI tool that drafts settlement recommendations and payment authorisations. Adjusters can accept, modify, or escalate the AI's proposals.",
+            outcomes: "Cut settlement cycle time significantly. A comparable US travel insurer using AI settlement automation cut claims processing <strong>from weeks to minutes</strong> and achieved <strong>57% straight-through processing</strong>.",
+            source: "Allianz Media / CDP Center",
+            sourceUrl: "https://www.allianz.com/en/press.html"
+          }
+        }
+      ]
+    },
+    {
+    {
+      num: "03", title: "Product and Distribution",
+      subdomains: [
+        {
+          id: "3.1", title: "Develop and Manage Products & Services",
           activities: [
             {
               name: "Analyse Market & Customer Needs",
@@ -1868,7 +1982,7 @@ const DATA = {
           }
         },
         {
-          id: "1.2", title: "Market & Promote Products & Services",
+          id: "3.2", title: "Market & Promote Products & Services",
           activities: [
             {
               name: "Advertise / Promote",
@@ -1937,7 +2051,7 @@ const DATA = {
           }
         },
         {
-          id: "1.3", title: "Manage Commissions",
+          id: "3.3", title: "Manage Commissions",
           activities: [
             "Manage Commission Types & Plans",
             "Negotiate Commission",
@@ -1969,15 +2083,15 @@ const DATA = {
       ]
     },
     {
-      num: "02", title: "Quoting and Underwriting",
+      num: "04", title: "Quoting and Underwriting",
       subdomains: [
         {
-          id: "2.1", title: "Quoting",
+          id: "4.1", title: "Quoting",
           activities: ["Calculate & Present Quote", "Configure Cover & Options", "Manage Quote Pipeline", "Multi-Quote / Tender Response"],
           caseStudy: null
         },
         {
-          id: "2.2", title: "Underwriting",
+          id: "4.2", title: "Underwriting",
           activities: ["Risk Assessment", "Underwriting Decisioning", "Referrals & Exception Handling", "Underwriter Guidance & Knowledge Support", "Data Enrichment & Third-Party Lookups"],
           caseStudy: {
             company: "Liberty Mutual (with Groundspeed Analytics)",
@@ -1991,7 +2105,7 @@ const DATA = {
           }
         },
         {
-          id: "2.3", title: "Policy Issuance & Renewals",
+          id: "4.3", title: "Policy Issuance & Renewals",
           activities: ["Manage Application / New Business", "Generate & Deliver Policy Documents", "Manage Renewals", "Manage Customer Relationships"],
           caseStudy: {
             company: "Liberty International Underwriters",
@@ -2005,7 +2119,7 @@ const DATA = {
           }
         },
         {
-          id: "2.4", title: "Bill & Collect Premiums",
+          id: "4.4", title: "Bill & Collect Premiums",
           activities: ["Produce Bill / Statements", "Manage Changes to Payment Details", "Process Receipts", "Perform Collection"],
           caseStudy: {
             company: "UiPath Insurance Clients",
@@ -2016,120 +2130,6 @@ const DATA = {
             outcomes: "Saved over <strong>15,000 employee hours per month</strong> across billing and collections. Documentation time fell <strong>40%</strong>, turnaround <strong>50%</strong>, with <strong>99.5% data accuracy</strong> and a <strong>30% reported ROI</strong>.",
             source: "UiPath / CDP Center",
             sourceUrl: "https://www.uipath.com/"
-          }
-        }
-      ]
-    },
-    {
-      num: "03", title: "Policy Servicing",
-      subdomains: [
-        {
-          id: "3.1", title: "Customer Service Operations",
-          activities: ["Develop Customer Service Strategy", "Fulfil Customer Service Requirements", "Manage Service Delivery", "Measure and Improve Service", "Manage Contact Channels", "Handle Complaints & Escalations", "Route & Prioritise Inbound Contacts"],
-          caseStudy: {
-            company: "Zurich Insurance",
-            year: "2024",
-            title: "AI-driven CRM across four markets",
-            context: "Zurich needed to consolidate fragmented customer data and unify agent experience across phone, email, and WhatsApp, while reducing servicing times and improving claim handling consistency.",
-            useCase: "Launched an AI-powered CRM in January 2024, built on Microsoft Dynamics 365 with Copilot for Sales. A 'three-click rule' was embedded in the design — agents access any customer record or complete any task in three clicks or fewer. A separate AI claims chatbot now handles 35% of all claim requests.",
-            outcomes: "Servicing times dropped by <strong>over 70%</strong> across four pilot markets. The claims chatbot cut average processing time by <strong>30%</strong> with an <strong>80% Net Promoter Score</strong>.",
-            source: "Microsoft Customer Stories",
-            sourceUrl: "https://customers.microsoft.com/"
-          }
-        },
-        {
-          id: "3.2", title: "Policy Administration",
-          activities: ["Issue & Deliver Policy Documents", "Process Endorsements & Mid-Term Adjustments", "Process Renewals (Operational)", "Process Cancellations & Lapses", "Manage Coverage Corrections", "Policy Data Quality & Maintenance", "Intelligent Document Processing (IDP)", "Straight-Through Processing (STP) Automation", "Regulatory Compliance & Filings"],
-          caseStudy: {
-            company: "Major US Insurer (Nomad Data Doc Chat)",
-            year: "2024",
-            title: "AI-powered endorsement processing at scale",
-            context: "Endorsements — the mid-term changes that update coverage, add locations, modify limits, or exclude new exposures — are high-volume, document-heavy, and high-risk. Each request requires cross-referencing dense 100+ page policy documents, comparing against schedules and regulatory notices, and flagging conflicts. A major US insurer reported receiving <strong>thousands of endorsement requests weekly</strong>, with dedicated teams whose entire job was reviewing, interpreting, and manually processing them.",
-            useCase: "Deployed Nomad Data's Doc Chat AI agent to automate endorsement intake and cross-document verification. The system reads requests in any format (emails, scanned letters, digital forms, handwritten notes), parses them against the original policy and prior endorsements, flags coverage conflicts and regulatory gaps, and routes for review or auto-approval.",
-            outcomes: "Transformed endorsement processing from a 'necessary administrative cost centre to a strategic, value-generating function.' Insurers using similar AI policy-administration agents report cycle times <strong>compressed from days to minutes</strong> for high-volume change types, with audit-readiness time <strong>cut 60–80%</strong>.",
-            source: "Nomad Data",
-            sourceUrl: "https://www.nomad-data.com/doc-chat/ai-powered-policy-endorsement-processing-revolutionizing-mid-term-changes-in-insurance-servicing"
-          }
-        },
-        {
-          id: "3.3", title: "Billing & Premium Management",
-          activities: ["Premium Invoicing & Collection", "Direct Debit & Payment Processing", "Premium Adjustment & Recalculation", "Manage Instalments & Financing", "Debt Management & Arrears", "Refunds & Credit Processing", "Premium Reconciliation"],
-          caseStudy: null,
-          emptyNote: "AI is being applied to premium collection and billing workflows across P&C — automating payment reconciliation, predicting arrears risk, optimising instalment defaults, and reducing lapse from missed payments. Case studies in production are emerging but not yet widely published by name; vendors active in this space include Majesco, Guidewire Billing Center with AI extensions, and specialist fintechs. We are sourcing a confirmed case study for this area."
-        },
-        {
-          id: "3.4", title: "Retention & Cross-Sell",
-          activities: ["Predict Customer Churn", "Trigger Retention Actions", "Identify Cross-Sell / Up-Sell Opportunities", "Customer Lifetime Value Modelling", "Renewal Engagement"],
-          caseStudy: {
-            company: "Nationwide Insurance (with H2O.ai)",
-            year: "2024",
-            title: "Centralised AI model factory for churn, retention & customer expansion",
-            context: "Nationwide, a top US P&C carrier, had a sprawling set of analytics use cases — customer churn, retention, call routing, risk segmentation, fraud, underwriting, customer expansion — but lacked a single platform to develop, deploy, and monitor models consistently. Bespoke modelling per use case was slow and inconsistent.",
-            useCase: "Powered by H2O Driverless AI, Nationwide built a centralised data science team and a unique, patented 'model factory' that monitors all AI/ML models across the business. The agile team rapidly explores data with feature engineering and prototypes models for customer churn, retention, cross-sell, call routing, risk and business segmentation, fraud, underwriting, and customer-360 use cases.",
-            outcomes: "Enabled stable, statistically unbiased models that the business can trust in production. Quote from Nationwide's VP of Predictive Analytics: 'We are able to do more with less and do it faster.' The model factory pattern has become a reference architecture for other P&C carriers building scaled AI capability.",
-            source: "H2O.ai / Emerj AI Research",
-            sourceUrl: "https://h2o.ai/case-studies/nationwide-insurance-delivers-exceptional-protection-for-members-with-h2o-ai/"
-          }
-        }
-      ]
-    },
-    {
-      num: "04", title: "Claims",
-      subdomains: [
-        {
-          id: "4.1", title: "Initial Claim Setup",
-          activities: ["Receive Claim Notice (FNOL)", "Triage / Assign Claim", "Constituent Set Up", "Set Initial Reserves", "Perform Initial Investigation", "Manage CAT & Major Loss Events"],
-          caseStudy: {
-            company: "Aviva",
-            year: "2024",
-            title: "AI-powered triage and routing",
-            context: "As part of an 80+ AI model deployment across the claims journey, Aviva targeted the intake and triage stage — a high-volume bottleneck where mis-routing extended liability assessment timelines on complex cases.",
-            useCase: "Applied AI at intake and triage to automatically classify inbound claims by type, severity, and complexity, and route them to the right specialist team.",
-            outcomes: "Routing accuracy improved by <strong>30%</strong> and liability assessment time for complex cases was cut by <strong>23 days</strong>. The full claims transformation saved Aviva <strong>more than £60 million in 2024</strong> and reduced customer complaints by <strong>65%</strong>.",
-            source: "McKinsey / Thomson Reuters",
-            sourceUrl: "https://legal.thomsonreuters.com/blog/ai-is-transforming-insurance-and-the-law-firms-that-serve-it-must-keep-pace/"
-          }
-        },
-        {
-          id: "4.2", title: "Claims Assessment & Adjudication",
-          activities: ["Appoint & Manage Loss Adjusters", "Assess Damage & Quantify Loss", "Manage Repair & Reinstatement", "Determine Loss Control", "Determine Salvage", "Evaluate Fraud", "Manage Exposure", "Manage Claim Reserves", "Determine Reinsurance", "Determine Subrogation"],
-          caseStudy: {
-            company: "Allianz",
-            year: "2024",
-            title: "'Incognito' Fraud Detection System",
-            context: "Fabricated or manipulated evidence — subtle image distortions, doctored documents — routinely slips past human adjusters, creating material leakage across motor and property books.",
-            useCase: "Deployed 'Incognito' across motor claims, home insurance claims, and applications. The system analyses distortions and anomalies in images, video, and documents to detect tampered evidence.",
-            outcomes: "<strong>29% increase in fraud detection</strong> across all channels, materially reducing leakage on the book.",
-            source: "CDP Center / Risk & Insurance",
-            sourceUrl: "https://riskandinsurance.com/"
-          }
-        },
-        {
-          id: "4.3", title: "Claims Operations",
-          activities: ["Manage Claimant Communications", "Manage Vendor Relationships", "Manage Third Party Administrators (TPA)", "Manage Litigation & Legal Spend", "Manage / Review Billing", "Manage Claim Department", "Perform Reporting", "Knowledge & Quality Management"],
-          caseStudy: {
-            company: "Aviva (claims operations layer)",
-            year: "2024",
-            title: "80+ AI models across claims operations",
-            context: "Beyond intake and triage, the day-to-day machinery of claims operations — vendor coordination, litigation management, billing review, and departmental reporting — was a major source of leakage and lag. Aviva approached this with a portfolio rather than a point-solution strategy, layering AI across the entire operation.",
-            useCase: "Deployed more than 80 AI models across the claims operation, covering vendor performance, legal spend, departmental KPIs, and case-routing optimisation. AI-generated reports, legal correspondence drafts, and quality-assurance signals feed directly into adjuster and operations-manager workflows. One large carrier (referenced alongside Aviva) now generates approximately 50,000 claims-related communications daily using AI.",
-            outcomes: "Aviva's full claims transformation <strong>saved more than £60 million ($79.3m) in 2024</strong>, cut customer complaints by <strong>65%</strong>, and improved routing accuracy by <strong>30%</strong>. AI leaders in insurance have generated more than <strong>six times the total shareholder return</strong> of laggard peers over the past five years.",
-            source: "Thomson Reuters / McKinsey",
-            sourceUrl: "https://legal.thomsonreuters.com/blog/ai-is-transforming-insurance-and-the-law-firms-that-serve-it-must-keep-pace/"
-          }
-        },
-        {
-          id: "4.4", title: "Negotiate & Settle Claims",
-          activities: ["Settlement Recommendation Drafting", "Third Party Negotiation", "Issue Payment", "Manage Disputes & Litigation", "Pursue Recovery & Subrogation", "Perform Claims Audit", "Close Claim & Archive File"],
-          caseStudy: {
-            company: "Allianz Austria",
-            year: "2024",
-            title: "Insurance Copilot for Settlement",
-            context: "Automotive claims settlement required adjusters to synthesise claim evidence, policy terms, and precedent to negotiate and authorise payment — a high-touch, time-intensive stage of the claims lifecycle.",
-            useCase: "Launched the Insurance Copilot — a generative AI tool that drafts settlement recommendations and payment authorisations. Adjusters can accept, modify, or escalate the AI's proposals.",
-            outcomes: "Cut settlement cycle time significantly. A comparable US travel insurer using AI settlement automation cut claims processing <strong>from weeks to minutes</strong> and achieved <strong>57% straight-through processing</strong>.",
-            source: "Allianz Media / CDP Center",
-            sourceUrl: "https://www.allianz.com/en/press.html"
           }
         }
       ]
