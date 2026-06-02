@@ -2949,6 +2949,15 @@ document.body.addEventListener('input', (e) => {
   setScore(subId, type, value);
 });
 
+// Fix: 'input' only fires on value change, so clicking an unset slider already at 0
+// never triggers. Pointerdown fires first — use it to register 0 on first touch.
+document.body.addEventListener('pointerdown', (e) => {
+  if (!e.target.classList.contains('slider') || !e.target.classList.contains('unset')) return;
+  const subId = e.target.dataset.subdomainId;
+  const type = e.target.dataset.sliderType;
+  setScore(subId, type, parseInt(e.target.value, 10));
+});
+
 // Stop slider clicks from bubbling up to the subdomain expand handler
 document.body.addEventListener('click', (e) => {
   if (e.target.classList.contains('slider') || e.target.closest('.assessment-block')) {
