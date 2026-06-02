@@ -3764,6 +3764,75 @@ document.getElementById('request-followup-btn').addEventListener('click', () => 
   openLeadModal('shortlist_followup');
 });
 
+// Build a rich, human-readable assessment + shortlist payload to attach to the
+// lead record. The Supabase -> Slack webhook can render lead.details directly
+// (e.g. details.assessment_summary / details.shortlist_summary) to show the
+// full picture rather than just counts.
+function buildAssessmentDetail() {
+  return Object.entries(state.scores)
+    .filter(([_, v]) => v.current != null || v.target != null)
+    .map(([subId, v]) => {
+      const f = findSubdomain(subId);
+      const cur = v.current ?? null;
+      const tar = v.target ?? null;
+      const gap = (cur != null && tar != null) ? (tar - cur) : null;
+      return {
+        subdomain_id: subId,
+        domain: f ? `${f.domain.num} · ${f.domain.title}` : null,
+        subdomain: f ? `${f.sub.id} ${f.sub.title}` : subId,
+        current: cur,
+        target: tar,
+        gap
+      };
+    });
+}
+
+function buildShortlistDetail() {
+  return state.shortlist.map(item => {
+    const info = lookupTarget(item.target);
+    return {
+      target: item.target,
+      type: item.target.includes('::leaf::') ? 'activity' : 'sub-domain',
+      domain: info ? info.eyebrow : null,
+      path: info ? info.path : item.target,
+      case_study: info && info.company ? `${info.company} — ${info.title}` : null,
+      added_at: item.added_at
+    };
+  });
+}
+
+function formatAssessmentSummary(rows) {
+  if (!rows.length) return 'No sub-domains rated.';
+  return rows.map(r => {
+    const cur = r.current != null ? r.current : '–';
+    const tar = r.target != null ? r.target : '–';
+    const gap = r.gap != null ? `  (gap ${r.gap >= 0 ? '+' : ''}${r.gap})` : '';
+    return `• ${r.subdomain}: ${cur} → ${tar}${gap}`;
+  }).join('\n');
+}
+
+function formatShortlistSummary(rows) {
+  if (!rows.length) return 'No items shortlisted.';
+  return rows.map(r => {
+    const cs = r.case_study ? ` — ${r.case_study}` : '';
+    return `• ${r.path}${cs}`;
+  }).join('\n');
+}
+
+function buildLeadDetail() {
+  const assessment = buildAssessmentDetail();
+  const shortlist = buildShortlistDetail();
+  return {
+    assessment_summary: formatAssessmentSummary(assessment),
+    shortlist_summary: formatShortlistSummary(shortlist),
+    assessment,
+    shortlist,
+    counts: { rated: assessment.length, shortlisted: shortlist.length },
+    mode: document.body.classList.contains('mode-assess') ? 'assess' : 'explore',
+    demo_mode: DEMO_MODE
+  };
+}
+
 // Form submission — for now, capture locally + show success.
 // In Phase 2, this POSTs to Supabase / Formspree.
 document.getElementById('lead-form').addEventListener('submit', async (e) => {
@@ -3772,6 +3841,7 @@ document.getElementById('lead-form').addEventListener('submit', async (e) => {
   submit.disabled = true;
   submit.textContent = 'Sending...';
 
+  const leadDetail = buildLeadDetail();
   const lead = {
     session_id: SESSION_ID,
     name: document.getElementById('lead-name').value,
@@ -3780,6 +3850,7 @@ document.getElementById('lead-form').addEventListener('submit', async (e) => {
     role: document.getElementById('lead-role').value,
     scores: state.scores,
     shortlist: state.shortlist.map(s => s.target),
+    details: leadDetail,
     submitted_at: new Date().toISOString()
   };
 
@@ -3802,8 +3873,18 @@ document.getElementById('lead-form').addEventListener('submit', async (e) => {
   // Send to Supabase if configured
   if (supabaseConfigured()) {
     try {
-      // 1. Insert the lead row
-      await fetch(`${OMNIA_CONFIG.SUPABASE_URL}/rest/v1/leads`, {
+      // 1. Insert the lead row, enriched with the full assessment + shortlist
+      //    detail (lead.details) so the Supabase -> Slack webhook can render it.
+      const leadBase = {
+        session_id: SESSION_ID,
+        name: lead.name,
+        email: lead.email,
+        company: lead.company,
+        role: lead.role,
+        shortlist_count: state.shortlist.length,
+        assessment_count: Object.keys(state.scores).length
+      };
+      const insertLead = (extra) => fetch(`${OMNIA_CONFIG.SUPABASE_URL}/rest/v1/leads`, {
         method: 'POST',
         headers: {
           'apikey': OMNIA_CONFIG.SUPABASE_ANON_KEY,
@@ -3811,16 +3892,16 @@ document.getElementById('lead-form').addEventListener('submit', async (e) => {
           'Content-Type': 'application/json',
           'Prefer': 'return=minimal'
         },
-        body: JSON.stringify({
-          session_id: SESSION_ID,
-          name: lead.name,
-          email: lead.email,
-          company: lead.company,
-          role: lead.role,
-          shortlist_count: state.shortlist.length,
-          assessment_count: Object.keys(state.scores).length
-        })
+        body: JSON.stringify({ ...leadBase, ...extra })
       });
+      // Try the enriched insert first; if the `details` jsonb column hasn't been
+      // added to the leads table yet, fall back to the base row so lead capture
+      // never breaks.
+      let leadRes = await insertLead({ details: leadDetail });
+      if (!leadRes.ok) {
+        console.warn(`[lead submit] enriched insert returned ${leadRes.status}; retrying without details column`);
+        await insertLead({});
+      }
 
       // 2. Insert assessment scores as individual rows for analytics-friendly shape
       const assessmentRows = Object.entries(state.scores)
