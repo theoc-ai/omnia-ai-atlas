@@ -666,34 +666,11 @@
     gap: 12px;
   }
 
-  .brand-logo {
-    width: 34px;
-    height: 34px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--accent);
-    flex-shrink: 0;
-  }
-  .brand-logo svg {
-    width: 100%;
-    height: 100%;
+  .brand-lockup {
+    height: 32px;
+    width: auto;
     display: block;
-  }
-
-  .brand-name {
-    font-size: 16px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    color: var(--text);
-  }
-
-  .brand-attribution {
-    font-size: 10px;
-    color: var(--text-faint);
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    margin-top: 1px;
+    flex-shrink: 0;
   }
 
   .brand-right {
@@ -1518,9 +1495,9 @@
     .data-refreshed-tag { display: none; }
   }
 
-  /* Hide brand attribution sub-line on phones to prevent overflow */
-  @media (max-width: 640px) {
-    .brand-attribution { display: none; }
+  /* Scale down logo lockup on phones */
+  @media (max-width: 480px) {
+    .brand-lockup { height: 26px; }
   }
 
   /* Small phones (≤ 480px) */
@@ -1573,13 +1550,7 @@
 <!-- Brand bar with mode toggle -->
 <div class="brand-bar">
   <div class="brand-mark">
-    <div class="brand-logo" aria-label="The Omnia Collective">
-      <svg viewBox="0 0 54.61 55.01" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M26.3095 18.1429V13.2563C19.0435 13.2563 13.1565 19.19 13.1565 26.5057H18.0075C18.0075 21.8871 21.7245 18.1394 26.313 18.1394L26.3095 18.1429Z" fill="currentColor"></path><path d="M28.2905 13.2563V18.1429C32.8755 18.1429 36.596 21.8871 36.596 26.5092H41.447C41.447 19.19 35.5565 13.2599 28.294 13.2599L28.2905 13.2563Z" fill="currentColor"></path><path d="M26.3095 4.89337V0.00683594C19.0435 0.00683594 13.1565 5.94049 13.1565 13.2562H18.0075C18.0075 8.63761 21.7245 4.88985 26.313 4.88985L26.3095 4.89337Z" fill="currentColor"></path><path d="M13.153 4.89337V0.00683594C5.8905 0.00683594 0 5.94049 0 13.2562H4.851C4.851 8.63761 8.568 4.88985 13.1565 4.88985L13.153 4.89337Z" fill="currentColor"></path><path d="M28.2905 0.00683594V4.89337C32.8755 4.89337 36.596 8.63761 36.596 13.2597H41.447C41.447 5.94049 35.5565 0.00683594 28.2905 0.00683594Z" fill="currentColor"></path><path d="M41.447 0.00683594V4.89337C46.032 4.89337 49.7525 8.63761 49.7525 13.2597H54.6035C54.6035 5.94049 48.713 0.0103616 41.4505 0.0103616L41.447 0.00683594Z" fill="currentColor"></path><path d="M28.2906 36.8711V41.7577C35.5566 41.7577 41.4436 35.824 41.4436 28.5083H36.5926C36.5926 33.1269 32.8756 36.8746 28.2871 36.8746L28.2906 36.8711Z" fill="currentColor"></path><path d="M41.447 13.2563V18.1429C46.032 18.1429 49.7525 21.8871 49.7525 26.5092H54.6035C54.6035 19.19 48.713 13.2599 41.4505 13.2599L41.447 13.2563Z" fill="currentColor"></path><path d="M41.4471 36.8711V41.7577C48.7131 41.7577 54.6001 35.824 54.6001 28.5083H49.7491C49.7491 33.1269 46.0321 36.8746 41.4436 36.8746L41.4471 36.8711Z" fill="currentColor"></path><path d="M41.4471 50.1201V55.0067C48.7131 55.0067 54.6001 49.073 54.6001 41.7573H49.7491C49.7491 46.3759 46.0321 50.1237 41.4436 50.1237L41.4471 50.1201Z" fill="currentColor"></path><path d="M18.0041 28.5045H13.1531C13.1531 35.8237 19.0436 41.7539 26.3061 41.7539V36.8673C21.7211 36.8673 18.0006 33.1231 18.0006 28.501L18.0041 28.5045Z" fill="currentColor"></path><path d="M28.2906 50.1201V55.0067C35.5566 55.0067 41.4436 49.073 41.4436 41.7573H36.5926C36.5926 46.3759 32.8756 50.1237 28.2871 50.1237L28.2906 50.1201Z" fill="currentColor"></path><path d="M18.0041 41.7574H13.1531C13.1531 49.0767 19.0436 55.0068 26.3061 55.0068V50.1203C21.7211 50.1203 18.0006 46.376 18.0006 41.7539L18.0041 41.7574Z" fill="currentColor"></path><path d="M13.153 18.1429V13.2563C5.8905 13.2563 0 19.19 0 26.5092H4.851C4.851 21.8906 8.568 18.1429 13.1565 18.1429H13.153Z" fill="currentColor"></path><path d="M4.851 28.5045H0C0 35.8237 5.8905 41.7539 13.153 41.7539V36.8673C8.568 36.8673 4.8475 33.1231 4.8475 28.501L4.851 28.5045Z" fill="currentColor"></path><path d="M4.851 41.7574H0C0 49.0767 5.8905 55.0068 13.153 55.0068V50.1203C8.568 50.1203 4.8475 46.376 4.8475 41.7539L4.851 41.7574Z" fill="currentColor"></path></svg>
-    </div>
-    <div>
-      <div class="brand-name">OMNIA</div>
-      <div class="brand-attribution">AI Maturity Atlas · Delivered by AI Decisions</div>
-    </div>
+    <img src="data:image/webp;base64,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" alt="AI Decisions" class="brand-lockup" />
   </div>
   <div class="brand-right">
     <span class="data-refreshed-tag">
