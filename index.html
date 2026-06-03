@@ -340,6 +340,30 @@
 
   .domain.collapsed .chevron { transform: rotate(-90deg); }
 
+  /* ===== Locked (demo mode) domains ===== */
+  .domain.locked .chevron { display: none; }
+  .domain.locked .domain-header { cursor: pointer; }
+  .domain.locked .domain-title-block { opacity: 0.72; }
+  .domain.locked:hover .domain-title-block { opacity: 1; }
+  .domain-lock {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: rgba(193, 239, 165, 0.12);
+    border: 1px solid rgba(193, 239, 165, 0.35);
+    border-radius: 999px;
+    padding: 4px 10px 4px 8px;
+    white-space: nowrap;
+    transition: background 0.2s ease;
+  }
+  .domain-lock svg { width: 14px; height: 14px; flex-shrink: 0; }
+  .domain.locked:hover .domain-lock { background: rgba(193, 239, 165, 0.2); }
+
   /* ===== Subdomain body ===== */
   .subdomains {
     padding: 0 16px 16px;
@@ -761,34 +785,11 @@
     gap: 12px;
   }
 
-  .brand-logo {
-    width: 34px;
-    height: 34px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--accent);
-    flex-shrink: 0;
-  }
-  .brand-logo svg {
-    width: 100%;
-    height: 100%;
+  .brand-lockup {
+    height: 32px;
+    width: auto;
     display: block;
-  }
-
-  .brand-name {
-    font-size: 16px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    color: var(--text);
-  }
-
-  .brand-attribution {
-    font-size: 10px;
-    color: var(--text-faint);
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    margin-top: 1px;
+    flex-shrink: 0;
   }
 
   .brand-right {
@@ -1605,6 +1606,62 @@
     .privacy-notice { left: 12px; right: 12px; max-width: none; bottom: 12px; }
     .shortlist-fab { bottom: 12px; right: 12px; }
   }
+
+  /* ===== RESPONSIVE — comprehensive mobile pass ===== */
+
+  /* Hide "Data refreshed" badge when viewport gets narrow */
+  @media (max-width: 680px) {
+    .data-refreshed-tag { display: none; }
+  }
+
+  /* Scale down logo lockup on phones */
+  @media (max-width: 480px) {
+    .brand-lockup { height: 26px; }
+  }
+
+  /* Small phones (≤ 480px) */
+  @media (max-width: 480px) {
+    /* Brand bar */
+    .brand-right { gap: 8px; }
+    .mode-btn { padding: 7px 12px; font-size: 10px; letter-spacing: 1px; }
+
+    /* Typography */
+    h1 { font-size: 22px; }
+    .splash-title { font-size: 19px; }
+    .splash-body { font-size: 14px; }
+
+    /* Splash CTA — stack vertically */
+    .splash-cta-row {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    /* Assessment sliders — tighten label column */
+    .slider-row {
+      grid-template-columns: 60px 1fr 26px;
+      gap: 8px;
+    }
+    .slider-label { font-size: 9px; letter-spacing: 1px; }
+
+    /* Larger touch targets for slider thumbs */
+    .slider { height: 7px; }
+    .slider::-webkit-slider-thumb { width: 22px; height: 22px; }
+    .slider::-moz-range-thumb { width: 22px; height: 22px; }
+
+    /* Progress bar — hide track to free space for the CTA button */
+    .progress-track { display: none; }
+
+    /* Modal — tighter padding and stack footer */
+    .modal-backdrop { padding: 10px; }
+    .modal-footer { flex-direction: column; align-items: flex-start; gap: 12px; }
+
+    /* Case pill — larger touch target */
+    .case-pill { padding: 7px 12px; }
+
+    /* Page footer — stack vertically */
+    .page-footer { flex-direction: column; gap: 6px; }
+  }
 </style>
 </head>
 <body class="mode-explore">
@@ -1612,13 +1669,7 @@
 <!-- Brand bar with mode toggle -->
 <div class="brand-bar">
   <div class="brand-mark">
-    <div class="brand-logo" aria-label="The Omnia Collective">
-      <svg viewBox="0 0 54.61 55.01" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M26.3095 18.1429V13.2563C19.0435 13.2563 13.1565 19.19 13.1565 26.5057H18.0075C18.0075 21.8871 21.7245 18.1394 26.313 18.1394L26.3095 18.1429Z" fill="currentColor"></path><path d="M28.2905 13.2563V18.1429C32.8755 18.1429 36.596 21.8871 36.596 26.5092H41.447C41.447 19.19 35.5565 13.2599 28.294 13.2599L28.2905 13.2563Z" fill="currentColor"></path><path d="M26.3095 4.89337V0.00683594C19.0435 0.00683594 13.1565 5.94049 13.1565 13.2562H18.0075C18.0075 8.63761 21.7245 4.88985 26.313 4.88985L26.3095 4.89337Z" fill="currentColor"></path><path d="M13.153 4.89337V0.00683594C5.8905 0.00683594 0 5.94049 0 13.2562H4.851C4.851 8.63761 8.568 4.88985 13.1565 4.88985L13.153 4.89337Z" fill="currentColor"></path><path d="M28.2905 0.00683594V4.89337C32.8755 4.89337 36.596 8.63761 36.596 13.2597H41.447C41.447 5.94049 35.5565 0.00683594 28.2905 0.00683594Z" fill="currentColor"></path><path d="M41.447 0.00683594V4.89337C46.032 4.89337 49.7525 8.63761 49.7525 13.2597H54.6035C54.6035 5.94049 48.713 0.0103616 41.4505 0.0103616L41.447 0.00683594Z" fill="currentColor"></path><path d="M28.2906 36.8711V41.7577C35.5566 41.7577 41.4436 35.824 41.4436 28.5083H36.5926C36.5926 33.1269 32.8756 36.8746 28.2871 36.8746L28.2906 36.8711Z" fill="currentColor"></path><path d="M41.447 13.2563V18.1429C46.032 18.1429 49.7525 21.8871 49.7525 26.5092H54.6035C54.6035 19.19 48.713 13.2599 41.4505 13.2599L41.447 13.2563Z" fill="currentColor"></path><path d="M41.4471 36.8711V41.7577C48.7131 41.7577 54.6001 35.824 54.6001 28.5083H49.7491C49.7491 33.1269 46.0321 36.8746 41.4436 36.8746L41.4471 36.8711Z" fill="currentColor"></path><path d="M41.4471 50.1201V55.0067C48.7131 55.0067 54.6001 49.073 54.6001 41.7573H49.7491C49.7491 46.3759 46.0321 50.1237 41.4436 50.1237L41.4471 50.1201Z" fill="currentColor"></path><path d="M18.0041 28.5045H13.1531C13.1531 35.8237 19.0436 41.7539 26.3061 41.7539V36.8673C21.7211 36.8673 18.0006 33.1231 18.0006 28.501L18.0041 28.5045Z" fill="currentColor"></path><path d="M28.2906 50.1201V55.0067C35.5566 55.0067 41.4436 49.073 41.4436 41.7573H36.5926C36.5926 46.3759 32.8756 50.1237 28.2871 50.1237L28.2906 50.1201Z" fill="currentColor"></path><path d="M18.0041 41.7574H13.1531C13.1531 49.0767 19.0436 55.0068 26.3061 55.0068V50.1203C21.7211 50.1203 18.0006 46.376 18.0006 41.7539L18.0041 41.7574Z" fill="currentColor"></path><path d="M13.153 18.1429V13.2563C5.8905 13.2563 0 19.19 0 26.5092H4.851C4.851 21.8906 8.568 18.1429 13.1565 18.1429H13.153Z" fill="currentColor"></path><path d="M4.851 28.5045H0C0 35.8237 5.8905 41.7539 13.153 41.7539V36.8673C8.568 36.8673 4.8475 33.1231 4.8475 28.501L4.851 28.5045Z" fill="currentColor"></path><path d="M4.851 41.7574H0C0 49.0767 5.8905 55.0068 13.153 55.0068V50.1203C8.568 50.1203 4.8475 46.376 4.8475 41.7539L4.851 41.7574Z" fill="currentColor"></path></svg>
-    </div>
-    <div>
-      <div class="brand-name">OMNIA</div>
-      <div class="brand-attribution">AI Maturity Atlas · Delivered by AI Decisions</div>
-    </div>
+    <img src="data:image/webp;base64,UklGRhoLAABXRUJQVlA4TA4LAAAvagEXEHdgkG2kzh/mDP81CCRthId8/yDnBNk2ncn9Ja+gkaTmdfRGdUDwb4sQgP8/EIWEItHg6x78lhQ3dhwD3Wv7HafReCSiBMdDkKYcdh0ohXNJcigJm0pwLtEmXDI4QOk2bWglIw6t46F1PLSOx63l8EfM/f2+e+fe2VjNL6L/EiXbCtvmkKR1FDlXjwc8HpAP8Fh5/Xujj0l4+vlGr9f68K7EdPx5490Dz7TMXwuDSyd8z3Y585142ShbraYI41NTJKEpNx8xmiIvzIiuBqTUC5aZCeRURj43m4DbTY7II4A8NoJ9iiz6dhkKJPYz8n8C/aQwKQC5a8BCAMopu1RFpCML3GoCdpoabpYA0qengpCiVcKMsN1gKBfVIU8Q7ZL+X8jYX/DLRhNwq6lFygSzbw0lxEd8b6qqbrHKcIKfgX+biIYBTwjMTQ0cbJ8SMG7d1RZEJrJz/eWzEr/+4Xk5GSwa3ETbb36nevox44HILJWwmtCd2yzfnPcz8C4NYpTnyEdfllg3jPzxNuGV/koXpUYu/LUKq9dHyHAv0eiBTLRh8HK3ahWohSz+1biDTPKemkRryBI1pP7lYCB1Mw3R1CGf/YIC5sD0IQN/jL45L4d8N8Dh+I6+h2oRE6FW90R35yxnRST28mhdxK9VE8sVvXy8mmgpEtbWpcP7KVB6CEvr8gMNKap0QHdyBTaUTeZ9un/uoWbX1vWbY7htJShfHSYGYENf7LNOrmNBkI4VZudayOIQF7xH1biFq5HZD5lyg5gyPXNCSudMQMoxToXpwAwJK/sdcJ00GTRg9Bs0tpvQrH0aRkwIKbPMErFPORFwHYiacGYdDchtaA8+ghlI2SK2TI9IzA0jwga9UFDpYrDRpf7dOaWqYJ+WajGouttG43Uf8tJeCxz1axXWtq+wQS9kepSOMQYVXvdJlC9dbu7sYW5ocIWGFv3IG+6lhLXoGfa+UUitE/JfUgmkzqByRpmabgukNkdqY6ZnhDX7RTZ8TDAKHvNFnxP9zNQMBDLmhj5Ej95xEdft0MlqbYzZYRYYj1V+Ad02ueYpVpwEcSQKhpYx6iR6Ea/S08Ek7SJ2oLC3psKKiDyig50TniWlpLqmZ5+fP8vzsuLp237vzfMHRMKzPP/0lkjYfpbnD9JTYHRjQINR5oTk7gAJjU3w1tu/s7iepjRIXP+BuUHujE5KqOPMWqCKQz41hfO6AWYj7TJHbj7MIlcCcczHJmCnAedQ7RJHbva5pcOIBXHNThOwtamZ+b0isHmfAROOqTiFWAhxWztffcRgA582QoYNObbPeJBwaTnP11xxqwnYaSJAzf7JdRH0MxA2INRtQyws+1zettVAtAxyA3cRrwBggGVUAlm0z4Aa81xyndXmhzJIbnzo9z41mJw8f888V8qYJT4Cs0DHPoN8zBtwA6vNl2Xgo23au35qAH98ukm4h5nRZjQcwPu+YTdswywGTW6U+YhHGz9K5rUxEcgZRVUVIbj7EgVuuI66021tY7+FJO2Y/PBwQrzHy2vXlADPwbfZjGpQzVhdvb6LDPdE3z/0oUTMXf0FkUtrLCvq5rZTha9+JrLXj1mngaakG/p6vIVMtE1u1r5EpcMBNbBUQKzt5MpdZji9QbagkhaxKi4/Mmh34HBM7qq44D3pSpnh9IE9jd1guyvrgglOXHDCAtPsD1oiZc6ibJQbgBNuDRGrprjDc0J+lSVhZkIHbKCGf93A9/IdaMCGyRQrOqvycRcKHmVaxFdMTUtRMT4thxJERCljCrgcNWMNg/ikl+e1adnj4s5eVN2vjKKMPpz70Jevcqc58Mid6E1dbuCJmSyc8MhqcZsb0KSHDGbef2aaTOYGemBu4G+DL0kpUT4lEvoBBlreJxJeeP+fli9JKVv69k6mv535/OLf1Thx729rnEg16P6djsktFdaniX+aNuKfrJCtWHM7TazJo0WJTXeJkZhyD408C7Y5/eseK3F9G4fDVtcTa9WU261200l/xf4qVS0MYt/2HOqubj0x3RwqAnOo2YyxElhQumNhvvrEyny1MxP8upwXCWom2G2CgUFullByo6zPDfQgB3hinhtYdA+eIA4ljNjMw9wyzMOUU+Zh1tdoRiMrpP+SKrGllcQcGF8BVVHf4+WT1YTRrIDyranZptll8rGZIr9IFemfTjpAfjQrcJdftJTLZatrd2gu9wG5+gbl+F+zrVfGu8SGA4kzRT7+bcHiEoU2b76J8ua/p8ibIwmFjJDVNQqTXWL8ZUdG+GutB0WouufPL184bE509tfl76AzHDi3nJ/wbVI7t3zhhG9l7a3fAzxOs/YWJsCN4Bd9PTDwiIsgzAkDvnVsAO8PrhHvqYLBYol501xIwxajdc6Ghpcp1znHOFVmkKs8sjAjqvLdS+wz4DrMAAsuYL1rJmRhi9Ga8naaNeU0nDsvHZpV4lEjLnNRx7RD+ikziI2YNzH9YFOZ+/V7XakAYt+AGrBOzLbWgFIwgqz4gscZwVVRt7pXwgYzxBTrxCpdBqzSNWTgAUQeFTlqBN16A1orW35aXiNhC9yX8lazL+XT8/s296UAv5fFghddUU6vg75TvNfLJ0O+KYvqOCNKx4GDIomgIwdFfAroEImMIpFRL1CdI9nYAwTenjldpAT4WiJVt2Atmpp2H9/nUcBvxMirJHaj7+2T+zrY89Yt7beyAHjIUdBFdmjgz5yz/U1E9iKISDpNQA+2ohTSTgEYT7+3LXVuIBUL4DBGpC5o4M8M1l3AMEDr0gS6xwytlA9xnZHSZ30fYRpoZ4N6Gw1ouZ4ugaNhnNhh1ATyHHX+gGhkJwo6W7rcQFub0dDv2UzFbl6L1DQaaGc/TQoZYGoo0Fs9ucczY0Z13GzoJPedoLrVc2Rkf2yu3cU4YMJwAIqSM645P2IEW8oD2/hCrLsb5ix2bOxFLptyUKSAoPdqqWggFeilJa8q5+V2DTC7qIlgJsDgJ9voipTSxD+YlSwAuosF9Tv04D32LRt77P9CaPzbAHyeYSP9eYZ75hEyY8L8BTHuqWle9hB/S88S3nUTqh/hpZiJsyO0+1TGmU11myZLQShQFk74pswEUqe/lU0d0p3TeWV2Tuc3g9B+FT3vOOleVpD5htOME9DAHdy09X0mMG2+klPUzR+pidBHi06WSh7PYrChb+sznbDqZ9ld2HALwHyR8lQtq8ADlorMNqNoKDSBNdMO2CWMUM76HkhjyMvn4PxZW50/e2Ny/qzPLKPBwkgY/9AISwPOHwzHrM5mUdhhBLVQl7qJb1VkVbHoa8/6baY865djopBHi3OqN6KPW+dPKb4GaMtxOmUdVC+5gxRNYBYaVbsMNQmUBTVltXqussfwXGU0Hwa0hQ+yI7g/Gcb1ara6l6WtfeoH9QKdWsUeYz+CWWgsuTTCxcQFGn4vpj/D+hieYfVSnWEtciGXzlfINEkPnSZdOHdNmZK7SHzhV/VOIxylicNuBK2/onR+d44kM52eF46q+v1W1XTz1XGYZddMurlDVgyIWE3Q1LHB4eQWMsctDQ9zwGOTZRv9866myg2AuI03ulqoXeEYNCCvEnxt5czaPAf/Mjcpw5wftELqvhaNefahfhqnk2Y08OdAg88MSi3wj9/N/ubAw/R/c+Aa+/R128bqBcOc11xIOMplX6EPvxfoMGBAMQF8CuhEKY0v2r/vcMPO33c4sxbEF4/oto2tf8eMVzsoX7PwmQ0tv4TBxcNI5fxy8sNwcfDAQaI0OijClRMlvEz+mjyl+swB" alt="AI Decisions" class="brand-lockup" />
   </div>
   <div class="brand-right">
     <span class="data-refreshed-tag">
@@ -1816,7 +1867,7 @@
     <div class="modal-eyebrow" id="lead-modal-eyebrow">Tailored AI Opportunity Brief</div>
     <h2 class="modal-title" id="lead-modal-title">Get your tailored AI maturity report</h2>
     <div id="lead-modal-body">
-      <div class="modal-section-body" style="margin-bottom:14px;">Based on your assessment, we'll prepare a personalised report mapping your biggest capability gaps to deployed AI case studies — emailed to you within one business day.</div>
+      <div class="modal-section-body" id="lead-modal-intro" style="margin-bottom:14px;">Based on your assessment, we'll prepare a personalised report mapping your biggest capability gaps to deployed AI case studies — emailed to you within one business day.</div>
       <form class="lead-form" id="lead-form">
         <div class="form-field">
           <label class="form-label" for="lead-name">Full name</label>
@@ -1890,14 +1941,664 @@ const OMNIA_CONFIG = {
   SUPABASE_ANON_KEY: 'sb_publishable_EOsR2658Y83_YPTFzvc-cw_CZExTb3w'
 };
 
+// =====================================================
+// FEATURE FLAGS
+// DEMO_MODE: when true, only the first two domains (Policy Servicing & Claims)
+// are open to explore/assess. The remaining domains stay locked & collapsed —
+// clicking one opens a lead-capture modal offering the full version. Gating
+// applies identically in both Assess and Explore modes.
+// Override at runtime with ?demo=0 (off) or ?demo=1 (on).
+// =====================================================
+const DEMO_MODE = (() => {
+  const p = new URLSearchParams(location.search);
+  if (p.has('demo')) return p.get('demo') !== '0' && p.get('demo') !== 'false';
+  return true; // default flag value
+})();
+// Domain numbers that remain unlocked in demo mode (the first two core domains)
+const DEMO_UNLOCKED_DOMAINS = ['01', '02'];
+function isDomainLocked(num) { return DEMO_MODE && !DEMO_UNLOCKED_DOMAINS.includes(num); }
+
 // =================== DATA ===================
 const DATA = {
   core: [
     {
-      num: "01", title: "Product and Distribution",
+      num: "01", title: "Policy Servicing",
       subdomains: [
         {
-          id: "1.1", title: "Develop and Manage Products & Services",
+          id: "1.1", title: "Customer Service Operations",
+          activities: [
+            "Develop Customer Service Strategy",
+            {
+              name: "Fulfil Customer Service Requirements",
+              caseStudy: {
+                company: "Manulife (with OpenAI)",
+                year: "2024",
+                title: "GenAI knowledge bot speeds answers across 110M+ calls a year",
+                context: "Manulife's contact-centre agents spent significant time looking up contract documents and consolidating information to resolve customer requests, across operations that handle <strong>over 110 million calls annually</strong>.",
+                useCase: "Manulife deployed a GenAI Knowledge Bot (built on OpenAI, part of its ChatMFC suite launched in 2024) that lets an agent type a question mid-call and instantly receive source-backed insight on the customer's contract and the relevant process, so the service request can be fulfilled in the moment.",
+                outcomes: "The tool provides agents with real-time, source-backed answers across Manulife's <strong>110 million+ annual calls</strong>, with <strong>over 75% of the global workforce</strong> actively engaged with the firm's GenAI tools as the programme scaled.",
+                source: "Insurtech Insights",
+                sourceUrl: "https://www.insurtechinsights.com/manulife-rolls-out-genai-capabilities-across-100-of-its-global-workforce/"
+              }
+            },
+            "Manage Service Delivery",
+            {
+              name: "Measure and Improve Service",
+              caseStudy: {
+                company: "MetLife (with Cogito, now part of Verint)",
+                year: "2019",
+                title: "Real-time voice AI lifts first-call resolution and satisfaction",
+                context: "MetLife rolled out Cogito's real-time conversation-analysis software across <strong>10 US call centres</strong>, where agents each handle around <strong>700 calls a week</strong>. The aim was to measure interaction quality live and continuously coach agents rather than rely on post-call sampling.",
+                useCase: "Cogito analyses acoustic and behavioural signals during the call (pace, tone, silences, overlap) and gives agents in-the-moment 'behavioural nudges' to adjust tone or pause, while supervisors see live quality scores used to target coaching and improvement.",
+                outcomes: "Managers reported first-call resolution improved by <strong>3.5%</strong> and customer satisfaction by <strong>13%</strong>, alongside more natural, 'human' conversations.",
+                source: "TIME",
+                sourceUrl: "https://time.com/5610094/cogito-ai-artificial-intelligence/"
+              }
+            },
+            {
+              name: "Manage Contact Channels",
+              caseStudy: {
+                company: "Allstate Business Insurance (with Earley Information Science)",
+                year: "2024",
+                title: "Virtual assistant 'ABIe' offloads routine contacts from the call centre",
+                context: "Allstate Business Insurance agents needing help quoting and issuing policies generated heavy inbound call-centre traffic for routine, repetitive questions, creating a costly and slow contact channel for both agents and support staff.",
+                useCase: "Allstate introduced ABIe (the Allstate Business Insurance Expert), an intelligent virtual assistant that talks agents through quoting and product questions in plain language using a curated knowledge base, taxonomies and analytics that surface emerging FAQs — establishing a self-service channel as the first port of call.",
+                outcomes: "ABIe handles <strong>over 25,000 inquiries a month</strong> — questions that previously went to the call centre or went unasked — with monthly volume growing about <strong>10%</strong> as more agents adopt it.",
+                source: "KMWorld",
+                sourceUrl: "https://www.kmworld.com/Articles/Editorial/Features/Allstates-Intelligent-Agent-Reduces-Call-Center-Traffic--and-Provides-Help-During-Quoting-Process-108263.aspx"
+              }
+            },
+            {
+              name: "Handle Complaints & Escalations",
+              caseStudy: {
+                company: "Humana (with Cogito)",
+                year: "2020",
+                title: "Emotion AI helps agents de-escalate difficult calls",
+                context: "Humana's contact centres needed to spot conversations going wrong — rising customer frustration or low agent empathy — in time to intervene rather than discover the problem in a post-call complaint. After early results, Humana expanded the programme to <strong>more than 2,000 customer-service agents</strong>.",
+                useCase: "Cogito's behavioural AI listens to live calls, detecting signs of distress, frustration and disengagement, and prompts agents in real time to adjust tone, slow down or show empathy so tense interactions are de-escalated before they escalate into complaints.",
+                outcomes: "Humana reported a <strong>14-point increase in Net Promoter Score</strong>, a <strong>17% reduction in average handle time</strong>, a <strong>6.3% improvement in issue resolution</strong> and a <strong>5% improvement in 'Perfect Call' scores</strong>.",
+                source: "Stevie Awards (Cogito Contact Center Solution)",
+                sourceUrl: "https://stevieawards.com/sales/cogito-corporation-contact-center-solution-%E2%80%93-new-version"
+              }
+            },
+            "Route & Prioritise Inbound Contacts"
+          ],
+          caseStudy: {
+            company: "Zurich Insurance",
+            year: "2024",
+            title: "AI-driven CRM across four markets",
+            context: "Zurich needed to consolidate fragmented customer data and unify agent experience across phone, email, and WhatsApp, while reducing servicing times and improving claim handling consistency.",
+            useCase: "Launched an AI-powered CRM in January 2024, built on Microsoft Dynamics 365 with Copilot for Sales. A 'three-click rule' was embedded in the design — agents access any customer record or complete any task in three clicks or fewer. A separate AI claims chatbot now handles 35% of all claim requests.",
+            outcomes: "Servicing times dropped by <strong>over 70%</strong> across four pilot markets. The claims chatbot cut average processing time by <strong>30%</strong> with an <strong>80% Net Promoter Score</strong>.",
+            source: "Microsoft Customer Stories",
+            sourceUrl: "https://customers.microsoft.com/"
+          }
+        },
+        {
+          id: "1.2", title: "Policy Administration",
+          activities: [
+            {
+              name: "Issue & Deliver Policy Documents",
+              caseStudy: {
+                company: "John Hancock (+ Munich Re Life US, alitheia platform)",
+                year: "2025",
+                title: "AI-driven instant decisions extend no-exam issuance up to $5M cover",
+                context: "John Hancock embedded Munich Re Life US's <strong>alitheia</strong> rapid risk-assessment platform into its ExpressTrack individual life underwriting programme. The collaboration was announced in <strong>September 2025</strong>, expanding instant-issue eligibility to face amounts up to and including <strong>$5 million</strong>.",
+                useCase: "alitheia applies patented NLP models that interpret free-text application responses and map them to a medical lexicon, plus automated electronic health record (EHR) assessment, enabling more applications to be adjudicated and policies issued instantly rather than routed to full manual underwriting.",
+                outcomes: "alitheia sustains some of the industry's highest instant-offer rates, with adopting carriers often <strong>doubling or tripling</strong> their prior instant-decision rates and compressing cycle times that previously ran weeks.",
+                source: "John Hancock newsroom",
+                sourceUrl: "https://www.johnhancock.com/about-us/newsroom/news/john-hancock-insurance/2025/john-hancock-and-munich-re-life-us-collaborate-to-enhance-underwriting-automation.html"
+              }
+            },
+            "Process Endorsements & Mid-Term Adjustments",
+            {
+              name: "Process Renewals (Operational)",
+              caseStudy: {
+                company: "McFarlan Rowlands Insurance Brokers (+ Quandri)",
+                year: "2024",
+                title: "Digital renewal-review workers free a six-person team",
+                context: "McFarlan Rowlands, a 120-year-old Ontario brokerage operating across 19 offices, ran a best-in-class but labour-intensive personal-lines renewal-review process that tied up a <strong>six-person</strong> team and was straining under rising volume.",
+                useCase: "The brokerage deployed Quandri's AI renewal-review automation, which triggers on the policy download date, reads each renewal, and flags premium increases and coverage gaps so brokers can proactively contact clients with options. Quandri estimates the work it now handles would otherwise have required roughly ten full-time staff.",
+                outcomes: "Quandri processed <strong>18,000+ renewal reviews in six months</strong>, letting McFarlan Rowlands redeploy <strong>5.5 full-time positions</strong> to higher-value work and realise a <strong>350% return</strong> on its investment within months.",
+                source: "Quandri customer story",
+                sourceUrl: "https://www.quandri.io/customer-story/mcfarlan-rowlands-automated-work"
+              }
+            },
+            {
+              name: "Process Cancellations & Lapses",
+              caseStudy: {
+                company: "Tier-one annuity provider (+ EXL)",
+                year: "2024",
+                title: "Predicting surrenders three to six months out",
+                context: "A tier-one annuity provider with <strong>$50bn in assets under management</strong> across <strong>600,000 policyholders</strong> was losing customers fast: <strong>70%</strong> surrendered their policies once surrender-charge periods expired, and only <strong>9%</strong> moved into other company products.",
+                useCase: "EXL built AI and predictive-analytics models that forecast individual surrender probabilities three to six months before they occur, enabling targeted retention and reinvestment outreach before the policyholder walks. EXL reports the models were roughly ten times more accurate than the client's previous approach.",
+                outcomes: "The programme unlocked a <strong>$5bn lifetime-value opportunity</strong>, with EXL noting the predictive retention approach was <strong>8–10x cheaper</strong> than acquiring equivalent assets through traditional means.",
+                source: "EXL case study",
+                sourceUrl: "https://www.exlservice.com/insights/case-study/transform-retention-strategies-with-predictive-analytics"
+              }
+            },
+            {
+              name: "Manage Coverage Corrections",
+              caseStudy: {
+                company: "Mid-sized US insurer (+ FurtherAI)",
+                year: "2024",
+                title: "AI policy checking catches coverage discrepancies at scale",
+                context: "A mid-sized insurer with <strong>over 1,500 employees and roughly $1bn in annual revenue</strong> struggled to maintain compliance and consistency across quotes, binders and issued policies. Reconciling the nuanced differences in coverage, exclusions and endorsements between competing policies was a manual, time-consuming and error-prone exercise — leaving the carrier exposed to undetected coverage discrepancies and slow remediation when corrections were required.",
+                useCase: "The insurer deployed FurtherAI's Policy Check & Compare AI to automate data extraction from complex policy documents, validate compliance across quotes, binders and issued policies, and perform side-by-side comparisons of coverage, terms, exclusions and endorsements at scale — surfacing discrepancies for correction rather than relying on line-by-line manual review.",
+                outcomes: "FurtherAI delivered policy checks <strong>more than 20x faster</strong> and side-by-side comparisons <strong>more than 30x faster</strong> than manual effort, with equal or superior accuracy. Automated processing drove a <strong>95%+ gain in operational efficiency</strong> by cutting manual review time, and the insurer reported a <strong>400% ROI within months</strong> of implementation.",
+                source: "FurtherAI — Policy Comparison & Checks customer story",
+                sourceUrl: "https://www.furtherai.com/customers/policy-check-compare-ai-teammate"
+              }
+            },
+            {
+              name: "Policy Data Quality & Maintenance",
+              caseStudy: {
+                company: "Generali Group Poland (+ Decerto)",
+                year: "2024",
+                title: "Validating and standardising an acquired book during PAS consolidation",
+                context: "Following an acquisition, Generali Group Poland had to absorb the acquired company's entire policy estate into its own infrastructure. The inherited data was <strong>incomplete and inconsistent</strong>, requiring validation, correction and standardisation before it could be trusted in the target system — all under strict time constraints and with a hard requirement for uninterrupted operational continuity.",
+                useCase: "Decerto built a custom data-migration tool that imported the legacy records, validated them for completeness and accuracy, corrected and standardised them to Generali's quality standards, transformed them into the target data model and generated full migration reporting — hardened through dozens of trial migrations and detailed technical and business testing before cutover.",
+                outcomes: "The acquired book was migrated and brought up to Generali's quality standards over <strong>a single weekend</strong>, with <strong>no data loss</strong> and the balance of financial transactions kept intact, delivering improved data consistency and accuracy across the consolidated estate.",
+                source: "Decerto — Data Migration for Generali Group Poland",
+                sourceUrl: "https://www.decerto.com/case-study/successful-data-migration-for-generali-group-poland"
+              }
+            },
+            {
+              name: "Intelligent Document Processing (IDP)",
+              caseStudy: {
+                company: "Fortune 500 US insurer (+ Hyperscience)",
+                year: "2024",
+                title: "ML-based IDP replaces legacy OCR for evidence-of-insurability forms",
+                context: "A Fortune 500 insurer serving <strong>29 million</strong> customers faced a backlog of evidence-of-insurability (EOI) forms and customer email attachments, around <strong>70%</strong> of which contained handwriting or low-quality mobile captures that defeated its legacy OCR. It processes roughly <strong>1.5 million pages</strong> of documents.",
+                useCase: "The carrier deployed Hyperscience's Hypercell intelligent document processing platform, using machine-learning classification and extraction with human-in-the-loop validation across more than 200 document types, replacing rules-based OCR with a hybrid AI approach.",
+                outcomes: "Per-email processing time fell <strong>85%</strong> (from 6.5 minutes to 1 minute), data-extraction accuracy reached <strong>over 99%</strong> across 200+ document types, and onboarding of new document types dropped from months to about <strong>two weeks</strong>.",
+                source: "Hyperscience",
+                sourceUrl: "https://www.hyperscience.ai/resource/insurer-reduces-processing-times-by-85/"
+              }
+            },
+            {
+              name: "Straight-Through Processing (STP) Automation",
+              caseStudy: {
+                company: "Leading US commercial P&C insurer (+ Indico Data)",
+                year: "2024",
+                title: "Intelligent intake unlocks straight-through handling across 50+ units",
+                context: "One of the largest US commercial property & casualty insurers ran intake separately across <strong>more than 50</strong> specialised operating units, each manually reviewing unstructured documents arriving in multiple channels and formats, creating backlogs and capping throughput.",
+                useCase: "The insurer deployed Indico Data's Intake & Orchestration Platform, using NLP and machine learning to ingest unstructured documents, extract and validate key fields, and route structured, system-ready data straight into downstream workflows without manual re-keying.",
+                outcomes: "The deployment delivered an <strong>85% reduction in processing time</strong>, removing backlogs and materially increasing intake capacity. Indico reports intelligent-intake customers average an <strong>85% cut in cycle times and a 4x increase in capacity</strong>.",
+                source: "Indico Data",
+                sourceUrl: "https://indicodata.ai/customer-story-top-u-s-commercial-lines-insurer/"
+              }
+            },
+            {
+              name: "Regulatory Compliance & Filings",
+              caseStudy: {
+                company: "Milliman",
+                year: "2024",
+                title: "Mining SERFF rate & form filings with AI and large language models",
+                context: "Milliman applied AI and large language models to <strong>over 5,000</strong> rate and form filings pulled from the NAIC's System for Electronic Rate & Form Filing (SERFF), covering the residential property line submitted to the <strong>California, New York and Texas</strong> departments of insurance from <strong>January 2020 through June 2023</strong>. The aim was to surface recurring regulator objection patterns that drive filing delays and resubmissions.",
+                useCase: "Machine-learning topic modelling and LLM analysis clustered free-text objections and correspondence to identify state-specific themes, which compliance professionals, actuaries and product managers then reviewed for reasonableness — exposing patterns such as California's recurring requests to waive the deemer provision and New York's demand for dislocation analysis.",
+                outcomes: "The work demonstrated that AI and LLMs can <strong>unlock unstructured content buried across thousands of filings</strong>, letting carriers anticipate likely DOI objections and pre-empt them to compress filing-to-approval cycle time.",
+                source: "Milliman",
+                sourceUrl: "https://www.milliman.com/en/insight/analyzing-insurance-product-filings-artificial-intelligence-llm"
+              }
+            }
+          ],
+          caseStudy: {
+            company: "Major US Insurer (Nomad Data Doc Chat)",
+            year: "2024",
+            title: "AI-powered endorsement processing at scale",
+            context: "Endorsements — the mid-term changes that update coverage, add locations, modify limits, or exclude new exposures — are high-volume, document-heavy, and high-risk. Each request requires cross-referencing dense 100+ page policy documents, comparing against schedules and regulatory notices, and flagging conflicts. A major US insurer reported receiving <strong>thousands of endorsement requests weekly</strong>, with dedicated teams whose entire job was reviewing, interpreting, and manually processing them.",
+            useCase: "Deployed Nomad Data's Doc Chat AI agent to automate endorsement intake and cross-document verification. The system reads requests in any format (emails, scanned letters, digital forms, handwritten notes), parses them against the original policy and prior endorsements, flags coverage conflicts and regulatory gaps, and routes for review or auto-approval.",
+            outcomes: "Transformed endorsement processing from a 'necessary administrative cost centre to a strategic, value-generating function.' Insurers using similar AI policy-administration agents report cycle times <strong>compressed from days to minutes</strong> for high-volume change types, with audit-readiness time <strong>cut 60–80%</strong>.",
+            source: "Nomad Data",
+            sourceUrl: "https://www.nomad-data.com/doc-chat/ai-powered-policy-endorsement-processing-revolutionizing-mid-term-changes-in-insurance-servicing"
+          }
+        },
+        {
+          id: "1.3", title: "Billing & Premium Management",
+          activities: [
+            {
+              name: "Premium Invoicing & Collection",
+              caseStudy: {
+                company: "Allina Health (+ Health Catalyst)",
+                year: "2018",
+                title: "Propensity-to-pay model targets billing outreach and lifts collections",
+                context: "A cross-industry analogue from healthcare provider billing (not insurance premium): Allina Health, a US not-for-profit health system, faced rising patient-responsibility balances and limited capacity to chase every account. It built a propensity-to-pay model to focus billing-team outreach on the accounts most likely to pay.",
+                useCase: "A random-forest machine-learning model scoring each account's monthly probability of payment was trained on <strong>500,000</strong> cases using 46 of 77 candidate variables (financial, demographic and behavioural), achieving an AUROC of <strong>0.88</strong>, and used to segment and prioritise collections calls — directly transferable to insurance premium invoicing and collection.",
+                outcomes: "Allina reported a <strong>$2 million</strong> increase in collections in the first nine months versus the prior year, including over <strong>$660,000</strong> in additional phone payments in the first two months (a <strong>43.2%</strong> relative improvement), with outbound and inbound call collections up <strong>37.5%</strong> and <strong>21%</strong> respectively.",
+                source: "Health Catalyst (success story)",
+                sourceUrl: "https://www.healthcatalyst.com/learn/success-stories/predicting-propensity-to-pay-allina-health"
+              }
+            },
+            {
+              name: "Direct Debit & Payment Processing",
+              caseStudy: {
+                company: "Neos (smart-home insurer) + GoCardless Success+",
+                year: "2020",
+                title: "ML-timed direct debit retries nearly triple recovery of failed payments",
+                context: "Neos, a UK smart-home insurance provider, collects premiums by direct debit, where a meaningful share of payments fail on first attempt and previously needed manual chasing. Before adopting machine-learning retries, only <strong>30–40%</strong> of retried payments were recovered, and one staff member spent <strong>60%</strong> of their time on credit control.",
+                useCase: "Neos enabled GoCardless Success+, which uses machine-learning models trained on nine years of recurring-payment data across GoCardless's merchant network to predict the optimal day to re-present each failed direct debit for an individual payer, rather than retrying on fixed static schedules.",
+                outcomes: "Retried-payment collection rose to <strong>almost 90%</strong> at Neos, and credit-control workload fell from 60% to <strong>20%</strong> of one person's time. Across all Success+ users, intelligent retries recovered <strong>76%</strong> of failed payments and cut the overall failure rate by <strong>15%</strong> versus naive double retries.",
+                source: "GoCardless (Success+ case study)",
+                sourceUrl: "https://gocardless.com/blog/success-plus/"
+              }
+            },
+            "Premium Adjustment & Recalculation",
+            {
+              name: "Manage Instalments & Financing",
+              caseStudy: {
+                company: "Snap Finance (with TrueAccord)",
+                year: "2024",
+                title: "ML-driven outreach lifts instalment recovery rates",
+                context: "Consumer-finance lender Snap Finance ran a head-to-head test of a traditional call-and-collect agency against TrueAccord's machine-learning collections platform across its delinquent instalment accounts. (Used as a banking/fintech analogue, as no insurer instalment-collection case with comparable public figures is available.)",
+                useCase: "TrueAccord's models personalise the channel, timing and messaging of each repayment reminder per customer, replacing fixed call scripts with adaptive, digital-first outreach to recover missed instalments — directly transferable to insurance premium-financing and instalment collection.",
+                outcomes: "Snap Finance improved liquidation (recovery) rates by <strong>25–35%</strong> across all account tiers versus the traditional agency.",
+                source: "TrueAccord",
+                sourceUrl: "https://pages.trueaccord.com/snap-finance-case-study.html"
+              }
+            },
+            {
+              name: "Debt Management & Arrears",
+              caseStudy: {
+                company: "Ophelos (now part of Intrum)",
+                year: "2024",
+                title: "ML-driven, empathetic arrears resolution lifts recovery and self-service",
+                context: "Ophelos is an AI-native debt-resolution platform whose clients include insurers, banks, utilities and telecoms; it runs <strong>hundreds of models</strong> in production daily to handle arrears at scale. (Used as a near-insurance collections analogue — Ophelos handles insurer arrears, but its published figures are cross-portfolio rather than insurance-specific.)",
+                useCase: "A reinforcement-learning Decision Engine selects the best channel, timing and message for each customer to help them clear an outstanding balance, while an NLP model scans inbound messages to detect vulnerable customers and route them to appropriate support.",
+                outcomes: "Ophelos reports a <strong>25%</strong> increase in customers reaching a resolution, <strong>88.3%</strong> of customers self-serving without needing to speak to anyone, and <strong>89%</strong> rating their experience 4 or 5 stars — achieved while reducing the volume of outbound communications.",
+                source: "Databricks (Ophelos customer story)",
+                sourceUrl: "https://www.databricks.com/customers/ophelos"
+              }
+            },
+            {
+              name: "Refunds & Credit Processing",
+              caseStudy: {
+                company: "Chartway Credit Union (with Casap)",
+                year: "2025",
+                title: "Agentic AI cuts dispute and refund turnaround from 90 days to 12",
+                context: "A banking/credit-union analogue (no comparable named-insurer return-premium case with public figures exists): Chartway Federal Credit Union ran a year-long live deployment of Casap's agentic-AI dispute platform, evaluated through the Filene Research Institute's FiLab programme. Refund and dispute resolution had previously taken <strong>up to 90 days</strong>, with provisional credits taking around <strong>20 minutes</strong> of manual work each.",
+                useCase: "Casap's AI agents automate the end-to-end refund/dispute workflow — auto-filling member and transaction data, issuing provisional credit, tracking chargebacks and merchant responses, and resolving routine cases without an agent — while surfacing transaction metadata to flag likely first-party fraud.",
+                outcomes: "Resolution time fell to about <strong>12 days</strong>, write-offs dropped <strong>72%</strong>, per-claim processing costs fell roughly <strong>90%</strong>, and provisional credit became near-instant, saving Chartway an estimated <strong>$875,000</strong> in the first year.",
+                source: "Filene Research Institute",
+                sourceUrl: "https://www.filene.org/blog/chartway-credit-union-saved-an-estimated-875k-in-one-year-testing-a-fraud-dispute-automation-fintech-with-filab"
+              }
+            },
+            {
+              name: "Premium Reconciliation",
+              caseStudy: {
+                company: "Bermuda-based reinsurer (Brisc AI)",
+                year: "2025",
+                title: "AI reconciles premium bordereaux against cash and treaties",
+                context: "A Bermuda-based reinsurer used Brisc's AI reconciliation agent to audit four years of delegated-authority premium data spanning <strong>100,000+ premium records</strong> — work that is typically slow, error-prone manual matching of bordereaux to bank statements and treaty terms.",
+                useCase: "The AI ingests premium bordereaux, bank statements and treaty documents and performs intelligent line-by-line matching, flagging discrepancies and leakage that manual reconciliation misses.",
+                outcomes: "Brisc reports <strong>97%+</strong> reconciliation accuracy and, for this reinsurer, a <strong>12%</strong> uplift in true profitability while resolving a multi-million-dollar dispute in <strong>6 weeks</strong>.",
+                source: "Brisc AI",
+                sourceUrl: "https://brisc.ai/"
+              }
+            }
+          ],
+          caseStudy: {
+            company: "Zurich Insurance (VoiceIQ) at Sabadell Seguros",
+            year: "2025",
+            title: "GenAI call analysis cuts churn and lifts premium retention",
+            context: "Zurich built <strong>VoiceIQ</strong>, a generative-AI platform that analyses retention and renewal calls at <strong>Sabadell Seguros</strong>, its Spanish joint venture. Previously human reviewers could only sample <strong>3–4%</strong> of calls; VoiceIQ analyses <strong>100%</strong> of them in under a minute. The work won bronze for GenAI Innovation of the Year at the 2025 Qorus–NTT DATA Innovation in Insurance Awards.",
+            useCase: "The model transcribes and scores every customer conversation, surfacing why policyholders consider cancelling or letting cover lapse, and gives agents real-time, behavioural-economics-informed guidance and tailored retention offers — directly supporting premium continuation and arrears/lapse prevention.",
+            outcomes: "Retention rose by roughly <strong>20%</strong> at Sabadell Seguros, with full coverage of calls replacing a tiny manual sample.",
+            source: "Qorus / Zurich Insurance",
+            sourceUrl: "https://www.qorusglobal.com/content/30374-transforming-retention-with-genai-sabadell-seguros-award-winning-approach"
+          }
+        },
+        {
+          id: "1.4", title: "Retention & Cross-Sell",
+          activities: [
+            {
+              name: "Predict Customer Churn",
+              caseStudy: {
+                company: "European motor insurer (Univ. of Groningen / Univ. of Malta study)",
+                year: "2018",
+                title: "Random-forest churn model on a real motor book of 72,000+ policyholders",
+                context: "Academic researchers built and validated a churn-prediction model on a real motor insurer's full portfolio of <strong>72,445 policyholders</strong> over a one-year window, using premiums, claims, policy and policyholder attributes. The work was published at the IEEE 13th International Conference on Digital Information Management.",
+                useCase: "Several supervised models were benchmarked to predict which customers would not renew, identify the underlying risk factors, and model time-until-churn. Random forest was the top performer, surfacing features such as vehicle model and claim cost as key churn drivers.",
+                outcomes: "The random-forest model reached <strong>91.18% accuracy</strong> in identifying churners, giving the insurer a ranked list of at-risk policyholders to target ahead of renewal.",
+                source: "IEEE Xplore / University of Groningen research portal",
+                sourceUrl: "https://pure.rug.nl/ws/files/238924399/Customer_Churn_Prediction_for_a_Motor_Insurance_Company.pdf"
+              }
+            },
+            {
+              name: "Trigger Retention Actions",
+              caseStudy: {
+                company: "Achmea (with Pega Customer Decision Hub)",
+                year: "2023",
+                title: "Next-best-action save offers intercept online cancellations",
+                context: "Achmea, the largest insurer in the Netherlands serving <strong>10 million customers across 11 brands</strong>, unified its inbound, outbound, owned and paid channels into a single AI-driven decisioning 'brain' using Pega Customer Decision Hub.",
+                useCase: "When a customer starts to cancel a policy online, the system detects the intent and routes them to the call centre, where the agent instantly sees the cancellation reason and is served a personalised next-best-action retention offer for the live conversation.",
+                outcomes: "Achmea reported an <strong>85% save rate</strong> on at-risk customers, a <strong>27% increase</strong> in online upsell and cross-sell, and a <strong>41% web-to-call-centre conversion rate</strong>.",
+                source: "Pega customer story",
+                sourceUrl: "https://www.pega.com/customers/achmea-marketing"
+              }
+            },
+            {
+              name: "Identify Cross-Sell / Up-Sell Opportunities",
+              caseStudy: {
+                company: "Ping An Insurance",
+                year: "2024",
+                title: "AI cross-sell engine lifts products held per customer",
+                context: "Ping An, China's largest private insurer, runs AI agents across a unified platform linking around 500 banking, insurance and healthcare services, explicitly to automate underwriting and claims while boosting cross-selling across its retail base.",
+                useCase: "Behavioural, financial and health data feed AI-driven recommendations that prompt the next-best product for each customer, with management targeting a typical customer holding five to seven financial products over time.",
+                outcomes: "Average contracts held per retail customer rose from <strong>2.03 in 2015 to 2.94</strong>, with executives framing the resulting customer-value upside as worth roughly <strong>$174 billion</strong> of potential market value.",
+                source: "Insurance Journal",
+                sourceUrl: "https://www.insurancejournal.com/news/international/2026/03/31/864014.htm"
+              }
+            },
+            "Customer Lifetime Value Modelling",
+            {
+              name: "Renewal Engagement",
+              caseStudy: {
+                company: "John Hancock (Vitality programme, with Vitality Group)",
+                year: "2025",
+                title: "Data-driven wellness programme transforms policyholder engagement",
+                context: "John Hancock embedded the data- and wearable-driven Vitality engagement model into its US life policies, pulling in wearable, app and health-exam data (e.g. Fitbit, Apple Watch) to keep customers engaged between renewals rather than at point of sale only.",
+                useCase: "Vitality scores activity and healthy behaviours and feeds personalised rewards, premium discounts and nudges, turning a once-a-year renewal relationship into continuous engagement and offering natural cross-sell/up-sell touchpoints.",
+                outcomes: "Member interactions rose from about <strong>2 a year to 500+ a year</strong>; <strong>89%</strong> of buyers preferred Vitality over traditional life cover and <strong>70%</strong> were more motivated to buy, while after ten years nearly <strong>90%</strong> of eligible members had earned premium savings.",
+                source: "The Conference Board / John Hancock newsroom",
+                sourceUrl: "https://www.conference-board.org/research/economy-strategy-finance-briefs/John-Hancock-Customer-Engagement-Increase"
+              }
+            }
+          ],
+          caseStudy: {
+            company: "Nationwide Insurance (with H2O.ai)",
+            year: "2024",
+            title: "Centralised AI model factory for churn, retention & customer expansion",
+            context: "Nationwide, a top US P&C carrier, had a sprawling set of analytics use cases — customer churn, retention, call routing, risk segmentation, fraud, underwriting, customer expansion — but lacked a single platform to develop, deploy, and monitor models consistently. Bespoke modelling per use case was slow and inconsistent.",
+            useCase: "Powered by H2O Driverless AI, Nationwide built a centralised data science team and a unique, patented 'model factory' that monitors all AI/ML models across the business. The agile team rapidly explores data with feature engineering and prototypes models for customer churn, retention, cross-sell, call routing, risk and business segmentation, fraud, underwriting, and customer-360 use cases.",
+            outcomes: "Enabled stable, statistically unbiased models that the business can trust in production. Quote from Nationwide's VP of Predictive Analytics: 'We are able to do more with less and do it faster.' The model factory pattern has become a reference architecture for other P&C carriers building scaled AI capability.",
+            source: "H2O.ai / Emerj AI Research",
+            sourceUrl: "https://h2o.ai/case-studies/nationwide-insurance-delivers-exceptional-protection-for-members-with-h2o-ai/"
+          }
+        }
+      ]
+    },
+    {
+      num: "02", title: "Claims",
+      subdomains: [
+        {
+          id: "2.1", title: "Initial Claim Setup",
+          activities: [
+            {
+              name: "Receive Claim Notice (FNOL)",
+              caseStudy: {
+                company: "Tokio Marine & Nichido Fire (+ EIS ClaimPulse)",
+                year: "2024",
+                title: "Digital, 24/7 FNOL for overseas travel insurance",
+                context: "Tokio Marine & Nichido Fire, Japan's largest P&C insurer, launched a new overseas travel insurance proposition built on EIS's ClaimPulse claims platform. The goal was to modernise first notice of loss with a fully digital, omni-channel intake that captures rich, structured loss data at the point of submission.",
+                useCase: "ClaimPulse gives policyholders <strong>24/7 digital FNOL</strong> access with self-service photo and document upload, capturing detailed structured loss information automatically at first notice. The integrated ClaimGuard module applies automated AI fraud screening, letting straightforward cases flow through while flagging suspicious ones for review.",
+                outcomes: "The automated intake and fraud screening identified <strong>five times more instances of attempted fraud</strong>, lifted Net Promoter Score, and saved the company <strong>millions annually</strong> through reduced fraud losses and lower loss-adjustment expense from cleaner data capture.",
+                source: "EIS Group case study",
+                sourceUrl: "https://www.eisgroup.com/blog/tokio-marine-nichido-fires-triumph-a-wild-success-story-in-claims-revolution/"
+              }
+            },
+            "Triage / Assign Claim",
+            "Constituent Set Up",
+            {
+              name: "Set Initial Reserves",
+              caseStudy: {
+                company: "Eastern Alliance Insurance Group (+ CLARA Analytics)",
+                year: "2024",
+                title: "AI decision support for more accurate reserving",
+                context: "Eastern Alliance Insurance Group, a workers' compensation specialist, adopted CLARA Analytics' CLARAty.ai platform with improving reserve accuracy as a stated primary objective. Adjusters in workers' comp often lack a complete data picture when setting reserves early in a claim's life, leading to over- or under-reserving.",
+                useCase: "CLARAty.ai combines predictive analytics with generative AI to read structured and unstructured data, including claim notes, medical records and legal documents, and surface guidance to claims professionals when they set reserves. It flags high-risk casualty claims early so they can be prioritised for proactive resolution.",
+                outcomes: "The platform was selected specifically to <strong>improve reserve accuracy</strong> and reduce administrative burden, with leadership citing demonstrable AI-driven ROI and expected operational efficiencies as the deciding factors.",
+                source: "CLARA Analytics newsroom",
+                sourceUrl: "https://claraanalytics.com/news/eastern-alliance-adopts-clara-analytics-ai-platform-to-improve-workers-compensation-claims-management/"
+              }
+            },
+            {
+              name: "Perform Initial Investigation",
+              caseStudy: {
+                company: "USAA and others (+ CCC Intelligent Solutions)",
+                year: "2024",
+                title: "Touchless AI damage estimates from FNOL photos",
+                context: "CCC Intelligent Solutions launched CCC Estimate-STP, the industry's first AI solution to produce a complete, line-level auto repair estimate straight from a few smartphone photos at first notice of loss, with no human intervention. Four national insurers including <strong>USAA</strong> were live at launch.",
+                useCase: "Computer-vision deep-learning models interpret photos of vehicle damage submitted at FNOL and auto-generate a detailed estimate covering parts, labour and taxes, configured to each insurer's rules — automating the initial damage investigation and enabling straight-through processing of routine claims.",
+                outcomes: "Estimates are produced <strong>in seconds versus days</strong>. CCC's photo-based AI estimating subsequently scaled to <strong>15 insurers, including 7 of the top 10 US auto carriers</strong> (around 50% of US auto claims volume), with advanced-AI claims processing growing <strong>60% year-over-year</strong>.",
+                source: "CCC Intelligent Solutions press release",
+                sourceUrl: "https://www.cccis.com/news-and-insights/posts/ccc-intelligent-solutions-launches-industry-first-touchless-auto-estimates-with-line-level-detail"
+              }
+            },
+            {
+              name: "Manage CAT & Major Loss Events",
+              caseStudy: {
+                company: "Travelers (Geospatial Intelligence Center)",
+                year: "2024",
+                title: "AI aerial imagery to triage catastrophe claims",
+                context: "Travelers operates a Geospatial Intelligence Center that monitors developing catastrophes and dispatches aircraft to capture high-resolution aerial imagery, often <strong>within 24 hours</strong> of an event such as a wildfire — assessing damage across large affected areas before claim professionals can safely access the site.",
+                useCase: "Deep-learning models compare post-event aerial photos against pre-loss file imagery to identify covered properties, detect total losses and estimate rebuild costs without an on-site visit. Severely impacted policyholders are prioritised for outreach via text, email and app, and payments can be advanced ahead of inspection.",
+                outcomes: "Catastrophe claims that <strong>previously took weeks can now be resolved in hours or days</strong>, with Travelers advancing payments on total-loss claims before in-person inspection so homeowners can begin rebuilding sooner.",
+                source: "Travelers Insurance",
+                sourceUrl: "https://www.travelers.com/resources/weather/wildfires/using-technology-to-help-homeowners-rebuild-after-a-property-loss"
+              }
+            }
+          ],
+          caseStudy: {
+            company: "Aviva",
+            year: "2024",
+            title: "AI-powered triage and routing",
+            context: "As part of an 80+ AI model deployment across the claims journey, Aviva targeted the intake and triage stage — a high-volume bottleneck where mis-routing extended liability assessment timelines on complex cases.",
+            useCase: "Applied AI at intake and triage to automatically classify inbound claims by type, severity, and complexity, and route them to the right specialist team.",
+            outcomes: "Routing accuracy improved by <strong>30%</strong> and liability assessment time for complex cases was cut by <strong>23 days</strong>. The full claims transformation saved Aviva <strong>more than £60 million in 2024</strong> and reduced customer complaints by <strong>65%</strong>.",
+            source: "McKinsey / Thomson Reuters",
+            sourceUrl: "https://legal.thomsonreuters.com/blog/ai-is-transforming-insurance-and-the-law-firms-that-serve-it-must-keep-pace/"
+          }
+        },
+        {
+          id: "2.2", title: "Claims Assessment & Adjudication",
+          activities: [
+            {
+              name: "Appoint & Manage Loss Adjusters",
+              caseStudy: {
+                company: "Ping An P&C",
+                year: "2024",
+                title: "AI smart-dispatch and image-based loss surveying",
+                context: "Ping An Property & Casualty, one of China's largest motor insurers, launched a credit-based smart auto-claims solution combining intelligent surveyor dispatch with AI image damage assessment to settle claims rapidly at the scene.",
+                useCase: "A smart-scheduling engine and 'smart grid' technology route loss surveyors to accident scenes optimally, while AI image-recognition assesses damage and OCR reads supporting bills, with biometric face recognition authorising payment.",
+                outcomes: "The dispatch engine delivered on-scene surveying within <strong>5–10 minutes for 95.5%</strong> of daytime accident claims, and AI image recognition handled loss assessment for <strong>30%</strong> of cases at up to <strong>95% accuracy</strong>.",
+                source: "The Digital Insurer",
+                sourceUrl: "https://www.the-digital-insurer.com/dia/ping-an-announces-ai-driven-car-insurance-claims-processor/"
+              }
+            },
+            {
+              name: "Assess Damage & Quantify Loss",
+              caseStudy: {
+                company: "Admiral Seguros (+ Tractable)",
+                year: "2021",
+                title: "Touchless AI vehicle damage valuation in minutes",
+                context: "Admiral Seguros, the Spanish subsidiary of UK motor insurer Admiral, became the first insurer in Spain to use AI to value vehicle damage. Policyholders photograph the damage via a web app and receive an immediate settlement offer. In its first phase the carrier processed <strong>12,000 touchless claims</strong>.",
+                useCase: "Tractable's computer-vision models assess vehicle damage from policyholder-submitted photos in seconds, producing a line-by-line repair appraisal and immediate payment offer without a human appraiser in the loop for qualifying claims.",
+                outcomes: "<strong>90%</strong> of estimates were processed without a human appraiser, <strong>98%</strong> of claims were completed in under 15 minutes, and the AI reached <strong>96%</strong> accuracy versus human appraisers.",
+                source: "Tractable case study",
+                sourceUrl: "https://tractable.ai/case-studies/admiral-seguros/"
+              }
+            },
+            {
+              name: "Manage Repair & Reinstatement",
+              caseStudy: {
+                company: "Solera (+ Google Cloud)",
+                year: "2023",
+                title: "AI auto-authorisation of repair estimates",
+                context: "Solera, which touches roughly <strong>60%</strong> of motor claims worldwide across insurers, drivers and the automotive industry, rebuilt its claims estimation pipeline on Google Cloud to recognise vehicles, identify parts and price repairs from images.",
+                useCase: "Using Vision API for OCR of plates and VINs plus custom TensorFlow models trained on a vast repository of claims images, the system recognises make/model, identifies the parts needed for repair and estimates repair cost automatically.",
+                outcomes: "Within months of launch the platform was <strong>auto-authorising 50%</strong> of damage claims and had cut estimation costs by <strong>nearly 50%</strong>.",
+                source: "Google Cloud Blog",
+                sourceUrl: "https://cloud.google.com/blog/products/ai-machine-learning/solera-speeds-up-car-insurance-claims-with-ai"
+              }
+            },
+            "Determine Loss Control",
+            "Determine Salvage",
+            {
+              name: "Evaluate Fraud",
+              caseStudy: {
+                company: "Shift Technology (+ Microsoft Azure)",
+                year: "2024",
+                title: "Generative-AI document fraud detection at scale",
+                context: "Shift Technology provides AI-driven fraud detection to <strong>hundreds of insurers</strong>, with models trained on a corpus of <strong>more than 2.6 billion policies and claims</strong> and their supporting documentation. It added generative-AI document analysis built on Azure OpenAI Service to catch manipulated and fabricated claim evidence.",
+                useCase: "Azure AI Vision, Azure AI Document Intelligence and Azure OpenAI classify and extract data from claim documents and use image-similarity scoring to flag reused or altered photos (e.g. the same item submitted across multiple claims) and tampered paperwork that human adjusters would miss.",
+                outcomes: "The generative-AI tooling compressed fraud-model development and document-review tasks from <strong>weeks to days</strong>, enabling faster detection of organised and document-based fraud across its insurer base.",
+                source: "Microsoft Customer Stories",
+                sourceUrl: "https://www.microsoft.com/en/customers/story/23202-shift-technology-azure-ai-vision"
+              }
+            },
+            "Manage Exposure",
+            "Manage Claim Reserves",
+            "Determine Reinsurance",
+            {
+              name: "Determine Subrogation",
+              caseStudy: {
+                company: "Root Insurance & a top-10 US carrier (CCC Safekeep)",
+                year: "2024",
+                title: "AI-scored subrogation adds ~$10m a year in recoveries",
+                context: "CCC's Safekeep platform was recognised in the IDC FinTech Rankings Real Results Award for improving subrogation outcomes at <strong>Root Insurance</strong>, whose chief claims officer cited meaningful expected recovery value. A separate top-10 national carrier used the same technology to overhaul its subrogation review.",
+                useCase: "Safekeep combines machine learning, NLP, insurer rules and predictive models to score and prioritise claims with subrogation potential and uses configured audit rules to assess repairable and total-loss demands consistently.",
+                outcomes: "The top-10 carrier saw a <strong>37% increase</strong> in claims identified with subrogation potential and a <strong>21% increase</strong> in recovery dollars, worth roughly <strong>$10m per year</strong> in additional profit.",
+                source: "CCC Intelligent Solutions / Business Wire",
+                sourceUrl: "https://www.cccis.com/news-and-insights/posts/ccc-intelligent-solutions-wins-2022-idc-fintech-rankings-real-results-award-for-ccc-safekeep"
+              }
+            }
+          ],
+          caseStudy: {
+            company: "Allianz",
+            year: "2024",
+            title: "'Incognito' Fraud Detection System",
+            context: "Fabricated or manipulated evidence — subtle image distortions, doctored documents — routinely slips past human adjusters, creating material leakage across motor and property books.",
+            useCase: "Deployed 'Incognito' across motor claims, home insurance claims, and applications. The system analyses distortions and anomalies in images, video, and documents to detect tampered evidence.",
+            outcomes: "<strong>29% increase in fraud detection</strong> across all channels, materially reducing leakage on the book.",
+            source: "CDP Center / Risk & Insurance",
+            sourceUrl: "https://riskandinsurance.com/"
+          }
+        },
+        {
+          id: "2.3", title: "Claims Operations",
+          activities: [
+            {
+              name: "Manage Claimant Communications",
+              caseStudy: {
+                company: "INSHUR (+ Five Sigma Clive AI)",
+                year: "2025",
+                title: "AI email triage halves claim correspondence handling time",
+                context: "INSHUR, a UK commercial auto insurer purpose-built for the rideshare and delivery economy, has issued <strong>over 1 million policies</strong> covering more than 25 million driver-hours. Its claims team faced heavy volumes of inbound and forwarded claimant emails requiring manual sorting and matching.",
+                useCase: "INSHUR deployed Five Sigma's Clive AI claims adjuster to read incoming messages, identify original senders within forwarded threads, classify content, match each email to the correct claim and organise attachments automatically — removing manual triage so adjusters could focus on complex claimant interactions.",
+                outcomes: "Claim-related email handling time fell <strong>60%</strong> (roughly five minutes to two per email), with <strong>97% precision</strong> in email-to-claim matching and a <strong>33% reduction</strong> in overall general-queue processing time.",
+                source: "Five Sigma",
+                sourceUrl: "https://fivesigmalabs.com/blog/case-study-inshur-cuts-claim-email-handling-time-in-half-with-five-sigmas-clive-ai/"
+              }
+            },
+            "Manage Vendor Relationships",
+            "Manage Third Party Administrators (TPA)",
+            {
+              name: "Manage Litigation & Legal Spend",
+              caseStudy: {
+                company: "Top 50 US property insurer (+ CaseGlide)",
+                year: "2024",
+                title: "Predictive litigation management cuts defence spend 30%",
+                context: "One of the south-east's largest residential property insurers, a Top 50 US carrier, lacked visibility into litigated-claim data, attorney performance and settlement timing across its defence panel. CaseGlide's platform manages over <strong>$7.5bn in legal spend</strong> across more than 500 defence firms.",
+                useCase: "The carrier adopted CaseGlide's workflow-driven litigation platform, using AI and analytics to score case favourability (1-5), predict cost and complexity, assign the right attorneys and surface settlement opportunities — turning fragmented litigation data into actionable strategy.",
+                outcomes: "Defence spend dropped <strong>30%</strong> over two years while adjuster productivity rose <strong>300%</strong>, with caseloads growing from <strong>40 to 120 cases</strong> per adjuster.",
+                source: "CaseGlide",
+                sourceUrl: "https://caseglide.com/case-study/claims-litigation-management-helps-insurer-increase-productivity-and-decrease-defense-spend/"
+              }
+            },
+            {
+              name: "Manage / Review Billing",
+              caseStudy: {
+                company: "Large US Midwest health plan (+ EXL EXLMINE)",
+                year: "2024",
+                title: "AI prepay bill review delivers $5.2M in savings",
+                context: "A large Midwest health plan needed to curb overpayments on high-dollar itemised medical bills and turned to EXL for a prepay auditing programme. Over Phase 1 alone, EXL reviewed <strong>over $22M in billed charges</strong> across 731 itemised bills.",
+                useCase: "EXL combined registered-nurse clinical review with EXLMINE, its digital audit-workflow platform using OCR and natural-language processing to identify unbundling and overcharges, with a second-level quality-control review on qualifying claims.",
+                outcomes: "The programme generated <strong>$5.2M in savings</strong> over 18 months ($2.6M in the first six months), averaging roughly <strong>$10,000 overcharge identified per review</strong> and hitting <strong>173% of projected annual savings</strong>.",
+                source: "EXL",
+                sourceUrl: "https://www.exlservice.com/insights/case-study/prepay-itemized-bill-review-delivers-52m-savings"
+              }
+            },
+            "Manage Claim Department",
+            "Perform Reporting",
+            {
+              name: "Knowledge & Quality Management",
+              caseStudy: {
+                company: "Merchants Insurance Group (+ CLARA Analytics)",
+                year: "2025",
+                title: "AI document intelligence equips adjusters with claim knowledge",
+                context: "Merchants Insurance Group, a US regional property & casualty carrier, selected CLARA Analytics in early 2025 to give adjusters faster, more consistent access to the knowledge buried in claim files, starting in auto liability and expanding to workers' compensation and general liability.",
+                useCase: "Merchants deployed CLARA Claims DocIntel Pro to identify, index, transcribe and summarise claims documents including medical records and legal demands, alongside CLARA Triage to guide reserving and prioritise claims needing attention.",
+                outcomes: "The deployment is designed to <strong>dramatically reduce adjusters' document-review time</strong> and improve consistency and confidence in reserve-setting across the casualty book.",
+                source: "Merchants Insurance Group",
+                sourceUrl: "https://www.merchantsgroup.com/news/merchants-partners-with-clara-analytics-2025/"
+              }
+            }
+          ],
+          caseStudy: {
+            company: "Aviva (claims operations layer)",
+            year: "2024",
+            title: "80+ AI models across claims operations",
+            context: "Beyond intake and triage, the day-to-day machinery of claims operations — vendor coordination, litigation management, billing review, and departmental reporting — was a major source of leakage and lag. Aviva approached this with a portfolio rather than a point-solution strategy, layering AI across the entire operation.",
+            useCase: "Deployed more than 80 AI models across the claims operation, covering vendor performance, legal spend, departmental KPIs, and case-routing optimisation. AI-generated reports, legal correspondence drafts, and quality-assurance signals feed directly into adjuster and operations-manager workflows. One large carrier (referenced alongside Aviva) now generates approximately 50,000 claims-related communications daily using AI.",
+            outcomes: "Aviva's full claims transformation <strong>saved more than £60 million ($79.3m) in 2024</strong>, cut customer complaints by <strong>65%</strong>, and improved routing accuracy by <strong>30%</strong>. AI leaders in insurance have generated more than <strong>six times the total shareholder return</strong> of laggard peers over the past five years.",
+            source: "Thomson Reuters / McKinsey",
+            sourceUrl: "https://legal.thomsonreuters.com/blog/ai-is-transforming-insurance-and-the-law-firms-that-serve-it-must-keep-pace/"
+          }
+        },
+        {
+          id: "2.4", title: "Negotiate & Settle Claims",
+          activities: [
+            "Settlement Recommendation Drafting",
+            "Third Party Negotiation",
+            {
+              name: "Issue Payment",
+              caseStudy: {
+                company: "Clearcover (with Snapsheet)",
+                year: "2024",
+                title: "Auto claims paid in minutes via digital settlement",
+                context: "Digital auto insurer Clearcover implemented Snapsheet's claims management and digital-payments platform to compress the path from first notice of loss to settlement. Snapsheet's technology is used by <strong>16 of the top 20 US P&C carriers</strong> and handled <strong>$15.3bn in indemnity</strong> across 4.3 million claims in 2023.",
+                useCase: "A rules engine automates data entry, initial damage triage and payment disbursement, enabling straight-through processing and instant digital payouts in place of manual cheque cycles. Snapsheet reports automating up to 90% of formerly manual administrative tasks.",
+                outcomes: "After a roughly three-month implementation, Clearcover settled auto-damage claims in <strong>under 30 minutes</strong> from FNOL to payment, contributing to up to a <strong>15% reduction</strong> in operating and loss-adjustment costs.",
+                source: "Snapsheet case study",
+                sourceUrl: "https://www.snapsheetclaims.com/case-study/clearcover"
+              }
+            },
+            "Manage Disputes & Litigation",
+            {
+              name: "Pursue Recovery & Subrogation",
+              caseStudy: {
+                company: "Top-25 US auto & property insurer (Shift Technology)",
+                year: "2024",
+                title: "AI subrogation detection recovers over $1m a month",
+                context: "A top-25 US P&C carrier deployed Shift Technology's Subrogation Detection across its auto and home books to surface recovery opportunities its claims teams were missing. Across the industry, roughly <strong>15% of P&C claims close with missed subrogation</strong>, costing insurers an estimated <strong>$15–20bn a year</strong>.",
+                useCase: "The solution applies NLP and generative AI to read claim notes, extract facts, apply state-specific negligence laws and estimate liability, then generates scored alerts flagging exposure-level recovery (including PIP and Medpay) ahead of the claims teams.",
+                outcomes: "The carrier achieved a recurring average recovery of <strong>over $1m per month</strong> in production, with continuous year-on-year improvement and net-new alerts surfacing opportunities adjusters had previously overlooked.",
+                source: "Shift Technology case study",
+                sourceUrl: "https://www.shift-technology.com/resources/case-studies/top-25-us-auto-and-property-insurer-drives-operational-efficiency-in-subrogation"
+              }
+            },
+            "Perform Claims Audit",
+            "Close Claim & Archive File"
+          ],
+          caseStudy: {
+            company: "Allianz Austria",
+            year: "2024",
+            title: "Insurance Copilot for Settlement",
+            context: "Automotive claims settlement required adjusters to synthesise claim evidence, policy terms, and precedent to negotiate and authorise payment — a high-touch, time-intensive stage of the claims lifecycle.",
+            useCase: "Launched the Insurance Copilot — a generative AI tool that drafts settlement recommendations and payment authorisations. Adjusters can accept, modify, or escalate the AI's proposals.",
+            outcomes: "Cut settlement cycle time significantly. A comparable US travel insurer using AI settlement automation cut claims processing <strong>from weeks to minutes</strong> and achieved <strong>57% straight-through processing</strong>.",
+            source: "Allianz Media / CDP Center",
+            sourceUrl: "https://www.allianz.com/en/press.html"
+          }
+        }
+      ]
+    },
+    {
+      num: "03", title: "Product and Distribution",
+      subdomains: [
+        {
+          id: "3.1", title: "Develop and Manage Products & Services",
           activities: [
             {
               name: "Analyse Market & Customer Needs",
@@ -1955,7 +2656,7 @@ const DATA = {
           }
         },
         {
-          id: "1.2", title: "Market & Promote Products & Services",
+          id: "3.2", title: "Market & Promote Products & Services",
           activities: [
             {
               name: "Advertise / Promote",
@@ -2024,7 +2725,7 @@ const DATA = {
           }
         },
         {
-          id: "1.3", title: "Manage Commissions",
+          id: "3.3", title: "Manage Commissions",
           activities: [
             "Manage Commission Types & Plans",
             "Negotiate Commission",
@@ -2056,15 +2757,15 @@ const DATA = {
       ]
     },
     {
-      num: "02", title: "Quoting and Underwriting",
+      num: "04", title: "Quoting and Underwriting",
       subdomains: [
         {
-          id: "2.1", title: "Quoting",
+          id: "4.1", title: "Quoting",
           activities: ["Calculate & Present Quote", "Configure Cover & Options", "Manage Quote Pipeline", "Multi-Quote / Tender Response"],
           caseStudy: null
         },
         {
-          id: "2.2", title: "Underwriting",
+          id: "4.2", title: "Underwriting",
           activities: ["Risk Assessment", "Underwriting Decisioning", "Referrals & Exception Handling", "Underwriter Guidance & Knowledge Support", "Data Enrichment & Third-Party Lookups"],
           caseStudy: {
             company: "Liberty Mutual (with Groundspeed Analytics)",
@@ -2078,7 +2779,7 @@ const DATA = {
           }
         },
         {
-          id: "2.3", title: "Policy Issuance & Renewals",
+          id: "4.3", title: "Policy Issuance & Renewals",
           activities: ["Manage Application / New Business", "Generate & Deliver Policy Documents", "Manage Renewals", "Manage Customer Relationships"],
           caseStudy: {
             company: "Liberty International Underwriters",
@@ -2092,7 +2793,7 @@ const DATA = {
           }
         },
         {
-          id: "2.4", title: "Bill & Collect Premiums",
+          id: "4.4", title: "Bill & Collect Premiums",
           activities: ["Produce Bill / Statements", "Manage Changes to Payment Details", "Process Receipts", "Perform Collection"],
           caseStudy: {
             company: "UiPath Insurance Clients",
@@ -2103,114 +2804,6 @@ const DATA = {
             outcomes: "Saved over <strong>15,000 employee hours per month</strong> across billing and collections. Documentation time fell <strong>40%</strong>, turnaround <strong>50%</strong>, with <strong>99.5% data accuracy</strong> and a <strong>30% reported ROI</strong>.",
             source: "UiPath / CDP Center",
             sourceUrl: "https://www.uipath.com/"
-          }
-        }
-      ]
-    },
-    {
-      num: "03", title: "Policy Servicing",
-      subdomains: [
-        {
-          id: "3.1", title: "Customer Service Operations",
-          activities: ["Develop Customer Service Strategy", "Fulfil Customer Service Requirements", "Manage Service Delivery", "Measure and Improve Service", "Manage Contact Channels"],
-          caseStudy: {
-            company: "Zurich Insurance",
-            year: "2024",
-            title: "AI-driven CRM across four markets",
-            context: "Zurich needed to consolidate fragmented customer data and unify agent experience across phone, email, and WhatsApp, while reducing servicing times and improving claim handling consistency.",
-            useCase: "Launched an AI-powered CRM in January 2024, built on Microsoft Dynamics 365 with Copilot for Sales. A 'three-click rule' was embedded in the design — agents access any customer record or complete any task in three clicks or fewer. A separate AI claims chatbot now handles 35% of all claim requests.",
-            outcomes: "Servicing times dropped by <strong>over 70%</strong> across four pilot markets. The claims chatbot cut average processing time by <strong>30%</strong> with an <strong>80% Net Promoter Score</strong>.",
-            source: "Microsoft Customer Stories",
-            sourceUrl: "https://customers.microsoft.com/"
-          }
-        },
-        {
-          id: "3.2", title: "Policy Administration",
-          activities: ["Manage Endorsements", "Mid-Term Adjustments", "Policy Data Maintenance", "Coverage Changes", "Audit Trail & Compliance Records"],
-          caseStudy: {
-            company: "Major US Insurer (Nomad Data Doc Chat)",
-            year: "2024",
-            title: "AI-powered endorsement processing at scale",
-            context: "Endorsements — the mid-term changes that update coverage, add locations, modify limits, or exclude new exposures — are high-volume, document-heavy, and high-risk. Each request requires cross-referencing dense 100+ page policy documents, comparing against schedules and regulatory notices, and flagging conflicts. A major US insurer reported receiving <strong>thousands of endorsement requests weekly</strong>, with dedicated teams whose entire job was reviewing, interpreting, and manually processing them.",
-            useCase: "Deployed Nomad Data's Doc Chat AI agent to automate endorsement intake and cross-document verification. The system reads requests in any format (emails, scanned letters, digital forms, handwritten notes), parses them against the original policy and prior endorsements, flags coverage conflicts and regulatory gaps, and routes for review or auto-approval.",
-            outcomes: "Transformed endorsement processing from a 'necessary administrative cost centre to a strategic, value-generating function.' Insurers using similar AI policy-administration agents report cycle times <strong>compressed from days to minutes</strong> for high-volume change types, with audit-readiness time <strong>cut 60–80%</strong>.",
-            source: "Nomad Data",
-            sourceUrl: "https://www.nomad-data.com/doc-chat/ai-powered-policy-endorsement-processing-revolutionizing-mid-term-changes-in-insurance-servicing"
-          }
-        },
-        {
-          id: "3.3", title: "Retention & Cross-Sell",
-          activities: ["Predict Customer Churn", "Trigger Retention Actions", "Identify Cross-Sell / Up-Sell Opportunities", "Customer Lifetime Value Modelling", "Renewal Engagement"],
-          caseStudy: {
-            company: "Nationwide Insurance (with H2O.ai)",
-            year: "2024",
-            title: "Centralised AI model factory for churn, retention & customer expansion",
-            context: "Nationwide, a top US P&C carrier, had a sprawling set of analytics use cases — customer churn, retention, call routing, risk segmentation, fraud, underwriting, customer expansion — but lacked a single platform to develop, deploy, and monitor models consistently. Bespoke modelling per use case was slow and inconsistent.",
-            useCase: "Powered by H2O Driverless AI, Nationwide built a centralised data science team and a unique, patented 'model factory' that monitors all AI/ML models across the business. The agile team rapidly explores data with feature engineering and prototypes models for customer churn, retention, cross-sell, call routing, risk and business segmentation, fraud, underwriting, and customer-360 use cases.",
-            outcomes: "Enabled stable, statistically unbiased models that the business can trust in production. Quote from Nationwide's VP of Predictive Analytics: 'We are able to do more with less and do it faster.' The model factory pattern has become a reference architecture for other P&C carriers building scaled AI capability.",
-            source: "H2O.ai / Emerj AI Research",
-            sourceUrl: "https://h2o.ai/case-studies/nationwide-insurance-delivers-exceptional-protection-for-members-with-h2o-ai/"
-          }
-        }
-      ]
-    },
-    {
-      num: "04", title: "Claims",
-      subdomains: [
-        {
-          id: "4.1", title: "Initial Claim Setup",
-          activities: ["Receive Claim Notice (FNOL)", "Triage / Assign Claim", "Perform Investigation", "Constituent Set Up"],
-          caseStudy: {
-            company: "Aviva",
-            year: "2024",
-            title: "AI-powered triage and routing",
-            context: "As part of an 80+ AI model deployment across the claims journey, Aviva targeted the intake and triage stage — a high-volume bottleneck where mis-routing extended liability assessment timelines on complex cases.",
-            useCase: "Applied AI at intake and triage to automatically classify inbound claims by type, severity, and complexity, and route them to the right specialist team.",
-            outcomes: "Routing accuracy improved by <strong>30%</strong> and liability assessment time for complex cases was cut by <strong>23 days</strong>. The full claims transformation saved Aviva <strong>more than £60 million in 2024</strong> and reduced customer complaints by <strong>65%</strong>.",
-            source: "McKinsey / Thomson Reuters",
-            sourceUrl: "https://legal.thomsonreuters.com/blog/ai-is-transforming-insurance-and-the-law-firms-that-serve-it-must-keep-pace/"
-          }
-        },
-        {
-          id: "4.2", title: "Claims Assessment & Adjudication",
-          activities: ["Determine Loss Control", "Determine Salvage", "Evaluate Fraud", "Manage Exposure", "Manage Claim Reserves", "Determine Reinsurance", "Determine Subrogation"],
-          caseStudy: {
-            company: "Allianz",
-            year: "2024",
-            title: "'Incognito' Fraud Detection System",
-            context: "Fabricated or manipulated evidence — subtle image distortions, doctored documents — routinely slips past human adjusters, creating material leakage across motor and property books.",
-            useCase: "Deployed 'Incognito' across motor claims, home insurance claims, and applications. The system analyses distortions and anomalies in images, video, and documents to detect tampered evidence.",
-            outcomes: "<strong>29% increase in fraud detection</strong> across all channels, materially reducing leakage on the book.",
-            source: "CDP Center / Risk & Insurance",
-            sourceUrl: "https://riskandinsurance.com/"
-          }
-        },
-        {
-          id: "4.3", title: "Claims Operations",
-          activities: ["Manage Vendor Relationships", "Manage Litigation & Legal Spend", "Manage / Review Billing", "Manage Claim Department", "Perform Reporting", "Knowledge & Quality Management"],
-          caseStudy: {
-            company: "Aviva (claims operations layer)",
-            year: "2024",
-            title: "80+ AI models across claims operations",
-            context: "Beyond intake and triage, the day-to-day machinery of claims operations — vendor coordination, litigation management, billing review, and departmental reporting — was a major source of leakage and lag. Aviva approached this with a portfolio rather than a point-solution strategy, layering AI across the entire operation.",
-            useCase: "Deployed more than 80 AI models across the claims operation, covering vendor performance, legal spend, departmental KPIs, and case-routing optimisation. AI-generated reports, legal correspondence drafts, and quality-assurance signals feed directly into adjuster and operations-manager workflows. One large carrier (referenced alongside Aviva) now generates approximately 50,000 claims-related communications daily using AI.",
-            outcomes: "Aviva's full claims transformation <strong>saved more than £60 million ($79.3m) in 2024</strong>, cut customer complaints by <strong>65%</strong>, and improved routing accuracy by <strong>30%</strong>. AI leaders in insurance have generated more than <strong>six times the total shareholder return</strong> of laggard peers over the past five years.",
-            source: "Thomson Reuters / McKinsey",
-            sourceUrl: "https://legal.thomsonreuters.com/blog/ai-is-transforming-insurance-and-the-law-firms-that-serve-it-must-keep-pace/"
-          }
-        },
-        {
-          id: "4.4", title: "Negotiate & Settle Claims",
-          activities: ["Issue Payment", "Perform Claims Audit", "Settlement Recommendation Drafting"],
-          caseStudy: {
-            company: "Allianz Austria",
-            year: "2024",
-            title: "Insurance Copilot for Settlement",
-            context: "Automotive claims settlement required adjusters to synthesise claim evidence, policy terms, and precedent to negotiate and authorise payment — a high-touch, time-intensive stage of the claims lifecycle.",
-            useCase: "Launched the Insurance Copilot — a generative AI tool that drafts settlement recommendations and payment authorisations. Adjusters can accept, modify, or escalate the AI's proposals.",
-            outcomes: "Cut settlement cycle time significantly. A comparable US travel insurer using AI settlement automation cut claims processing <strong>from weeks to minutes</strong> and achieved <strong>57% straight-through processing</strong>.",
-            source: "Allianz Media / CDP Center",
-            sourceUrl: "https://www.allianz.com/en/press.html"
           }
         }
       ]
@@ -2696,16 +3289,30 @@ function renderDomain(domain, isEnabling = false) {
     `;
   }).join('');
 
+  const locked = isDomainLocked(domain.num);
+  const lockBadgeHTML = locked
+    ? `<span class="domain-lock">
+         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+           <rect x="5" y="11" width="14" height="9" rx="2"></rect>
+           <path d="M8 11V7a4 4 0 0 1 8 0v4"></path>
+         </svg>
+         Full version
+       </span>`
+    : '';
+
   return `
-    <div class="domain ${isEnabling ? 'enabling' : ''}" data-domain-num="${domain.num}">
+    <div class="domain ${isEnabling ? 'enabling' : ''} ${locked ? 'locked collapsed' : ''}" data-domain-num="${domain.num}">
       <div class="domain-header">
         <div class="domain-title-block">
           <div class="domain-number">DOMAIN ${domain.num}</div>
           <div class="domain-title">${domain.title}</div>
         </div>
-        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="6 9 12 15 18 9"></polyline>
-        </svg>
+        <div class="head-actions">
+          ${lockBadgeHTML}
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
       </div>
       <div class="subdomains">${subdomainHTML}</div>
     </div>
@@ -2719,8 +3326,15 @@ document.getElementById('enabling-grid').innerHTML = DATA.enabling.map(d => rend
 
 // Domain expand/collapse
 document.querySelectorAll('.domain-header').forEach(header => {
-  header.addEventListener('click', () => {
-    header.parentElement.classList.toggle('collapsed');
+  header.addEventListener('click', (e) => {
+    const domainEl = header.parentElement;
+    // Locked (demo) domains can't expand — invite the user to request full access.
+    if (domainEl.classList.contains('locked')) {
+      e.stopPropagation();
+      openLeadModal('demo_locked');
+      return;
+    }
+    domainEl.classList.toggle('collapsed');
   });
 });
 
@@ -2731,6 +3345,7 @@ document.querySelectorAll('[data-action]').forEach(btn => {
     document.querySelectorAll('[data-action]').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     document.querySelectorAll('.domain').forEach(d => {
+      if (d.classList.contains('locked')) return; // locked domains stay collapsed in demo mode
       if (action === 'expand-all') d.classList.remove('collapsed');
       else d.classList.add('collapsed');
     });
@@ -2912,6 +3527,13 @@ function openLeafModal(subId, leafIdx) {
 
 // Delegated click handler on the grids
 function handleGridClick(e) {
+  // Demo gating: any interaction inside a locked domain prompts for full access.
+  const lockedDomain = e.target.closest && e.target.closest('.domain.locked');
+  if (lockedDomain) {
+    e.stopPropagation();
+    openLeadModal('demo_locked');
+    return;
+  }
   // Walk up to find the nearest element with a data-click-type
   let el = e.target;
   while (el && el !== document.body) {
@@ -3147,8 +3769,9 @@ const TOTAL_SUBDOMAINS = (() => {
   return n;
 })();
 
-// Threshold to enable the "Generate report" CTA — set proportionally (~30% of subdomains)
-const UNLOCK_THRESHOLD = Math.max(5, Math.ceil(TOTAL_SUBDOMAINS * 0.3));
+// Threshold to enable the "Generate report" CTA. Set to 0 — the report is always
+// available, with no minimum number of rated sub-domains required.
+const UNLOCK_THRESHOLD = 0;
 
 // Sync the splash display + progress total once on init
 (function syncDynamicCounts() {
@@ -3229,6 +3852,15 @@ document.body.addEventListener('input', (e) => {
   const type = e.target.dataset.sliderType;
   const value = parseInt(e.target.value, 10);
   setScore(subId, type, value);
+});
+
+// Fix: 'input' only fires on value change, so clicking an unset slider already at 0
+// never triggers. Pointerdown fires first — use it to register 0 on first touch.
+document.body.addEventListener('pointerdown', (e) => {
+  if (!e.target.classList.contains('slider') || !e.target.classList.contains('unset')) return;
+  const subId = e.target.dataset.subdomainId;
+  const type = e.target.dataset.sliderType;
+  setScore(subId, type, parseInt(e.target.value, 10));
 });
 
 // Stop slider clicks from bubbling up to the subdomain expand handler
@@ -3428,15 +4060,26 @@ function openLeadModal(trigger) {
   // Re-show form if it was previously submitted
   const form = document.getElementById('lead-form');
   if (form) form.style.display = '';
-  // Reset title/eyebrow based on trigger
+  // Reset title/eyebrow/intro/submit copy based on trigger
   const title = document.getElementById('lead-modal-title');
   const eyebrow = document.getElementById('lead-modal-eyebrow');
+  const intro = document.getElementById('lead-modal-intro');
+  const submit = document.getElementById('lead-submit');
   if (trigger === 'shortlist_followup') {
     eyebrow.textContent = 'Follow-up Request';
     title.textContent = 'Discuss your shortlist with our team';
+    if (intro) intro.textContent = "Leave your details and our team will follow up to talk through your shortlisted capabilities and the deployed AI case studies behind them.";
+    if (submit) submit.textContent = 'Send me my report';
+  } else if (trigger === 'demo_locked') {
+    eyebrow.textContent = 'Full Atlas Access';
+    title.textContent = 'Unlock the full OMNIA atlas';
+    if (intro) intro.textContent = "You're viewing the demo edition — Policy Servicing and Claims are open to explore and assess. Leave your name and email and we'll send you the full version covering all eight domains across the insurance value chain.";
+    if (submit) submit.textContent = 'Send me the full version';
   } else {
     eyebrow.textContent = 'Tailored AI Opportunity Brief';
     title.textContent = 'Get your tailored AI maturity report';
+    if (intro) intro.textContent = "Based on your assessment, we'll prepare a personalised report mapping your biggest capability gaps to deployed AI case studies — emailed to you within one business day.";
+    if (submit) submit.textContent = 'Send me my report';
   }
   leadModal.classList.add('open');
   document.body.style.overflow = 'hidden';
@@ -3459,6 +4102,75 @@ document.getElementById('request-followup-btn').addEventListener('click', () => 
   openLeadModal('shortlist_followup');
 });
 
+// Build a rich, human-readable assessment + shortlist payload to attach to the
+// lead record. The Supabase -> Slack webhook can render lead.details directly
+// (e.g. details.assessment_summary / details.shortlist_summary) to show the
+// full picture rather than just counts.
+function buildAssessmentDetail() {
+  return Object.entries(state.scores)
+    .filter(([_, v]) => v.current != null || v.target != null)
+    .map(([subId, v]) => {
+      const f = findSubdomain(subId);
+      const cur = v.current ?? null;
+      const tar = v.target ?? null;
+      const gap = (cur != null && tar != null) ? (tar - cur) : null;
+      return {
+        subdomain_id: subId,
+        domain: f ? `${f.domain.num} · ${f.domain.title}` : null,
+        subdomain: f ? `${f.sub.id} ${f.sub.title}` : subId,
+        current: cur,
+        target: tar,
+        gap
+      };
+    });
+}
+
+function buildShortlistDetail() {
+  return state.shortlist.map(item => {
+    const info = lookupTarget(item.target);
+    return {
+      target: item.target,
+      type: item.target.includes('::leaf::') ? 'activity' : 'sub-domain',
+      domain: info ? info.eyebrow : null,
+      path: info ? info.path : item.target,
+      case_study: info && info.company ? `${info.company} — ${info.title}` : null,
+      added_at: item.added_at
+    };
+  });
+}
+
+function formatAssessmentSummary(rows) {
+  if (!rows.length) return 'No sub-domains rated.';
+  return rows.map(r => {
+    const cur = r.current != null ? r.current : '–';
+    const tar = r.target != null ? r.target : '–';
+    const gap = r.gap != null ? `  (gap ${r.gap >= 0 ? '+' : ''}${r.gap})` : '';
+    return `• ${r.subdomain}: ${cur} → ${tar}${gap}`;
+  }).join('\n');
+}
+
+function formatShortlistSummary(rows) {
+  if (!rows.length) return 'No items shortlisted.';
+  return rows.map(r => {
+    const cs = r.case_study ? ` — ${r.case_study}` : '';
+    return `• ${r.path}${cs}`;
+  }).join('\n');
+}
+
+function buildLeadDetail() {
+  const assessment = buildAssessmentDetail();
+  const shortlist = buildShortlistDetail();
+  return {
+    assessment_summary: formatAssessmentSummary(assessment),
+    shortlist_summary: formatShortlistSummary(shortlist),
+    assessment,
+    shortlist,
+    counts: { rated: assessment.length, shortlisted: shortlist.length },
+    mode: document.body.classList.contains('mode-assess') ? 'assess' : 'explore',
+    demo_mode: DEMO_MODE
+  };
+}
+
 // Form submission — for now, capture locally + show success.
 // In Phase 2, this POSTs to Supabase / Formspree.
 document.getElementById('lead-form').addEventListener('submit', async (e) => {
@@ -3467,6 +4179,7 @@ document.getElementById('lead-form').addEventListener('submit', async (e) => {
   submit.disabled = true;
   submit.textContent = 'Sending...';
 
+  const leadDetail = buildLeadDetail();
   const lead = {
     session_id: SESSION_ID,
     name: document.getElementById('lead-name').value,
@@ -3475,6 +4188,7 @@ document.getElementById('lead-form').addEventListener('submit', async (e) => {
     role: document.getElementById('lead-role').value,
     scores: state.scores,
     shortlist: state.shortlist.map(s => s.target),
+    details: leadDetail,
     submitted_at: new Date().toISOString()
   };
 
@@ -3497,8 +4211,18 @@ document.getElementById('lead-form').addEventListener('submit', async (e) => {
   // Send to Supabase if configured
   if (supabaseConfigured()) {
     try {
-      // 1. Insert the lead row
-      await fetch(`${OMNIA_CONFIG.SUPABASE_URL}/rest/v1/leads`, {
+      // 1. Insert the lead row, enriched with the full assessment + shortlist
+      //    detail (lead.details) so the Supabase -> Slack webhook can render it.
+      const leadBase = {
+        session_id: SESSION_ID,
+        name: lead.name,
+        email: lead.email,
+        company: lead.company,
+        role: lead.role,
+        shortlist_count: state.shortlist.length,
+        assessment_count: Object.keys(state.scores).length
+      };
+      const insertLead = (extra) => fetch(`${OMNIA_CONFIG.SUPABASE_URL}/rest/v1/leads`, {
         method: 'POST',
         headers: {
           'apikey': OMNIA_CONFIG.SUPABASE_ANON_KEY,
@@ -3506,16 +4230,16 @@ document.getElementById('lead-form').addEventListener('submit', async (e) => {
           'Content-Type': 'application/json',
           'Prefer': 'return=minimal'
         },
-        body: JSON.stringify({
-          session_id: SESSION_ID,
-          name: lead.name,
-          email: lead.email,
-          company: lead.company,
-          role: lead.role,
-          shortlist_count: state.shortlist.length,
-          assessment_count: Object.keys(state.scores).length
-        })
+        body: JSON.stringify({ ...leadBase, ...extra })
       });
+      // Try the enriched insert first; if the `details` jsonb column hasn't been
+      // added to the leads table yet, fall back to the base row so lead capture
+      // never breaks.
+      let leadRes = await insertLead({ details: leadDetail });
+      if (!leadRes.ok) {
+        console.warn(`[lead submit] enriched insert returned ${leadRes.status}; retrying without details column`);
+        await insertLead({});
+      }
 
       // 2. Insert assessment scores as individual rows for analytics-friendly shape
       const assessmentRows = Object.entries(state.scores)
@@ -3570,7 +4294,7 @@ document.getElementById('lead-form').addEventListener('submit', async (e) => {
   formContainer.innerHTML = `
     <div class="form-success">
       <strong>Thank you, ${lead.name.split(' ')[0]}!</strong>
-      We've received your details. The Omnia team will be in touch within one business day with your tailored AI Opportunity Brief.
+      We've received your details. The Omnia team will be in touch shortly with your tailored AI Opportunity Brief.
     </div>
     <p class="form-fineprint" style="margin-top:18px;text-align:center;">
       In the meantime, feel free to keep exploring the capability map below.
