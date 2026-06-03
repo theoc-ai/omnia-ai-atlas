@@ -3014,195 +3014,213 @@ const DATA = {
 //   tech:       'ml' | 'genai' | 'agentic'  (omitted when the space is Manual)
 // Tags are informed by the embedded case studies plus broader sector research.
 const LEAF_TAGS = {
-  // Domain 01 — Product and Distribution
   "1.1": {
-    "Analyse Market & Customer Needs": ["augmented", "ml"],
-    "Enhance Existing Products & Services": ["augmented", "ml"],
-    "Monitor / Manage Programs": ["automated", "ml"],
-    "Withdraw Products & Services": ["manual"],
-    "Develop New Products & Services": ["augmented", "ml"],
-    "Launch New / Enhanced": ["manual"],
-    "Plan Changes": ["manual"]
+    "Develop Customer Service Strategy": ["manual"],
+    "Fulfil Customer Service Requirements": ["automated","genai"],
+    "Manage Service Delivery": ["augmented","ml"],
+    "Measure and Improve Service": ["augmented","genai"],
+    "Manage Contact Channels": ["automated","genai"],
+    "Handle Complaints & Escalations": ["augmented","genai"],
+    "Route & Prioritise Inbound Contacts": ["automated","ml"],
   },
   "1.2": {
-    "Advertise / Promote": ["automated", "genai"],
-    "Manage Pricing": ["automated", "ml"],
-    "Manage Support / Distribution Channels": ["augmented", "agentic"],
-    "Develop Marketing & Sales Plan": ["manual"],
-    "Manage the Selling Process": ["augmented", "ml"],
-    "Perform Agent Setup": ["manual"]
+    "Issue & Deliver Policy Documents": ["automated","genai"],
+    "Process Endorsements & Mid-Term Adjustments": ["augmented","ml"],
+    "Process Renewals (Operational)": ["augmented","ml"],
+    "Process Cancellations & Lapses": ["augmented","ml"],
+    "Manage Coverage Corrections": ["augmented","ml"],
+    "Policy Data Quality & Maintenance": ["augmented","ml"],
+    "Intelligent Document Processing (IDP)": ["automated","genai"],
+    "Straight-Through Processing (STP) Automation": ["automated","agentic"],
+    "Regulatory Compliance & Filings": ["augmented","genai"],
   },
   "1.3": {
-    "Manage Commission Types & Plans": ["manual"],
-    "Negotiate Commission": ["manual"],
-    "Payout Commission": ["automated", "genai"]
+    "Premium Invoicing & Collection": ["augmented","ml"],
+    "Direct Debit & Payment Processing": ["manual"],
+    "Premium Adjustment & Recalculation": ["augmented","ml"],
+    "Manage Instalments & Financing": ["manual"],
+    "Debt Management & Arrears": ["augmented","ml"],
+    "Refunds & Credit Processing": ["manual"],
+    "Premium Reconciliation": ["augmented","ml"],
   },
-  // Domain 02 — Quoting and Underwriting
+  "1.4": {
+    "Predict Customer Churn": ["augmented","ml"],
+    "Trigger Retention Actions": ["automated","ml"],
+    "Identify Cross-Sell / Up-Sell Opportunities": ["augmented","ml"],
+    "Customer Lifetime Value Modelling": ["augmented","ml"],
+    "Renewal Engagement": ["augmented","genai"],
+  },
   "2.1": {
-    "Calculate & Present Quote": ["automated", "ml"],
-    "Configure Cover & Options": ["augmented", "ml"],
-    "Manage Quote Pipeline": ["augmented", "ml"],
-    "Multi-Quote / Tender Response": ["augmented", "genai"]
+    "Receive Claim Notice (FNOL)": ["automated","genai"],
+    "Triage / Assign Claim": ["automated","ml"],
+    "Constituent Set Up": ["augmented","ml"],
+    "Set Initial Reserves": ["augmented","ml"],
+    "Perform Initial Investigation": ["augmented","ml"],
+    "Manage CAT & Major Loss Events": ["augmented","ml"],
   },
   "2.2": {
-    "Risk Assessment": ["augmented", "ml"],
-    "Underwriting Decisioning": ["automated", "ml"],
-    "Referrals & Exception Handling": ["augmented", "ml"],
-    "Underwriter Guidance & Knowledge Support": ["augmented", "genai"],
-    "Data Enrichment & Third-Party Lookups": ["automated", "agentic"]
+    "Appoint & Manage Loss Adjusters": ["manual"],
+    "Assess Damage & Quantify Loss": ["automated","ml"],
+    "Manage Repair & Reinstatement": ["augmented","ml"],
+    "Determine Loss Control": ["augmented","ml"],
+    "Determine Salvage": ["augmented","ml"],
+    "Evaluate Fraud": ["automated","ml"],
+    "Manage Exposure": ["augmented","ml"],
+    "Manage Claim Reserves": ["augmented","ml"],
+    "Determine Reinsurance": ["augmented","ml"],
+    "Determine Subrogation": ["augmented","ml"],
   },
   "2.3": {
-    "Manage Application / New Business": ["automated", "genai"],
-    "Generate & Deliver Policy Documents": ["automated", "genai"],
-    "Manage Renewals": ["augmented", "ml"],
-    "Manage Customer Relationships": ["augmented", "genai"]
+    "Manage Claimant Communications": ["augmented","genai"],
+    "Manage Vendor Relationships": ["manual"],
+    "Manage Third Party Administrators (TPA)": ["manual"],
+    "Manage Litigation & Legal Spend": ["augmented","genai"],
+    "Manage / Review Billing": ["augmented","ml"],
+    "Manage Claim Department": ["manual"],
+    "Perform Reporting": ["augmented","genai"],
+    "Knowledge & Quality Management": ["augmented","genai"],
   },
   "2.4": {
-    "Produce Bill / Statements": ["manual"],
-    "Manage Changes to Payment Details": ["manual"],
-    "Process Receipts": ["augmented", "ml"],
-    "Perform Collection": ["augmented", "ml"]
+    "Settlement Recommendation Drafting": ["augmented","genai"],
+    "Third Party Negotiation": ["manual"],
+    "Issue Payment": ["automated","ml"],
+    "Manage Disputes & Litigation": ["augmented","genai"],
+    "Pursue Recovery & Subrogation": ["augmented","ml"],
+    "Perform Claims Audit": ["augmented","genai"],
+    "Close Claim & Archive File": ["augmented","ml"],
   },
-  // Domain 03 — Policy Servicing
   "3.1": {
-    "Develop Customer Service Strategy": ["manual"],
-    "Fulfil Customer Service Requirements": ["automated", "genai"],
-    "Manage Service Delivery": ["augmented", "ml"],
-    "Measure and Improve Service": ["augmented", "genai"],
-    "Manage Contact Channels": ["automated", "genai"]
+    "Analyse Market & Customer Needs": ["augmented","ml"],
+    "Enhance Existing Products & Services": ["augmented","ml"],
+    "Monitor / Manage Programs": ["automated","ml"],
+    "Withdraw Products & Services": ["manual"],
+    "Develop New Products & Services": ["augmented","ml"],
+    "Launch New / Enhanced": ["manual"],
+    "Plan Changes": ["manual"],
   },
   "3.2": {
-    "Manage Endorsements": ["augmented", "genai"],
-    "Mid-Term Adjustments": ["augmented", "ml"],
-    "Policy Data Maintenance": ["augmented", "ml"],
-    "Coverage Changes": ["augmented", "ml"],
-    "Audit Trail & Compliance Records": ["augmented", "genai"]
+    "Advertise / Promote": ["automated","genai"],
+    "Manage Pricing": ["automated","ml"],
+    "Manage Support / Distribution Channels": ["augmented","agentic"],
+    "Develop Marketing & Sales Plan": ["manual"],
+    "Manage the Selling Process": ["augmented","ml"],
+    "Perform Agent Setup": ["manual"],
   },
   "3.3": {
-    "Predict Customer Churn": ["augmented", "ml"],
-    "Trigger Retention Actions": ["automated", "ml"],
-    "Identify Cross-Sell / Up-Sell Opportunities": ["augmented", "ml"],
-    "Customer Lifetime Value Modelling": ["augmented", "ml"],
-    "Renewal Engagement": ["augmented", "genai"]
+    "Manage Commission Types & Plans": ["manual"],
+    "Negotiate Commission": ["manual"],
+    "Payout Commission": ["automated","genai"],
   },
-  // Domain 04 — Claims
   "4.1": {
-    "Receive Claim Notice (FNOL)": ["automated", "genai"],
-    "Triage / Assign Claim": ["automated", "ml"],
-    "Perform Investigation": ["augmented", "ml"],
-    "Constituent Set Up": ["augmented", "ml"]
+    "Calculate & Present Quote": ["automated","ml"],
+    "Configure Cover & Options": ["augmented","ml"],
+    "Manage Quote Pipeline": ["augmented","ml"],
+    "Multi-Quote / Tender Response": ["augmented","genai"],
   },
   "4.2": {
-    "Determine Loss Control": ["augmented", "ml"],
-    "Determine Salvage": ["augmented", "ml"],
-    "Evaluate Fraud": ["automated", "ml"],
-    "Manage Exposure": ["augmented", "ml"],
-    "Manage Claim Reserves": ["augmented", "ml"],
-    "Determine Reinsurance": ["augmented", "ml"],
-    "Determine Subrogation": ["augmented", "ml"]
+    "Risk Assessment": ["augmented","ml"],
+    "Underwriting Decisioning": ["automated","ml"],
+    "Referrals & Exception Handling": ["augmented","ml"],
+    "Underwriter Guidance & Knowledge Support": ["augmented","genai"],
+    "Data Enrichment & Third-Party Lookups": ["automated","agentic"],
   },
   "4.3": {
-    "Manage Vendor Relationships": ["manual"],
-    "Manage Litigation & Legal Spend": ["augmented", "genai"],
-    "Manage / Review Billing": ["augmented", "ml"],
-    "Manage Claim Department": ["manual"],
-    "Perform Reporting": ["augmented", "genai"],
-    "Knowledge & Quality Management": ["augmented", "genai"]
+    "Manage Application / New Business": ["automated","genai"],
+    "Generate & Deliver Policy Documents": ["automated","genai"],
+    "Manage Renewals": ["augmented","ml"],
+    "Manage Customer Relationships": ["augmented","genai"],
   },
   "4.4": {
-    "Issue Payment": ["automated", "ml"],
-    "Perform Claims Audit": ["augmented", "genai"],
-    "Settlement Recommendation Drafting": ["augmented", "genai"]
+    "Produce Bill / Statements": ["manual"],
+    "Manage Changes to Payment Details": ["manual"],
+    "Process Receipts": ["augmented","ml"],
+    "Perform Collection": ["augmented","ml"],
   },
-  // Domain 05 — Risk, Capital & Investment Management
   "5.1": {
-    "Manage Portfolio": ["augmented", "ml"],
+    "Manage Portfolio": ["augmented","ml"],
     "Perform Investment Accounting": ["manual"],
     "Process Transactions": ["manual"],
-    "Monitor Assets": ["augmented", "ml"],
-    "Perform Private Asset Origination": ["augmented", "ml"],
-    "Select Assets": ["augmented", "ml"]
+    "Monitor Assets": ["augmented","ml"],
+    "Perform Private Asset Origination": ["augmented","ml"],
+    "Select Assets": ["augmented","ml"],
   },
   "5.2": {
-    "Capital Modelling": ["augmented", "ml"],
-    "Solvency Calculations": ["augmented", "ml"],
-    "Regulatory Reporting (QRT / SCR)": ["augmented", "genai"],
-    "Stress Testing": ["augmented", "ml"],
-    "Reinsurance Optimisation": ["augmented", "ml"]
+    "Capital Modelling": ["augmented","ml"],
+    "Solvency Calculations": ["augmented","ml"],
+    "Regulatory Reporting (QRT / SCR)": ["augmented","genai"],
+    "Stress Testing": ["augmented","ml"],
+    "Reinsurance Optimisation": ["augmented","ml"],
   },
   "5.3": {
-    "Identify Emerging Risks": ["augmented", "genai"],
-    "Climate & Catastrophe Modelling": ["augmented", "ml"],
-    "Scenario Analysis": ["augmented", "ml"],
-    "ESG Risk Monitoring": ["augmented", "genai"],
-    "Cyber Risk Modelling": ["augmented", "ml"],
-    "Risk Aggregation & Reporting": ["augmented", "ml"]
+    "Identify Emerging Risks": ["augmented","genai"],
+    "Climate & Catastrophe Modelling": ["augmented","ml"],
+    "Scenario Analysis": ["augmented","ml"],
+    "ESG Risk Monitoring": ["augmented","genai"],
+    "Cyber Risk Modelling": ["augmented","ml"],
+    "Risk Aggregation & Reporting": ["augmented","ml"],
   },
-  // Domain 06 — Finance
   "6.1": {
-    "Accounts Payable": ["automated", "genai"],
-    "Accounts Receivable": ["augmented", "ml"],
+    "Accounts Payable": ["automated","genai"],
+    "Accounts Receivable": ["augmented","ml"],
     "General Ledger Accounting": ["manual"],
     "Tax Accounting": ["manual"],
     "Fixed Asset Accounting": ["manual"],
-    "Reconciliations": ["augmented", "ml"]
+    "Reconciliations": ["augmented","ml"],
   },
   "6.2": {
-    "Budgeting / Forecasting": ["augmented", "ml"],
-    "Cost Management": ["augmented", "ml"],
-    "Financial Analysis & Reporting": ["augmented", "genai"],
-    "Management Reporting": ["augmented", "genai"],
-    "Treasury & Cash Forecasting": ["augmented", "ml"]
+    "Budgeting / Forecasting": ["augmented","ml"],
+    "Cost Management": ["augmented","ml"],
+    "Financial Analysis & Reporting": ["augmented","genai"],
+    "Management Reporting": ["augmented","genai"],
+    "Treasury & Cash Forecasting": ["augmented","ml"],
   },
-  // Domain 07 — HR Function
   "7.1": {
-    "Plan & Manage Employee Resources": ["augmented", "ml"]
+    "Plan & Manage Employee Resources": ["augmented","ml"],
   },
   "7.2": {
-    "Manage Recruiting & Employee Integration": ["augmented", "genai"]
+    "Manage Recruiting & Employee Integration": ["augmented","genai"],
   },
   "7.3": {
     "Manage Employee Union Activities": ["manual"],
-    "Monitor Employee Health & Safety": ["augmented", "ml"],
-    "Manage Employee Separation Process": ["manual"]
+    "Monitor Employee Health & Safety": ["augmented","ml"],
+    "Manage Employee Separation Process": ["manual"],
   },
   "7.4": {
-    "Administer Employee Benefits": ["augmented", "genai"],
+    "Administer Employee Benefits": ["augmented","genai"],
     "Manage Payroll": ["manual"],
-    "Perform Employee Benefit & Enrolment": ["augmented", "genai"],
-    "Perform Employee Data & Salary Administration": ["manual"]
+    "Perform Employee Benefit & Enrolment": ["augmented","genai"],
+    "Perform Employee Data & Salary Administration": ["manual"],
   },
   "7.5": {
-    "Develop & Train Workforce": ["augmented", "genai"]
+    "Develop & Train Workforce": ["augmented","genai"],
   },
-  // Domain 08 — IT Function
   "8.1": {
     "Service Catalogue": ["manual"],
-    "Service Level": ["augmented", "ml"],
+    "Service Level": ["augmented","ml"],
     "Lifecycle": ["manual"],
-    "Bill Calculation & Invoicing": ["manual"]
+    "Bill Calculation & Invoicing": ["manual"],
   },
   "8.2": {
-    "Change Management": ["augmented", "ml"],
-    "Release & Deployment": ["augmented", "ml"],
-    "Configuration & Asset Management": ["augmented", "ml"],
-    "Service Testing & Acceptance": ["augmented", "genai"],
-    "Knowledge Management": ["augmented", "genai"]
+    "Change Management": ["augmented","ml"],
+    "Release & Deployment": ["augmented","ml"],
+    "Configuration & Asset Management": ["augmented","ml"],
+    "Service Testing & Acceptance": ["augmented","genai"],
+    "Knowledge Management": ["augmented","genai"],
   },
   "8.3": {
-    "Service Desk": ["automated", "genai"],
-    "Event Management": ["automated", "ml"],
-    "Incident Management": ["automated", "agentic"],
-    "Availability Management": ["augmented", "ml"],
-    "Capacity Management": ["augmented", "ml"],
-    "Request Fulfilment": ["automated", "agentic"],
-    "Security Management": ["automated", "ml"],
+    "Service Desk": ["automated","genai"],
+    "Event Management": ["automated","ml"],
+    "Incident Management": ["automated","agentic"],
+    "Availability Management": ["augmented","ml"],
+    "Capacity Management": ["augmented","ml"],
+    "Request Fulfilment": ["automated","agentic"],
+    "Security Management": ["automated","ml"],
     "Service Continuity": ["manual"],
-    "Access Management": ["augmented", "ml"],
-    "Problem Management": ["augmented", "ml"],
-    "Service Reporting": ["augmented", "genai"],
-    "Risk & Compliance": ["augmented", "genai"]
-  }
+    "Access Management": ["augmented","ml"],
+    "Problem Management": ["augmented","ml"],
+    "Service Reporting": ["augmented","genai"],
+    "Risk & Compliance": ["augmented","genai"],
+  },
 };
 
 const TECH_LABELS = { ml: "ML", genai: "GenAI", agentic: "Agentic" };
