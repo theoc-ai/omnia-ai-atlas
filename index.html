@@ -150,6 +150,33 @@
     font-weight: 300;
   }
   .mode-intro strong { color: var(--text); font-weight: 600; }
+  .mode-intro p { margin: 0; }
+
+  /* Inline CTA inside an intro blurb (e.g. start assessment from Explore) */
+  .intro-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 14px;
+    background: var(--accent);
+    color: var(--bg);
+    border: none;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 11px 20px;
+    border-radius: 100px;
+    cursor: pointer;
+    transition: all 0.18s ease;
+  }
+  .intro-cta:hover {
+    background: #d4f5b8;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(193, 239, 165, 0.2);
+  }
+  .intro-cta svg { width: 13px; height: 13px; }
 
   /* Shortlist legend — explains the quick-add toggle */
   .shortlist-legend {
@@ -433,7 +460,7 @@
   }
 
   .subdomain.expanded .activities {
-    max-height: 600px;
+    max-height: 1600px;
     opacity: 1;
     margin-top: 12px;
   }
@@ -466,6 +493,74 @@
     border-radius: 50%;
     background: var(--accent);
     flex-shrink: 0;
+  }
+
+  /* ===== Capability badges (automation level + predominant AI tech) ===== */
+  .cap-badges {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-left: 3px;
+  }
+  .cap-badge {
+    font-size: 8.5px;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 100px;
+    line-height: 1.35;
+    white-space: nowrap;
+  }
+  /* Automation: outlined, colour-coded by maturity */
+  .cap-badge.auto-manual {
+    color: #9fb4b1;
+    border: 1px solid rgba(159, 180, 177, 0.5);
+    background: rgba(159, 180, 177, 0.08);
+  }
+  .cap-badge.auto-augmented {
+    color: #ffc46b;
+    border: 1px solid rgba(255, 183, 77, 0.55);
+    background: rgba(255, 183, 77, 0.10);
+  }
+  .cap-badge.auto-automated {
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    background: rgba(193, 239, 165, 0.12);
+  }
+  /* Tech: solid subtle chip (distinct from the outlined maturity badge) */
+  .cap-badge.tech {
+    color: #d7f3bf;
+    background: rgba(193, 239, 165, 0.18);
+    border: 1px solid transparent;
+  }
+
+  /* Badge legend above the grid */
+  .badge-legend { display: none; }
+  body.mode-assess .badge-legend,
+  body.mode-explore .badge-legend {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 9px 16px;
+    margin: 0 0 22px;
+    padding: 12px 18px;
+    background: rgba(0, 0, 0, 0.12);
+    border: 1px solid var(--accent-line);
+    border-radius: 12px;
+  }
+  .badge-legend-label {
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    font-weight: 700;
+  }
+  .badge-legend .cap-badge { cursor: default; }
+  .badge-legend-divider {
+    width: 1px;
+    height: 16px;
+    background: var(--accent-line);
   }
 
   /* ===== Modal ===== */
@@ -1512,7 +1607,7 @@
   }
 </style>
 </head>
-<body class="mode-assess">
+<body class="mode-explore">
 
 <!-- Brand bar with mode toggle -->
 <div class="brand-bar">
@@ -1531,8 +1626,8 @@
       Data refreshed June 2026
     </span>
     <div class="mode-toggle" id="mode-toggle">
-      <button class="mode-btn active" data-mode="assess">Assess</button>
-      <button class="mode-btn" data-mode="explore">Explore</button>
+      <button class="mode-btn" data-mode="assess">Assess</button>
+      <button class="mode-btn active" data-mode="explore">Explore</button>
     </div>
   </div>
 </div>
@@ -1543,11 +1638,11 @@
   <h1 class="splash-title">Benchmark where AI is <strong>creating value</strong> across your insurance value chain.</h1>
   <p class="splash-body">A structured assessment across the full general insurance value chain. Rate your current state and target ambition for each sub-domain, see real deployed case studies from leading carriers, and receive a tailored AI opportunity brief — plus see how your AI maturity stacks up against other similar organisations in your industry.</p>
   <div class="splash-cta-row">
-    <button class="splash-cta" id="start-assess-btn">
-      Start the assessment
+    <button class="splash-cta" id="explore-atlas-btn">
+      Explore the atlas
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
     </button>
-    <button class="splash-skip" id="skip-to-explore-btn">Just exploring? Skip the assessment →</button>
+    <button class="splash-skip" id="start-assess-btn">Ready to benchmark? Start the assessment →</button>
   </div>
   <div class="splash-meta">
     <div class="splash-meta-item"><strong>~5 min</strong>to complete</div>
@@ -1574,11 +1669,17 @@
   complete every one — <strong>rate what's relevant to you</strong> and generate your tailored AI
   opportunity brief whenever you're ready.
 </p>
-<p class="mode-intro explore-intro">
-  This is a <strong>capability model</strong> of the general insurance value chain. Expand any domain
-  to see where AI is already being deployed by leading carriers. We're <strong>progressively adding
-  more examples</strong> of where AI is playing a role, so check back as the atlas grows.
-</p>
+<div class="mode-intro explore-intro">
+  <p>
+    This is a <strong>capability model</strong> of the general insurance value chain. Expand any domain
+    to see where AI is already being deployed by leading carriers. We're <strong>progressively adding
+    more examples</strong> of where AI is playing a role, so check back as the atlas grows.
+  </p>
+  <button class="intro-cta" id="explore-start-assess-btn">
+    Ready to benchmark your own maturity? Start the assessment
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+  </button>
+</div>
 
 <!-- Shortlist legend -->
 <div class="shortlist-legend">
@@ -1627,6 +1728,19 @@
       <div class="scale-step-desc">The capability is redesigned around AI, not just augmented by it.</div>
     </div>
   </div>
+</div>
+
+<!-- Capability badge legend -->
+<div class="badge-legend">
+  <span class="badge-legend-label">AI maturity</span>
+  <span class="cap-badge auto-manual">Manual</span>
+  <span class="cap-badge auto-augmented">Augmented</span>
+  <span class="cap-badge auto-automated">Automated</span>
+  <span class="badge-legend-divider"></span>
+  <span class="badge-legend-label">Predominant AI</span>
+  <span class="cap-badge tech">ML</span>
+  <span class="cap-badge tech">GenAI</span>
+  <span class="cap-badge tech">Agentic</span>
 </div>
 
 <div class="section-label">Core Business Capabilities</div>
@@ -2300,6 +2414,216 @@ const DATA = {
   ]
 };
 
+// =================== CAPABILITY TAGS ===================
+// Each leaf capability is tagged with the AI pattern PREDOMINANT in that space
+// across the general insurance industry (2024–26), not any single org's state.
+//   automation: 'manual' | 'augmented' | 'automated'
+//   tech:       'ml' | 'genai' | 'agentic'  (omitted when the space is Manual)
+// Tags are informed by the embedded case studies plus broader sector research.
+const LEAF_TAGS = {
+  // Domain 01 — Product and Distribution
+  "1.1": {
+    "Analyse Market & Customer Needs": ["augmented", "ml"],
+    "Enhance Existing Products & Services": ["augmented", "ml"],
+    "Monitor / Manage Programs": ["automated", "ml"],
+    "Withdraw Products & Services": ["manual"],
+    "Develop New Products & Services": ["augmented", "ml"],
+    "Launch New / Enhanced": ["manual"],
+    "Plan Changes": ["manual"]
+  },
+  "1.2": {
+    "Advertise / Promote": ["automated", "genai"],
+    "Manage Pricing": ["automated", "ml"],
+    "Manage Support / Distribution Channels": ["augmented", "agentic"],
+    "Develop Marketing & Sales Plan": ["manual"],
+    "Manage the Selling Process": ["augmented", "ml"],
+    "Perform Agent Setup": ["manual"]
+  },
+  "1.3": {
+    "Manage Commission Types & Plans": ["manual"],
+    "Negotiate Commission": ["manual"],
+    "Payout Commission": ["automated", "genai"]
+  },
+  // Domain 02 — Quoting and Underwriting
+  "2.1": {
+    "Calculate & Present Quote": ["automated", "ml"],
+    "Configure Cover & Options": ["augmented", "ml"],
+    "Manage Quote Pipeline": ["augmented", "ml"],
+    "Multi-Quote / Tender Response": ["augmented", "genai"]
+  },
+  "2.2": {
+    "Risk Assessment": ["augmented", "ml"],
+    "Underwriting Decisioning": ["automated", "ml"],
+    "Referrals & Exception Handling": ["augmented", "ml"],
+    "Underwriter Guidance & Knowledge Support": ["augmented", "genai"],
+    "Data Enrichment & Third-Party Lookups": ["automated", "agentic"]
+  },
+  "2.3": {
+    "Manage Application / New Business": ["automated", "genai"],
+    "Generate & Deliver Policy Documents": ["automated", "genai"],
+    "Manage Renewals": ["augmented", "ml"],
+    "Manage Customer Relationships": ["augmented", "genai"]
+  },
+  "2.4": {
+    "Produce Bill / Statements": ["manual"],
+    "Manage Changes to Payment Details": ["manual"],
+    "Process Receipts": ["augmented", "ml"],
+    "Perform Collection": ["augmented", "ml"]
+  },
+  // Domain 03 — Policy Servicing
+  "3.1": {
+    "Develop Customer Service Strategy": ["manual"],
+    "Fulfil Customer Service Requirements": ["automated", "genai"],
+    "Manage Service Delivery": ["augmented", "ml"],
+    "Measure and Improve Service": ["augmented", "genai"],
+    "Manage Contact Channels": ["automated", "genai"]
+  },
+  "3.2": {
+    "Manage Endorsements": ["augmented", "genai"],
+    "Mid-Term Adjustments": ["augmented", "ml"],
+    "Policy Data Maintenance": ["augmented", "ml"],
+    "Coverage Changes": ["augmented", "ml"],
+    "Audit Trail & Compliance Records": ["augmented", "genai"]
+  },
+  "3.3": {
+    "Predict Customer Churn": ["augmented", "ml"],
+    "Trigger Retention Actions": ["automated", "ml"],
+    "Identify Cross-Sell / Up-Sell Opportunities": ["augmented", "ml"],
+    "Customer Lifetime Value Modelling": ["augmented", "ml"],
+    "Renewal Engagement": ["augmented", "genai"]
+  },
+  // Domain 04 — Claims
+  "4.1": {
+    "Receive Claim Notice (FNOL)": ["automated", "genai"],
+    "Triage / Assign Claim": ["automated", "ml"],
+    "Perform Investigation": ["augmented", "ml"],
+    "Constituent Set Up": ["augmented", "ml"]
+  },
+  "4.2": {
+    "Determine Loss Control": ["augmented", "ml"],
+    "Determine Salvage": ["augmented", "ml"],
+    "Evaluate Fraud": ["automated", "ml"],
+    "Manage Exposure": ["augmented", "ml"],
+    "Manage Claim Reserves": ["augmented", "ml"],
+    "Determine Reinsurance": ["augmented", "ml"],
+    "Determine Subrogation": ["augmented", "ml"]
+  },
+  "4.3": {
+    "Manage Vendor Relationships": ["manual"],
+    "Manage Litigation & Legal Spend": ["augmented", "genai"],
+    "Manage / Review Billing": ["augmented", "ml"],
+    "Manage Claim Department": ["manual"],
+    "Perform Reporting": ["augmented", "genai"],
+    "Knowledge & Quality Management": ["augmented", "genai"]
+  },
+  "4.4": {
+    "Issue Payment": ["automated", "ml"],
+    "Perform Claims Audit": ["augmented", "genai"],
+    "Settlement Recommendation Drafting": ["augmented", "genai"]
+  },
+  // Domain 05 — Risk, Capital & Investment Management
+  "5.1": {
+    "Manage Portfolio": ["augmented", "ml"],
+    "Perform Investment Accounting": ["manual"],
+    "Process Transactions": ["manual"],
+    "Monitor Assets": ["augmented", "ml"],
+    "Perform Private Asset Origination": ["augmented", "ml"],
+    "Select Assets": ["augmented", "ml"]
+  },
+  "5.2": {
+    "Capital Modelling": ["augmented", "ml"],
+    "Solvency Calculations": ["augmented", "ml"],
+    "Regulatory Reporting (QRT / SCR)": ["augmented", "genai"],
+    "Stress Testing": ["augmented", "ml"],
+    "Reinsurance Optimisation": ["augmented", "ml"]
+  },
+  "5.3": {
+    "Identify Emerging Risks": ["augmented", "genai"],
+    "Climate & Catastrophe Modelling": ["augmented", "ml"],
+    "Scenario Analysis": ["augmented", "ml"],
+    "ESG Risk Monitoring": ["augmented", "genai"],
+    "Cyber Risk Modelling": ["augmented", "ml"],
+    "Risk Aggregation & Reporting": ["augmented", "ml"]
+  },
+  // Domain 06 — Finance
+  "6.1": {
+    "Accounts Payable": ["automated", "genai"],
+    "Accounts Receivable": ["augmented", "ml"],
+    "General Ledger Accounting": ["manual"],
+    "Tax Accounting": ["manual"],
+    "Fixed Asset Accounting": ["manual"],
+    "Reconciliations": ["augmented", "ml"]
+  },
+  "6.2": {
+    "Budgeting / Forecasting": ["augmented", "ml"],
+    "Cost Management": ["augmented", "ml"],
+    "Financial Analysis & Reporting": ["augmented", "genai"],
+    "Management Reporting": ["augmented", "genai"],
+    "Treasury & Cash Forecasting": ["augmented", "ml"]
+  },
+  // Domain 07 — HR Function
+  "7.1": {
+    "Plan & Manage Employee Resources": ["augmented", "ml"]
+  },
+  "7.2": {
+    "Manage Recruiting & Employee Integration": ["augmented", "genai"]
+  },
+  "7.3": {
+    "Manage Employee Union Activities": ["manual"],
+    "Monitor Employee Health & Safety": ["augmented", "ml"],
+    "Manage Employee Separation Process": ["manual"]
+  },
+  "7.4": {
+    "Administer Employee Benefits": ["augmented", "genai"],
+    "Manage Payroll": ["manual"],
+    "Perform Employee Benefit & Enrolment": ["augmented", "genai"],
+    "Perform Employee Data & Salary Administration": ["manual"]
+  },
+  "7.5": {
+    "Develop & Train Workforce": ["augmented", "genai"]
+  },
+  // Domain 08 — IT Function
+  "8.1": {
+    "Service Catalogue": ["manual"],
+    "Service Level": ["augmented", "ml"],
+    "Lifecycle": ["manual"],
+    "Bill Calculation & Invoicing": ["manual"]
+  },
+  "8.2": {
+    "Change Management": ["augmented", "ml"],
+    "Release & Deployment": ["augmented", "ml"],
+    "Configuration & Asset Management": ["augmented", "ml"],
+    "Service Testing & Acceptance": ["augmented", "genai"],
+    "Knowledge Management": ["augmented", "genai"]
+  },
+  "8.3": {
+    "Service Desk": ["automated", "genai"],
+    "Event Management": ["automated", "ml"],
+    "Incident Management": ["automated", "agentic"],
+    "Availability Management": ["augmented", "ml"],
+    "Capacity Management": ["augmented", "ml"],
+    "Request Fulfilment": ["automated", "agentic"],
+    "Security Management": ["automated", "ml"],
+    "Service Continuity": ["manual"],
+    "Access Management": ["augmented", "ml"],
+    "Problem Management": ["augmented", "ml"],
+    "Service Reporting": ["augmented", "genai"],
+    "Risk & Compliance": ["augmented", "genai"]
+  }
+};
+
+const TECH_LABELS = { ml: "ML", genai: "GenAI", agentic: "Agentic" };
+
+function leafBadges(subId, name) {
+  const tags = (LEAF_TAGS[subId] || {})[name];
+  if (!tags) return '';
+  const auto = tags[0];
+  const tech = tags[1];
+  let html = `<span class="cap-badge auto-${auto}">${auto}</span>`;
+  if (tech) html += `<span class="cap-badge tech">${TECH_LABELS[tech] || tech}</span>`;
+  return `<span class="cap-badges">${html}</span>`;
+}
+
 // =================== RENDER ===================
 function shortlistToggleBtn(extraClass, target) {
   return `<button class="shortlist-toggle ${extraClass}" data-click-type="shortlist-toggle" data-shortlist-target="${target}" aria-label="Add to shortlist" title="Add to shortlist">
@@ -2331,7 +2655,7 @@ function renderDomain(domain, isEnabling = false) {
       return `<span class="activity ${hasLeafCase ? 'has-leaf-case' : ''}"
                     data-click-type="leaf"
                     data-subdomain-id="${s.id}"
-                    data-leaf-idx="${idx}">${name}</span>`;
+                    data-leaf-idx="${idx}">${name}${leafBadges(s.id, name)}</span>`;
     }).join('');
 
     // Assessment block — two sliders for current/target maturity
@@ -2658,9 +2982,9 @@ const SESSION_ID = getOrCreateSession();
 function loadState() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : { scores: {}, shortlist: [], mode: 'assess', engaged: false, privacyDismissed: false, insightPromptDone: false, insightSubmitted: false, leadSubmitted: false };
+    return raw ? JSON.parse(raw) : { scores: {}, shortlist: [], mode: 'explore', engaged: false, privacyDismissed: false, insightPromptDone: false, insightSubmitted: false, leadSubmitted: false };
   } catch {
-    return { scores: {}, shortlist: [], mode: 'assess', engaged: false, privacyDismissed: false, insightPromptDone: false, insightSubmitted: false, leadSubmitted: false };
+    return { scores: {}, shortlist: [], mode: 'explore', engaged: false, privacyDismissed: false, insightPromptDone: false, insightSubmitted: false, leadSubmitted: false };
   }
 }
 function saveState() {
@@ -2755,7 +3079,7 @@ track('page_loaded', { mode: state.mode });
 
 // ---- Mode switching ----
 const body = document.body;
-function setMode(mode) {
+function setMode(mode, silent = false) {
   state.mode = mode;
   if (mode === 'assess') {
     body.classList.add('mode-assess');
@@ -2770,35 +3094,49 @@ function setMode(mode) {
     btn.classList.toggle('active', btn.dataset.mode === mode);
   });
   saveState();
-  track('mode_changed', { mode });
+  if (!silent) track('mode_changed', { mode });
 }
 
-// Apply persisted mode on load (after a tick to let DOM settle)
-if (state.mode === 'explore') setMode('explore');
+// Apply persisted/default mode on load (defaults to Explore for new visitors)
+setMode(state.mode, true);
 
 document.querySelectorAll('.mode-btn').forEach(btn => {
   btn.addEventListener('click', () => setMode(btn.dataset.mode));
 });
 
 // ---- Splash dismissal ----
+const SPLASH_SESSION_KEY = 'omnia_splash_dismissed_session';
 function dismissSplash() {
   body.classList.add('engaged');
   state.engaged = true;
   saveState();
+  // Remember dismissal for THIS browser session only (sessionStorage), so the
+  // splash survives same-tab reloads but reappears in a fresh session/tab.
+  try { sessionStorage.setItem(SPLASH_SESSION_KEY, '1'); } catch {}
 }
-if (state.engaged) body.classList.add('engaged');
+// Show the splash once per browser session: restore the dismissed state from
+// sessionStorage (persists across reloads in the same tab, clears on close).
+try { if (sessionStorage.getItem(SPLASH_SESSION_KEY) === '1') body.classList.add('engaged'); } catch {}
 
+document.getElementById('explore-atlas-btn').addEventListener('click', () => {
+  setMode('explore');
+  dismissSplash();
+  track('splash_action', { action: 'explore_atlas' });
+  // Scroll to first sub-domain
+  window.scrollTo({ top: 300, behavior: 'smooth' });
+});
 document.getElementById('start-assess-btn').addEventListener('click', () => {
   setMode('assess');
   dismissSplash();
   track('splash_action', { action: 'start_assess' });
-  // Scroll to first sub-domain
   window.scrollTo({ top: 300, behavior: 'smooth' });
 });
-document.getElementById('skip-to-explore-btn').addEventListener('click', () => {
-  setMode('explore');
+
+// Start the assessment from the Explore intro blurb
+document.getElementById('explore-start-assess-btn').addEventListener('click', () => {
+  setMode('assess');
   dismissSplash();
-  track('splash_action', { action: 'skip_to_explore' });
+  track('explore_action', { action: 'start_assess' });
   window.scrollTo({ top: 300, behavior: 'smooth' });
 });
 
