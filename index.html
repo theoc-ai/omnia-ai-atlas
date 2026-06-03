@@ -2338,7 +2338,7 @@ const DATA = {
               }
             },
             "Triage / Assign Claim",
-            "Constituent Set Up",
+            "Claim Setup",
             {
               name: "Set Initial Reserves",
               caseStudy: {
@@ -3052,16 +3052,16 @@ const LEAF_TAGS = {
   },
   "2.1": {
     "Receive Claim Notice (FNOL)": ["automated","genai"],
-    "Triage / Assign Claim": ["automated","ml"],
-    "Constituent Set Up": ["augmented","ml"],
-    "Set Initial Reserves": ["augmented","ml"],
-    "Perform Initial Investigation": ["augmented","ml"],
-    "Manage CAT & Major Loss Events": ["augmented","ml"],
+    "Triage / Assign Claim": ["automated","agentic"],
+    "Claim Setup": ["automated","agentic"],
+    "Set Initial Reserves": ["automated","ml"],
+    "Perform Initial Investigation": ["augmented","genai"],
+    "Manage CAT & Major Loss Events": ["augmented","genai"],
   },
   "2.2": {
-    "Appoint & Manage Loss Adjusters": ["manual"],
+    "Appoint & Manage Loss Adjusters": ["augmented","agentic"],
     "Assess Damage & Quantify Loss": ["automated","ml"],
-    "Manage Repair & Reinstatement": ["augmented","ml"],
+    "Manage Repair & Reinstatement": ["augmented","agentic"],
     "Determine Loss Control": ["augmented","ml"],
     "Determine Salvage": ["augmented","ml"],
     "Evaluate Fraud": ["automated","ml"],
@@ -3083,9 +3083,9 @@ const LEAF_TAGS = {
   "2.4": {
     "Settlement Recommendation Drafting": ["augmented","genai"],
     "Third Party Negotiation": ["manual"],
-    "Issue Payment": ["automated","ml"],
+    "Issue Payment": ["automated","agentic"],
     "Manage Disputes & Litigation": ["augmented","genai"],
-    "Pursue Recovery & Subrogation": ["augmented","ml"],
+    "Pursue Recovery & Subrogation": ["augmented","agentic"],
     "Perform Claims Audit": ["augmented","genai"],
     "Close Claim & Archive File": ["augmented","ml"],
   },
