@@ -4,6 +4,26 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Omnia — General Insurance AI Maturity Assessment</title>
+<meta name="description" content="Self-assess your organisation's AI maturity across the general insurance value chain — and explore real-world AI case studies from leading carriers including Progressive, AXA, Allianz and Liberty Mutual." />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23014348'/%3E%3Ccircle cx='16' cy='16' r='7' fill='%23C1EFA5'/%3E%3C/svg%3E" />
+
+<!-- Open Graph / LinkedIn / Facebook -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="OMNIA" />
+<meta property="og:title" content="General Insurance AI Maturity Assessment" />
+<meta property="og:description" content="Benchmark your AI maturity across the insurance value chain in minutes — and explore how leading carriers are deploying AI in underwriting, claims, servicing and beyond." />
+<meta property="og:url" content="https://omnia-ai-atlas-gi.vercel.app/" />
+<meta property="og:image" content="https://omnia-ai-atlas-gi.vercel.app/og-image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="OMNIA — General Insurance AI Maturity Assessment" />
+
+<!-- Twitter / X -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="General Insurance AI Maturity Assessment" />
+<meta name="twitter:description" content="Benchmark your AI maturity across the insurance value chain in minutes — and explore how leading carriers are deploying AI today." />
+<meta name="twitter:image" content="https://omnia-ai-atlas-gi.vercel.app/og-image.png" />
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -3618,6 +3638,34 @@ function getOrCreateSession() {
 }
 const SESSION_ID = getOrCreateSession();
 
+// ---- Attribution (campaign / referrer tracking) ----
+// Captures where a visitor came from so leads can be tied back to the
+// LinkedIn ad (or any campaign). First-touch wins: the first visit's source
+// is persisted and kept, but if a later visit arrives carrying fresh UTM
+// params (e.g. a re-click on the ad) we refresh to the newer campaign data.
+const ATTRIBUTION_KEY = 'omnia_gi_attribution_v2';
+function getOrCreateAttribution() {
+  let stored = null;
+  try { stored = JSON.parse(localStorage.getItem(ATTRIBUTION_KEY) || 'null'); } catch {}
+  const params = new URLSearchParams(location.search);
+  // LinkedIn ads append li_fat_id; Google uses gclid; Meta uses fbclid.
+  const fields = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content',
+                  'li_fat_id', 'gclid', 'fbclid', 'msclkid'];
+  const hasFresh = fields.some(k => params.has(k));
+  if (stored && !hasFresh) return stored;
+
+  const attr = stored ? { ...stored } : {};
+  fields.forEach(k => { if (params.has(k)) attr[k] = params.get(k); });
+  attr.landing_page = location.pathname + location.search;
+  attr.referrer = document.referrer || (stored && stored.referrer) || null;
+  attr.first_seen = (stored && stored.first_seen) || new Date().toISOString();
+  if (hasFresh) attr.last_campaign_seen = new Date().toISOString();
+  try { localStorage.setItem(ATTRIBUTION_KEY, JSON.stringify(attr)); } catch {}
+  return attr;
+}
+const ATTRIBUTION = getOrCreateAttribution();
+window.OMNIA_ATTRIBUTION = ATTRIBUTION; // expose for inspection
+
 // ---- State ----
 function loadState() {
   try {
@@ -3715,7 +3763,7 @@ function flushOnExit() {
 window.addEventListener('pagehide', flushOnExit);
 window.addEventListener('beforeunload', flushOnExit);
 
-track('page_loaded', { mode: state.mode });
+track('page_loaded', { mode: state.mode, attribution: ATTRIBUTION });
 
 // ---- Mode switching ----
 const body = document.body;
@@ -4185,7 +4233,8 @@ function buildLeadDetail() {
     shortlist,
     counts: { rated: assessment.length, shortlisted: shortlist.length },
     mode: document.body.classList.contains('mode-assess') ? 'assess' : 'explore',
-    demo_mode: DEMO_MODE
+    demo_mode: DEMO_MODE,
+    attribution: ATTRIBUTION
   };
 }
 
@@ -4212,7 +4261,8 @@ document.getElementById('lead-form').addEventListener('submit', async (e) => {
 
   track('lead_submitted', {
     has_assessment: Object.keys(state.scores).length > 0,
-    shortlist_count: state.shortlist.length
+    shortlist_count: state.shortlist.length,
+    attribution: ATTRIBUTION
   });
 
   // Record that this visitor has handed over their details, so the
@@ -4447,7 +4497,7 @@ document.getElementById('insight-form').addEventListener('submit', async (e) => 
   state.insightSubmitted = true;
   saveState();
 
-  track('insight_lead_submitted', { interactions: exploreInteractionCount });
+  track('insight_lead_submitted', { interactions: exploreInteractionCount, attribution: ATTRIBUTION });
 
   // Always keep a localStorage backup so nothing's ever lost
   const localLeads = JSON.parse(localStorage.getItem('omnia_gi_leads') || '[]');
